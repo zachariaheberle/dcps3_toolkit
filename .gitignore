@@ -1,0 +1,9 @@
+*.prm
+firmware/project_folder/
+*.png
+*.jou
+*.log
+analysis/.ipynb_checkpoints/
+analysis/bcp_test/
+firmware/vivado_pid3743.str
+
