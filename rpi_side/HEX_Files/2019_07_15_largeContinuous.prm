@@ -1,0 +1,14 @@
+===================================
+Configuration Memory information
+===================================
+File Format        HEX
+Interface          SPIX1
+Size               32M
+Start Address      0x00000000
+End Address        0x01FFFFFF
+Checksum           0xDBDCA589
+Fill Value         0xFF
+
+Addr1         Addr2         Date                    File(s)                                                          Checksum
+0x00000000    0x002316B3    Jul 15 16:38:49 2019    /home/rsaradhy/Work/DDMTD/Firmware/Nexys.runs/impl_1/main.bit    0x00D042D5
+File Checksum Total                                                                                                  0x00D042D5

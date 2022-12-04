@@ -1,0 +1,14 @@
+===================================
+Configuration Memory information
+===================================
+File Format        HEX
+Interface          SPIX1
+Size               32M
+Start Address      0x00000000
+End Address        0x01FFFFFF
+Checksum           0xDBE837CE
+Fill Value         0xFF
+
+Addr1         Addr2         Date                    File(s)                                                             Checksum
+0x00000000    0x00232E73    Nov  3 14:05:23 2020    C:/Users/rohit/Work/DDMTD/Firmware/Nexys.runs/impl_1/main_v2.bit    0x00F37D5A
+File Checksum Total                                                                                                     0x00F37D5A

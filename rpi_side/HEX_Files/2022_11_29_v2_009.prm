@@ -1,0 +1,11 @@
+===================================
+Configuration Memory information
+===================================
+File Format        HEX
+Interface          SPIX1
+Size               32M
+Start Address      0x00000000
+End Address        0x01FFFFFF
+
+Addr1         Addr2         Date                    File(s)
+0x00000000    0x00232113    Nov 29 02:46:31 2022    /home/rsaradhy/work/nexys_ddmtd_latest/Firmware/Nexys.runs/impl_1/main_v2.bit
