@@ -59,25 +59,25 @@ module DDMTD_Sampler
 // );
 
 
-(* ASYNC_REG = "TRUE" *) wire BEAT_CLK_synced;
-SYNC beat_sync(
-    .I(BEAT_CLK),
-    .O(BEAT_CLK_synced),
-    .clk(WR_CLK),
-    .reset(RST)
-);
+// (* ASYNC_REG = "TRUE" *) wire BEAT_CLK_synced;
+// SYNC beat_sync(
+//     .I(BEAT_CLK),
+//     .O(BEAT_CLK_synced),
+//     .clk(WR_CLK),
+//     .reset(RST)
+// );
 
-(* ASYNC_REG = "TRUE" *) reg [31:0] DATA_IN;
+reg [31:0] DATA_IN;
 reg temp_mem=0;
-(* ASYNC_REG = "TRUE" *) reg WRITE_EN=0;
+reg WRITE_EN=0;
 integer test_counter = 0;
 always @(negedge WR_CLK) 
 begin
     test_counter <= test_counter + 1;
-    if(temp_mem !=  BEAT_CLK_synced && en_SAMPLING_LOGIC) begin
-        temp_mem <= BEAT_CLK_synced;
+    if(temp_mem !=  BEAT_CLK && en_SAMPLING_LOGIC) begin
+        temp_mem <= BEAT_CLK;
         WRITE_EN <= 1;
-        DATA_IN  <={BEAT_CLK_synced,EXTERNAL_COUNTER[30:0]};
+        DATA_IN  <={BEAT_CLK,EXTERNAL_COUNTER[30:0]};
         // DATA_IN  <={clk_beat,internal_counter[30:0]};
         // DATA_IN  <={BEAT_CLK,test_counter[30:0]};
         // DATA_IN  <=test_counter[30:0];

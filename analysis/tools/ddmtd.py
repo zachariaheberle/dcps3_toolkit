@@ -249,11 +249,11 @@ class ddmtd():
     
 
     def edgeCleanEdged(self,parity,edges): #Cleans up the edges and identifies whether it is a rising or falling edge
-        N=50000 # number of cycle difference in metastability
+        N=2000 # number of cycle difference in metastability
         # N=5500 # number of cycle difference in metastability
         # N=15000 # number of cycle difference in metastability continuous
 
-        look_ahead=100000 # number of counter entries to look ahead
+        look_ahead=10000 # number of counter entries to look ahead
         edges = np.array(edges)
         out = []
         out_parity = []

@@ -64,7 +64,7 @@ module main_v2(
 //----------------------------------------------------------------------
 // PERIPHERAL ADDRESS SPACE
 //----------------------------------------------------------------------    
-    parameter FIRMWARE_VERSION = 16'd2031;
+    parameter FIRMWARE_VERSION = 16'd2032;
     parameter FIRMWARE_VERSION_MAJOR = FIRMWARE_VERSION[15:8];
     parameter FIRMWARE_VERSION_MINOR = FIRMWARE_VERSION[ 7:0];
 
@@ -115,10 +115,10 @@ module main_v2(
     IBUFGDS IBUFGDS_Q1B (.O(Q1B_temp), .I(Q1B_P), .IB(Q1B_N));//good
     IBUFGDS IBUFGDS_Q2B (.O(Q2B_temp), .I(Q2B_P), .IB(Q2B_N));
 
-    sync_ddr sync_Q1A(.clk(clk_ref),.D(Q1A_temp),.Q(Q1A),.Q2(Q1An));
-    sync_ddr sync_Q2A(.clk(clk_ref),.D(Q2A_temp),.Q(Q2A),.Q2(Q2An));
-    sync_ddr sync_Q1B(.clk(clk_ref),.D(Q1B_temp),.Q(Q1B),.Q2(Q1Bn));
-    sync_ddr sync_Q2B(.clk(clk_ref),.D(Q2B_temp),.Q(Q2B),.Q2(Q2Bn));
+    // sync_ddr sync_Q1A(.clk(clk_ref),.D(Q1A_temp),.Q(Q1A),.Q2(Q1An));
+    // sync_ddr sync_Q2A(.clk(clk_ref),.D(Q2A_temp),.Q(Q2A),.Q2(Q2An));
+    // sync_ddr sync_Q1B(.clk(clk_ref),.D(Q1B_temp),.Q(Q1B),.Q2(Q1Bn));
+    // sync_ddr sync_Q2B(.clk(clk_ref),.D(Q2B_temp),.Q(Q2B),.Q2(Q2Bn));
 
 
     //Connections to the sampling logic: reference --> (* ASYNC_REG = "TRUE" *) 
@@ -126,9 +126,9 @@ module main_v2(
     wire   ddmtd1_beat_clock;
     wire   ddmtd2_beat_clock;
 
-    assign sampling_logic_clock = clk_refn; // Clock that is used to sample...
-    assign ddmtd1_beat_clock    = Q1An;
-    assign ddmtd2_beat_clock    = Q1Bn;
+    assign sampling_logic_clock = clk_ref; // Clock that is used to sample...
+    assign ddmtd1_beat_clock    = Q1A_temp;
+    assign ddmtd2_beat_clock    = Q1B_temp;
     // assign sampling_logic_clock = clk_200; // Clock that is used to sample...
     // assign ddmtd1_beat_clock    = beat_0_q1; //Fake Clock
     // assign ddmtd2_beat_clock    = beat_1_q1; //Fake Clock
@@ -490,15 +490,15 @@ module main_v2(
     // BUF ddmtd2clkBuf1 (.I(ddmtd2_beat_clock),.O(ddmtd2_beat_clock_buff));
 
 
-    // wire rd_clk_buff;
-    // BUF readclkBuf1 (.I(clk),.O(rd_clk_buff));
-    // wire read_en_buff;
-    // BUF read_enBuf1 (.I(read_en),.O(read_en_buff));
+    wire rd_clk_buff;
+    BUF readclkBuf1 (.I(clk),.O(rd_clk_buff));
+    wire read_en_buff;
+    BUF read_enBuf1 (.I(read_en),.O(read_en_buff));
 
 
 
 
-    (* ASYNC_REG = "TRUE" *)wire [31:0] external_counter;
+    wire [31:0] external_counter;
     binary_counter bc1(
     .Q(external_counter),
     .CLK(sampling_logic_clock),
@@ -518,9 +518,9 @@ module main_v2(
         .EXTERNAL_COUNTER(external_counter),
         .RST(m_reset),
         //Inputs for readout
-        .RD_CLK(clk),
+        .RD_CLK(rd_clk_buff),
         .R_TDATA(tdata1),  
-        .READ_EN(read_en),
+        .READ_EN(read_en_buff),
         //  .PROG_FULL(prog_full_1),
         //  .PROG_EMPTY(TREADY),
         // .EMPTY(),
@@ -542,9 +542,9 @@ module main_v2(
         .EXTERNAL_COUNTER(external_counter),
         .RST(m_reset),
         //Inputs for readout
-        .RD_CLK(clk),
+        .RD_CLK(rd_clk_buff),
         .R_TDATA(tdata2),  
-        .READ_EN(read_en),
+        .READ_EN(read_en_buff),
         //  .PROG_FULL(prog_full_1),
         //  .PROG_EMPTY(TREADY),
         // .EMPTY(),

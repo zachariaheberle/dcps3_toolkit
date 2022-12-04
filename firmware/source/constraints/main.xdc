@@ -328,8 +328,8 @@ set_property -dict {PACKAGE_PIN V14 IOSTANDARD LVCMOS25} [get_ports vadj_en]
 
 
 #Heaters...
-set_property -dict { PACKAGE_PIN E14   IOSTANDARD LVCMOS25 } [get_ports HEAT_1 ]
-set_property -dict { PACKAGE_PIN E13   IOSTANDARD LVCMOS25 } [get_ports HEAT_2 ] 
+set_property -dict {PACKAGE_PIN E14 IOSTANDARD LVCMOS25} [get_ports HEAT_1]
+set_property -dict {PACKAGE_PIN E13 IOSTANDARD LVCMOS25} [get_ports HEAT_2]
 
 
 
@@ -416,3 +416,4 @@ set_property BITSTREAM.GENERAL.COMPRESS TRUE [current_design]
 #create_generated_clock -name spiInterface_i/spi_write -source [get_ports spi_sck] -divide_by 32 [get_pins spiInterface_i/spi_write_reg/Q]
 #set_property ASYNC_REG true [get_cells p1/sync1/FDRE_inst]
 #set_property ASYNC_REG true [get_cells p1/sync1/FDRE_inst1]
+
