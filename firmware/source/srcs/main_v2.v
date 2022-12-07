@@ -64,7 +64,7 @@ module main_v2(
 //----------------------------------------------------------------------
 // PERIPHERAL ADDRESS SPACE
 //----------------------------------------------------------------------    
-    parameter FIRMWARE_VERSION = 16'd2040;
+    parameter FIRMWARE_VERSION = 16'd2042;
     parameter FIRMWARE_VERSION_MAJOR = FIRMWARE_VERSION[15:8];
     parameter FIRMWARE_VERSION_MINOR = FIRMWARE_VERSION[ 7:0];
 
@@ -501,6 +501,7 @@ module main_v2(
     //Adding addional logic to trigger only at the posedge of ddmtd1_beat_clock...
     integer ptrigger_counter = 0;
     reg start_acq_ptrigger = 0;
+    reg previous_beat_edge = 0;
     always@(posedge sampling_logic_clock)
     begin
         if (m_reset | (start_acq==0))// Instantly reset  when reset or startAcq stops
@@ -515,10 +516,23 @@ module main_v2(
             else
                 ptrigger_counter <=0;
 
-            if ((ptrigger_counter > 5000)&&(~ddmtd1_beat_clock))
+            if ((ptrigger_counter > 500)&(~previous_beat_edge)&((ddmtd1_beat_clock))) // stable for 500 clocks
                 start_acq_ptrigger <= start_acq;
         end
+        previous_beat_edge <= ddmtd1_beat_clock;
     end
+
+
+    // //Delaying activation for two cycles
+    // reg start_acq_ptrigger_synced = 0;
+    // always@(negedge sampling_logic_clock)
+    //     start_acq_ptrigger_synced <= start_acq_ptrigger;
+    // reg start_acq_ptrigger_synced_synced = 0;
+    // always@(posedge sampling_logic_clock)
+    //     start_acq_ptrigger_synced_synced <= start_acq_ptrigger_synced;
+
+
+
 
     //Synchronize both Q1 & Q2 to the same clock....
     (* ASYNC_REG = "TRUE" *) reg ddmtd1_beat_clock_synced,ddmtd2_beat_clock_synced;
