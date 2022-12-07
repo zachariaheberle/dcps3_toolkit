@@ -36,17 +36,50 @@ class ddmtd():
     
     save_name_folder = ""
     quiet=0
-    def __init__(self,save_name_folder,q=0,channel=(1,3)):
+    def __init__(self,data_frame_input,q=0,channel=(1,3)):
         self.quiet = q
-        self.save_name_folder = save_name_folder
-        if type(save_name_folder) == pd.core.frame.DataFrame:
+        self.data_frame_input = data_frame_input
+        if type(data_frame_input) == pd.core.frame.DataFrame:
             self.df = pd.DataFrame()
 
-            self.df['edge1'] = save_name_folder[f"edge{channel[0]}"]
-            self.df['ddmtd1'] = save_name_folder[f"ddmtd{channel[0]}"]
+            edge1   = data_frame_input[f"edge{channel[0]}"].values
+            ddmtd1  = data_frame_input[f"ddmtd{channel[0]}"].values
+            edge2   = data_frame_input[f"edge{channel[1]}"].values
+            ddmtd2  = data_frame_input[f"ddmtd{channel[1]}"].values
+            
 
-            self.df['edge2'] = save_name_folder[f"edge{channel[1]}"]
-            self.df['ddmtd2'] = save_name_folder[f"ddmtd{channel[1]}"]
+
+            # # make the first transistion ==1
+            # if edge1[0] == 0:
+            #     edge1 = edge1[1:]
+            #     ddmtd1 = ddmtd1[1:]
+            #     edge2 = edge2[:-1]
+            #     ddmtd2 = ddmtd2[:-1]
+            #     print("deleted first transition of ddmtd1")
+
+            # if edge2[0] == 0:
+            #     edge2 = edge2[1:]
+            #     ddmtd2 = ddmtd2[1:]
+            #     edge1 = edge1[:-1]
+            #     ddmtd1 = ddmtd1[:-1]
+            #     print("deleted first transition of ddmtd2")
+            # make data the same size # if there are the first missing edge....
+            # if (edge1.size != edge2.size):
+            #     if (edge1.size > edge2.size):
+            #         edge1  = edge1 [1:]
+            #         ddmtd1 = ddmtd1[1:]
+            #     else:
+            #         edge2  = edge2 [1:]
+            #         ddmtd2 = ddmtd2[1:]
+
+            
+
+
+            # Save it into dataFrame
+            self.df['edge1']    = edge1
+            self.df['ddmtd1']   = ddmtd1
+            self.df['edge2']    = edge2
+            self.df['ddmtd2']   = ddmtd2
 
 
             # self.df = self.df[self.df.ddmtd1 != 2147483647].reset_index(drop=1) #remove memory that is not used
@@ -96,7 +129,7 @@ class ddmtd():
                 
             
         else:
-            self.myprint ("Loaded empty, Specify Load file")
+            self.myprint ("Didn't load a pandas dataFrame")
 
 
 
@@ -239,7 +272,7 @@ class ddmtd():
         # bins = 100
         bins = np.arange(np.min(TIE),np.max(TIE),1)*self.MULT_FACT
         popt,pcov = base.drawTIE(TIE,save_name=save_name,bns=bins,MULT_FACT=self.MULT_FACT,fit=fit,figName=sep,draw=draw)
-        return popt,np.sqrt(np.diag(pcov))
+        return popt,np.sqrt(np.diag(pcov)),TIE.size,
 
 
     def myprint(self,stuff):
