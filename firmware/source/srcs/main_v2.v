@@ -64,7 +64,7 @@ module main_v2(
 //----------------------------------------------------------------------
 // PERIPHERAL ADDRESS SPACE
 //----------------------------------------------------------------------    
-    parameter FIRMWARE_VERSION = 16'd2034;
+    parameter FIRMWARE_VERSION = 16'd2036;
     parameter FIRMWARE_VERSION_MAJOR = FIRMWARE_VERSION[15:8];
     parameter FIRMWARE_VERSION_MINOR = FIRMWARE_VERSION[ 7:0];
 
@@ -115,10 +115,10 @@ module main_v2(
     IBUFGDS IBUFGDS_Q1B (.O(Q1B_temp), .I(Q1B_P), .IB(Q1B_N));//good
     IBUFGDS IBUFGDS_Q2B (.O(Q2B_temp), .I(Q2B_P), .IB(Q2B_N));
 
-    // sync_ddr sync_Q1A(.clk(clk_ref),.D(Q1A_temp),.Q(Q1A),.Q2(Q1An));
-    // sync_ddr sync_Q2A(.clk(clk_ref),.D(Q2A_temp),.Q(Q2A),.Q2(Q2An));
-    // sync_ddr sync_Q1B(.clk(clk_ref),.D(Q1B_temp),.Q(Q1B),.Q2(Q1Bn));
-    // sync_ddr sync_Q2B(.clk(clk_ref),.D(Q2B_temp),.Q(Q2B),.Q2(Q2Bn));
+    sync_ddr sync_Q1A(.clk(clk_ref),.D(Q1A_temp),.Q(Q1A),.Q2(Q1An));
+    sync_ddr sync_Q2A(.clk(clk_ref),.D(Q2A_temp),.Q(Q2A),.Q2(Q2An));
+    sync_ddr sync_Q1B(.clk(clk_ref),.D(Q1B_temp),.Q(Q1B),.Q2(Q1Bn));
+    sync_ddr sync_Q2B(.clk(clk_ref),.D(Q2B_temp),.Q(Q2B),.Q2(Q2Bn));
 
 
     //Connections to the sampling logic: reference --> (* ASYNC_REG = "TRUE" *) 
@@ -127,8 +127,8 @@ module main_v2(
     wire   ddmtd2_beat_clock;
 
     assign sampling_logic_clock = clk_ref; // Clock that is used to sample...
-    assign ddmtd1_beat_clock    = Q1A_temp;
-    assign ddmtd2_beat_clock    = Q1B_temp;
+    assign ddmtd1_beat_clock    = Q1A;
+    assign ddmtd2_beat_clock    = Q1B;
     // assign sampling_logic_clock = clk_200; // Clock that is used to sample...
     // assign ddmtd1_beat_clock    = beat_0_q1; //Fake Clock
     // assign ddmtd2_beat_clock    = beat_1_q1; //Fake Clock
@@ -264,6 +264,8 @@ module main_v2(
 
     wire [7:0] read_count_fifo1;
     wire [7:0] write_count_fifo1;
+
+
     always@(negedge clk)
     begin
 
@@ -496,6 +498,32 @@ module main_v2(
     BUF read_enBuf1 (.I(read_en),.O(read_en_buff));
 
 
+    //Adding addional logic to trigger only at the posedge of ddmtd1_beat_clock...
+    integer ptrigger_counter = 0;
+    reg start_acq_ptrigger = 0;
+    always@(posedge sampling_logic_clock)
+    begin
+        if (m_reset | (start_acq==0))// Instantly reset  when reset or startAcq stops
+        begin
+            ptrigger_counter <=0;
+            start_acq_ptrigger <=0;
+        end
+        else 
+        begin
+            if (~ddmtd1_beat_clock)
+                ptrigger_counter <= ptrigger_counter +1;
+            else
+                ptrigger_counter <=0;
+
+            if ((ptrigger_counter > 100)&&(~ddmtd1_beat_clock))
+                start_acq_ptrigger <= start_acq;
+        end
+    end
+
+
+    
+
+
 
 
     wire [31:0] external_counter;
@@ -503,7 +531,7 @@ module main_v2(
     .Q(external_counter),
     .CLK(sampling_logic_clock),
     .CE(start_acq),
-    .SCLR(~start_acq | m_reset)
+    .SCLR(~start_acq_ptrigger | m_reset)
     );
 
 
@@ -514,7 +542,7 @@ module main_v2(
         // Inputs for the sampling logic
         .WR_CLK(sampling_logic_clock),
         .BEAT_CLK(ddmtd1_beat_clock),
-        .en_SAMPLING_LOGIC(start_acq), //Active High
+        .en_SAMPLING_LOGIC(start_acq_ptrigger), //Active High
         .EXTERNAL_COUNTER(external_counter),
         .RST(m_reset),
         //Inputs for readout
@@ -538,7 +566,7 @@ module main_v2(
         // Inputs for the sampling logic
         .WR_CLK(sampling_logic_clock),
         .BEAT_CLK(ddmtd2_beat_clock),
-        .en_SAMPLING_LOGIC(start_acq), //Active High
+        .en_SAMPLING_LOGIC(start_acq_ptrigger), //Active High
         .EXTERNAL_COUNTER(external_counter),
         .RST(m_reset),
         //Inputs for readout
