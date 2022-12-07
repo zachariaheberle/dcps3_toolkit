@@ -157,12 +157,12 @@ int write_toFiles(FILE* fp1,FILE* fp2,  void* virtual_address, int byte_count)
         val1_bit = (val1>>31 & 0x1);
         val2_val = (val2&0x7fffffff);
         val2_bit = (val2>>31 & 0x1);
-        // printf("%10u,%10u \t",(val1>>31 & 0x1),(val1 & 0x7fffffff));
-        // printf("%10u,%10u \n",(val2>>31 & 0x1),(val2 & 0x7fffffff));
+        printf("%10u,%10u \t",(val1>>31 & 0x1),(val1 & 0x7fffffff));
+        printf("%10u,%10u \n",(val2>>31 & 0x1),(val2 & 0x7fffffff));
         // printf("%10u,%10u \t", (val1>>31 & 0x1),(val1 & 0x7fffffff));
 
 
-          if(val1_val!=val1_prev)
+          if( (val1_val!=val1_prev) | (val1_val == 0) )
           {
               // printf("%u,%u \n ", (uint)(val1>>31 & 0x1),(uint)(val1 & 0x7fffffff));
               if(val1_val < val1_prev) cycles1= cycles1 + 1;
@@ -173,7 +173,7 @@ int write_toFiles(FILE* fp1,FILE* fp2,  void* virtual_address, int byte_count)
               fprintf(fp1,"%"PRIu64" \n",val1_disp);
               count1=count1+1;
           }
-          if(val2_val!=val2_prev)
+          if( (val2_val!=val2_prev) | (val2_val == 0) )
           {
               // printf("%u,%u \n ", (uint)(val2>>31 & 0x1),(uint)(val2 & 0x7fffffff));
               // if(val2_prev - val2_val > (0x7fffffff>>1)) cycles2= cycles2 + 1; // if previous value is greater by 1/2 of 0x7fffffff
