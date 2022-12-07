@@ -64,7 +64,7 @@ module main_v2(
 //----------------------------------------------------------------------
 // PERIPHERAL ADDRESS SPACE
 //----------------------------------------------------------------------    
-    parameter FIRMWARE_VERSION = 16'd2036;
+    parameter FIRMWARE_VERSION = 16'd2040;
     parameter FIRMWARE_VERSION_MAJOR = FIRMWARE_VERSION[15:8];
     parameter FIRMWARE_VERSION_MINOR = FIRMWARE_VERSION[ 7:0];
 
@@ -515,13 +515,18 @@ module main_v2(
             else
                 ptrigger_counter <=0;
 
-            if ((ptrigger_counter > 100)&&(~ddmtd1_beat_clock))
+            if ((ptrigger_counter > 5000)&&(~ddmtd1_beat_clock))
                 start_acq_ptrigger <= start_acq;
         end
     end
 
-
-    
+    //Synchronize both Q1 & Q2 to the same clock....
+    (* ASYNC_REG = "TRUE" *) reg ddmtd1_beat_clock_synced,ddmtd2_beat_clock_synced;
+    always@(posedge sampling_logic_clock)
+    begin
+        ddmtd1_beat_clock_synced <=ddmtd1_beat_clock;
+        ddmtd2_beat_clock_synced <=ddmtd2_beat_clock;
+    end
 
 
 
@@ -541,7 +546,7 @@ module main_v2(
     DDMTD1(
         // Inputs for the sampling logic
         .WR_CLK(sampling_logic_clock),
-        .BEAT_CLK(ddmtd1_beat_clock),
+        .BEAT_CLK(ddmtd1_beat_clock_synced),
         .en_SAMPLING_LOGIC(start_acq_ptrigger), //Active High
         .EXTERNAL_COUNTER(external_counter),
         .RST(m_reset),
@@ -565,7 +570,7 @@ module main_v2(
     DDMTD2(
         // Inputs for the sampling logic
         .WR_CLK(sampling_logic_clock),
-        .BEAT_CLK(ddmtd2_beat_clock),
+        .BEAT_CLK(ddmtd2_beat_clock_synced),
         .en_SAMPLING_LOGIC(start_acq_ptrigger), //Active High
         .EXTERNAL_COUNTER(external_counter),
         .RST(m_reset),
