@@ -1,10 +1,10 @@
 // Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
 // Tool Version: Vivado v.2019.2 (lin64) Build 2708876 Wed Nov  6 21:39:14 MST 2019
-// Date        : Sat Dec  3 08:27:50 2022
+// Date        : Fri Mar 31 03:35:20 2023
 // Host        : ubuntu running 64-bit Ubuntu 18.04.6 LTS
 // Command     : write_verilog -force -mode funcsim
-//               /home/rsaradhy/work/nexys_ddmtd_latest/Firmware/Nexys.srcs/sources_1/ip/FIFO_Array/FIFO_Array_sim_netlist.v
+//               /home/rsaradhy/work/nexys_ddmtd_github/firmware/source/ip/FIFO_Array/FIFO_Array_sim_netlist.v
 // Design      : FIFO_Array
 // Purpose     : This verilog netlist is a functional simulation representation of the design and should not be modified
 //               or synthesized. This netlist cannot be used for SDF annotated simulation.
@@ -27,7 +27,7 @@ module FIFO_Array
     prog_full,
     prog_empty);
   input rst;
-  (* x_interface_info = "xilinx.com:signal:clock:1.0 write_clk CLK" *) (* x_interface_parameter = "XIL_INTERFACENAME write_clk, FREQ_HZ 40000000, PHASE 0.000, INSERT_VIP 0" *) input wr_clk;
+  (* x_interface_info = "xilinx.com:signal:clock:1.0 write_clk CLK" *) (* x_interface_parameter = "XIL_INTERFACENAME write_clk, FREQ_HZ 166000000, PHASE 0.000, INSERT_VIP 0" *) input wr_clk;
   (* x_interface_info = "xilinx.com:signal:clock:1.0 read_clk CLK" *) (* x_interface_parameter = "XIL_INTERFACENAME read_clk, FREQ_HZ 100000000, PHASE 0.000, INSERT_VIP 0" *) input rd_clk;
   (* x_interface_info = "xilinx.com:interface:fifo_write:1.0 FIFO_WRITE WR_DATA" *) input [31:0]din;
   (* x_interface_info = "xilinx.com:interface:fifo_write:1.0 FIFO_WRITE WR_EN" *) input wr_en;
@@ -306,14 +306,14 @@ module FIFO_Array
   (* C_PROG_EMPTY_TYPE_WACH = "0" *) 
   (* C_PROG_EMPTY_TYPE_WDCH = "0" *) 
   (* C_PROG_EMPTY_TYPE_WRCH = "0" *) 
-  (* C_PROG_FULL_THRESH_ASSERT_VAL = "24593" *) 
+  (* C_PROG_FULL_THRESH_ASSERT_VAL = "32759" *) 
   (* C_PROG_FULL_THRESH_ASSERT_VAL_AXIS = "1023" *) 
   (* C_PROG_FULL_THRESH_ASSERT_VAL_RACH = "1023" *) 
   (* C_PROG_FULL_THRESH_ASSERT_VAL_RDCH = "1023" *) 
   (* C_PROG_FULL_THRESH_ASSERT_VAL_WACH = "1023" *) 
   (* C_PROG_FULL_THRESH_ASSERT_VAL_WDCH = "1023" *) 
   (* C_PROG_FULL_THRESH_ASSERT_VAL_WRCH = "1023" *) 
-  (* C_PROG_FULL_THRESH_NEGATE_VAL = "24592" *) 
+  (* C_PROG_FULL_THRESH_NEGATE_VAL = "32758" *) 
   (* C_PROG_FULL_TYPE = "1" *) 
   (* C_PROG_FULL_TYPE_AXIS = "0" *) 
   (* C_PROG_FULL_TYPE_RACH = "0" *) 
@@ -364,7 +364,7 @@ module FIFO_Array
   (* C_WR_DEPTH_WACH = "16" *) 
   (* C_WR_DEPTH_WDCH = "1024" *) 
   (* C_WR_DEPTH_WRCH = "16" *) 
-  (* C_WR_FREQ = "40" *) 
+  (* C_WR_FREQ = "166" *) 
   (* C_WR_PNTR_WIDTH = "15" *) 
   (* C_WR_PNTR_WIDTH_AXIS = "10" *) 
   (* C_WR_PNTR_WIDTH_RACH = "4" *) 
@@ -614,22 +614,22 @@ module FIFO_Array_builtin_extdepth_v6
     pe,
     emp,
     dout,
-    rd_clk,
-    wr_rst_i,
     wr_clk,
+    rd_rst_i,
     wr_tmp,
     din,
+    rd_clk,
     dout_3_sp_1);
   output [0:0]pf;
   output [0:0]ful;
   output [0:0]pe;
   output [0:0]emp;
   output [3:0]dout;
-  input rd_clk;
-  input wr_rst_i;
   input wr_clk;
+  input rd_rst_i;
   input wr_tmp;
   input [3:0]din;
+  input rd_clk;
   input dout_3_sp_1;
 
   wire [3:0]\d[1]_0 ;
@@ -651,10 +651,10 @@ module FIFO_Array_builtin_extdepth_v6
   wire [0:0]pe;
   wire [0:0]pf;
   wire rd_clk;
+  wire rd_rst_i;
   (* async_reg = "true" *) (* msgon = "true" *) wire sbr_as_reg;
   (* async_reg = "true" *) (* msgon = "true" *) wire sbr_d1;
   wire wr_clk;
-  wire wr_rst_i;
   wire wr_tmp;
 
   assign dout_3_sn_1 = dout_3_sp_1;
@@ -665,9 +665,8 @@ module FIFO_Array_builtin_extdepth_v6
         .ful(ful),
         .ful_2(ful_2),
         .pf(pf),
-        .rd_clk(rd_clk),
+        .rd_rst_i(rd_rst_i),
         .wr_clk(wr_clk),
-        .wr_rst_i(wr_rst_i),
         .wr_tmp(wr_tmp));
   FIFO_Array_builtin_prim_v6_34 \gchain.gp1[2].gbldc.inst_prim 
        (.DO(\d[2]_1 ),
@@ -676,8 +675,8 @@ module FIFO_Array_builtin_extdepth_v6
         .ful_1(ful_1),
         .ful_2(ful_2),
         .\gf36e1_inst.sngfifo36e1_0 (\d[1]_0 ),
-        .rd_clk(rd_clk),
-        .wr_rst_i(wr_rst_i));
+        .rd_rst_i(rd_rst_i),
+        .wr_clk(wr_clk));
   FIFO_Array_builtin_prim_v6_35 \gchain.gp1[3].gbldc.inst_prim 
        (.DO(\d[3]_2 ),
         .\dout[3] (\d[2]_1 ),
@@ -685,8 +684,8 @@ module FIFO_Array_builtin_extdepth_v6
         .e_2(e_2),
         .ful_0(ful_0),
         .ful_1(ful_1),
-        .rd_clk(rd_clk),
-        .wr_rst_i(wr_rst_i));
+        .rd_rst_i(rd_rst_i),
+        .wr_clk(wr_clk));
   FIFO_Array_builtin_prim_v6__parameterized0_36 \gchain.gp1[4].gbldl.inst_prim 
        (.DO(\d[3]_2 ),
         .dout(dout),
@@ -696,7 +695,8 @@ module FIFO_Array_builtin_extdepth_v6
         .ful_0(ful_0),
         .pe(pe),
         .rd_clk(rd_clk),
-        .wr_rst_i(wr_rst_i));
+        .rd_rst_i(rd_rst_i),
+        .wr_clk(wr_clk));
   LUT1 #(
     .INIT(2'h2)) 
     i_0
@@ -726,22 +726,22 @@ module FIFO_Array_builtin_extdepth_v6_0
     pe,
     emp,
     dout,
-    rd_clk,
-    wr_rst_i,
     wr_clk,
+    rd_rst_i,
     wr_tmp,
     din,
+    rd_clk,
     \dout[7] );
   output [0:0]pf;
   output [0:0]ful;
   output [0:0]pe;
   output [0:0]emp;
   output [3:0]dout;
-  input rd_clk;
-  input wr_rst_i;
   input wr_clk;
+  input rd_rst_i;
   input wr_tmp;
   input [3:0]din;
+  input rd_clk;
   input \dout[7] ;
 
   wire [3:0]\d[1]_3 ;
@@ -763,10 +763,10 @@ module FIFO_Array_builtin_extdepth_v6_0
   wire [0:0]pe;
   wire [0:0]pf;
   wire rd_clk;
+  wire rd_rst_i;
   (* async_reg = "true" *) (* msgon = "true" *) wire sbr_as_reg;
   (* async_reg = "true" *) (* msgon = "true" *) wire sbr_d1;
   wire wr_clk;
-  wire wr_rst_i;
   wire wr_tmp;
 
   FIFO_Array_builtin_prim_v6_29 \gchain.gp1[1].gbldc.inst_prim 
@@ -776,9 +776,8 @@ module FIFO_Array_builtin_extdepth_v6_0
         .ful(ful),
         .ful_2(ful_2),
         .pf(pf),
-        .rd_clk(rd_clk),
+        .rd_rst_i(rd_rst_i),
         .wr_clk(wr_clk),
-        .wr_rst_i(wr_rst_i),
         .wr_tmp(wr_tmp));
   FIFO_Array_builtin_prim_v6_30 \gchain.gp1[2].gbldc.inst_prim 
        (.DO(\d[2]_4 ),
@@ -787,8 +786,8 @@ module FIFO_Array_builtin_extdepth_v6_0
         .ful_1(ful_1),
         .ful_2(ful_2),
         .\gf36e1_inst.sngfifo36e1_0 (\d[1]_3 ),
-        .rd_clk(rd_clk),
-        .wr_rst_i(wr_rst_i));
+        .rd_rst_i(rd_rst_i),
+        .wr_clk(wr_clk));
   FIFO_Array_builtin_prim_v6_31 \gchain.gp1[3].gbldc.inst_prim 
        (.DO(\d[3]_5 ),
         .\dout[7] (\d[2]_4 ),
@@ -796,8 +795,8 @@ module FIFO_Array_builtin_extdepth_v6_0
         .e_2(e_2),
         .ful_0(ful_0),
         .ful_1(ful_1),
-        .rd_clk(rd_clk),
-        .wr_rst_i(wr_rst_i));
+        .rd_rst_i(rd_rst_i),
+        .wr_clk(wr_clk));
   FIFO_Array_builtin_prim_v6__parameterized0_32 \gchain.gp1[4].gbldl.inst_prim 
        (.DO(\d[3]_5 ),
         .dout(dout),
@@ -807,7 +806,8 @@ module FIFO_Array_builtin_extdepth_v6_0
         .ful_0(ful_0),
         .pe(pe),
         .rd_clk(rd_clk),
-        .wr_rst_i(wr_rst_i));
+        .rd_rst_i(rd_rst_i),
+        .wr_clk(wr_clk));
   LUT1 #(
     .INIT(2'h2)) 
     i_0
@@ -839,11 +839,11 @@ module FIFO_Array_builtin_extdepth_v6_1
     dout,
     full,
     empty,
-    rd_clk,
-    wr_rst_i,
     wr_clk,
+    rd_rst_i,
     wr_tmp,
     din,
+    rd_clk,
     \dout[11] ,
     full_0,
     full_1,
@@ -856,11 +856,11 @@ module FIFO_Array_builtin_extdepth_v6_1
   output [3:0]dout;
   output full;
   output empty;
-  input rd_clk;
-  input wr_rst_i;
   input wr_clk;
+  input rd_rst_i;
   input wr_tmp;
   input [3:0]din;
+  input rd_clk;
   input \dout[11] ;
   input [2:0]full_0;
   input full_1;
@@ -892,10 +892,10 @@ module FIFO_Array_builtin_extdepth_v6_1
   wire [0:0]pe;
   wire [0:0]pf;
   wire rd_clk;
+  wire rd_rst_i;
   (* async_reg = "true" *) (* msgon = "true" *) wire sbr_as_reg;
   (* async_reg = "true" *) (* msgon = "true" *) wire sbr_d1;
   wire wr_clk;
-  wire wr_rst_i;
   wire wr_tmp;
 
   FIFO_Array_builtin_prim_v6_25 \gchain.gp1[1].gbldc.inst_prim 
@@ -908,9 +908,8 @@ module FIFO_Array_builtin_extdepth_v6_1
         .full_0(full_0),
         .full_1(full_1),
         .pf(pf),
-        .rd_clk(rd_clk),
+        .rd_rst_i(rd_rst_i),
         .wr_clk(wr_clk),
-        .wr_rst_i(wr_rst_i),
         .wr_tmp(wr_tmp));
   FIFO_Array_builtin_prim_v6_26 \gchain.gp1[2].gbldc.inst_prim 
        (.DO(\d[2]_7 ),
@@ -919,8 +918,8 @@ module FIFO_Array_builtin_extdepth_v6_1
         .ful_1(ful_1),
         .ful_2(ful_2),
         .\gf36e1_inst.sngfifo36e1_0 (\d[1]_6 ),
-        .rd_clk(rd_clk),
-        .wr_rst_i(wr_rst_i));
+        .rd_rst_i(rd_rst_i),
+        .wr_clk(wr_clk));
   FIFO_Array_builtin_prim_v6_27 \gchain.gp1[3].gbldc.inst_prim 
        (.DO(\d[3]_8 ),
         .\dout[11] (\d[2]_7 ),
@@ -928,8 +927,8 @@ module FIFO_Array_builtin_extdepth_v6_1
         .e_2(e_2),
         .ful_0(ful_0),
         .ful_1(ful_1),
-        .rd_clk(rd_clk),
-        .wr_rst_i(wr_rst_i));
+        .rd_rst_i(rd_rst_i),
+        .wr_clk(wr_clk));
   FIFO_Array_builtin_prim_v6__parameterized0_28 \gchain.gp1[4].gbldl.inst_prim 
        (.DO(\d[3]_8 ),
         .dout(dout),
@@ -942,7 +941,8 @@ module FIFO_Array_builtin_extdepth_v6_1
         .ful_0(ful_0),
         .pe(pe),
         .rd_clk(rd_clk),
-        .wr_rst_i(wr_rst_i));
+        .rd_rst_i(rd_rst_i),
+        .wr_clk(wr_clk));
   LUT1 #(
     .INIT(2'h2)) 
     i_0
@@ -968,26 +968,26 @@ endmodule
 (* ORIG_REF_NAME = "builtin_extdepth_v6" *) 
 module FIFO_Array_builtin_extdepth_v6_2
    (pf,
-    rd_clk_0,
+    wr_clk_0,
     pe,
-    rd_clk_1,
+    rd_clk_0,
     dout,
-    rd_clk,
-    wr_rst_i,
     wr_clk,
+    rd_rst_i,
     wr_tmp,
     din,
+    rd_clk,
     \dout[15] );
   output [0:0]pf;
-  output [0:0]rd_clk_0;
+  output [0:0]wr_clk_0;
   output [0:0]pe;
-  output [0:0]rd_clk_1;
+  output [0:0]rd_clk_0;
   output [3:0]dout;
-  input rd_clk;
-  input wr_rst_i;
   input wr_clk;
+  input rd_rst_i;
   input wr_tmp;
   input [3:0]din;
+  input rd_clk;
   input \dout[15] ;
 
   wire [3:0]\d[1]_9 ;
@@ -1008,11 +1008,11 @@ module FIFO_Array_builtin_extdepth_v6_2
   wire [0:0]pf;
   wire rd_clk;
   wire [0:0]rd_clk_0;
-  wire [0:0]rd_clk_1;
+  wire rd_rst_i;
   (* async_reg = "true" *) (* msgon = "true" *) wire sbr_as_reg;
   (* async_reg = "true" *) (* msgon = "true" *) wire sbr_d1;
   wire wr_clk;
-  wire wr_rst_i;
+  wire [0:0]wr_clk_0;
   wire wr_tmp;
 
   FIFO_Array_builtin_prim_v6_21 \gchain.gp1[1].gbldc.inst_prim 
@@ -1021,10 +1021,9 @@ module FIFO_Array_builtin_extdepth_v6_2
         .e_3(e_3),
         .ful_2(ful_2),
         .pf(pf),
-        .rd_clk(rd_clk),
-        .rd_clk_0(rd_clk_0),
+        .rd_rst_i(rd_rst_i),
         .wr_clk(wr_clk),
-        .wr_rst_i(wr_rst_i),
+        .wr_clk_0(wr_clk_0),
         .wr_tmp(wr_tmp));
   FIFO_Array_builtin_prim_v6_22 \gchain.gp1[2].gbldc.inst_prim 
        (.DO(\d[2]_10 ),
@@ -1033,8 +1032,8 @@ module FIFO_Array_builtin_extdepth_v6_2
         .ful_1(ful_1),
         .ful_2(ful_2),
         .\gf36e1_inst.sngfifo36e1_0 (\d[1]_9 ),
-        .rd_clk(rd_clk),
-        .wr_rst_i(wr_rst_i));
+        .rd_rst_i(rd_rst_i),
+        .wr_clk(wr_clk));
   FIFO_Array_builtin_prim_v6_23 \gchain.gp1[3].gbldc.inst_prim 
        (.DO(\d[3]_11 ),
         .\dout[15] (\d[2]_10 ),
@@ -1042,8 +1041,8 @@ module FIFO_Array_builtin_extdepth_v6_2
         .e_2(e_2),
         .ful_0(ful_0),
         .ful_1(ful_1),
-        .rd_clk(rd_clk),
-        .wr_rst_i(wr_rst_i));
+        .rd_rst_i(rd_rst_i),
+        .wr_clk(wr_clk));
   FIFO_Array_builtin_prim_v6__parameterized0_24 \gchain.gp1[4].gbldl.inst_prim 
        (.DO(\d[3]_11 ),
         .dout(dout),
@@ -1052,8 +1051,9 @@ module FIFO_Array_builtin_extdepth_v6_2
         .ful_0(ful_0),
         .pe(pe),
         .rd_clk(rd_clk),
-        .rd_clk_0(rd_clk_1),
-        .wr_rst_i(wr_rst_i));
+        .rd_clk_0(rd_clk_0),
+        .rd_rst_i(rd_rst_i),
+        .wr_clk(wr_clk));
   LUT1 #(
     .INIT(2'h2)) 
     i_0
@@ -1083,22 +1083,22 @@ module FIFO_Array_builtin_extdepth_v6_3
     pe,
     emp,
     dout,
-    rd_clk,
-    wr_rst_i,
     wr_clk,
+    rd_rst_i,
     wr_tmp,
     din,
+    rd_clk,
     \dout[19] );
   output [0:0]pf;
   output [0:0]ful;
   output [0:0]pe;
   output [0:0]emp;
   output [3:0]dout;
-  input rd_clk;
-  input wr_rst_i;
   input wr_clk;
+  input rd_rst_i;
   input wr_tmp;
   input [3:0]din;
+  input rd_clk;
   input \dout[19] ;
 
   wire [3:0]\d[1]_12 ;
@@ -1120,10 +1120,10 @@ module FIFO_Array_builtin_extdepth_v6_3
   wire [0:0]pe;
   wire [0:0]pf;
   wire rd_clk;
+  wire rd_rst_i;
   (* async_reg = "true" *) (* msgon = "true" *) wire sbr_as_reg;
   (* async_reg = "true" *) (* msgon = "true" *) wire sbr_d1;
   wire wr_clk;
-  wire wr_rst_i;
   wire wr_tmp;
 
   FIFO_Array_builtin_prim_v6_17 \gchain.gp1[1].gbldc.inst_prim 
@@ -1133,9 +1133,8 @@ module FIFO_Array_builtin_extdepth_v6_3
         .ful(ful),
         .ful_2(ful_2),
         .pf(pf),
-        .rd_clk(rd_clk),
+        .rd_rst_i(rd_rst_i),
         .wr_clk(wr_clk),
-        .wr_rst_i(wr_rst_i),
         .wr_tmp(wr_tmp));
   FIFO_Array_builtin_prim_v6_18 \gchain.gp1[2].gbldc.inst_prim 
        (.DO(\d[2]_13 ),
@@ -1144,8 +1143,8 @@ module FIFO_Array_builtin_extdepth_v6_3
         .ful_1(ful_1),
         .ful_2(ful_2),
         .\gf36e1_inst.sngfifo36e1_0 (\d[1]_12 ),
-        .rd_clk(rd_clk),
-        .wr_rst_i(wr_rst_i));
+        .rd_rst_i(rd_rst_i),
+        .wr_clk(wr_clk));
   FIFO_Array_builtin_prim_v6_19 \gchain.gp1[3].gbldc.inst_prim 
        (.DO(\d[3]_14 ),
         .\dout[19] (\d[2]_13 ),
@@ -1153,8 +1152,8 @@ module FIFO_Array_builtin_extdepth_v6_3
         .e_2(e_2),
         .ful_0(ful_0),
         .ful_1(ful_1),
-        .rd_clk(rd_clk),
-        .wr_rst_i(wr_rst_i));
+        .rd_rst_i(rd_rst_i),
+        .wr_clk(wr_clk));
   FIFO_Array_builtin_prim_v6__parameterized0_20 \gchain.gp1[4].gbldl.inst_prim 
        (.DO(\d[3]_14 ),
         .dout(dout),
@@ -1164,7 +1163,8 @@ module FIFO_Array_builtin_extdepth_v6_3
         .ful_0(ful_0),
         .pe(pe),
         .rd_clk(rd_clk),
-        .wr_rst_i(wr_rst_i));
+        .rd_rst_i(rd_rst_i),
+        .wr_clk(wr_clk));
   LUT1 #(
     .INIT(2'h2)) 
     i_0
@@ -1195,13 +1195,13 @@ module FIFO_Array_builtin_extdepth_v6_4
     dout,
     rd_en_0,
     rd_clk_0,
-    rd_clk_1,
+    wr_clk_0,
     full,
-    rd_clk,
-    wr_rst_i,
     wr_clk,
+    rd_rst_i,
     din,
     empty,
+    rd_clk,
     rd_en,
     wr_en);
   output [0:0]pf;
@@ -1210,13 +1210,13 @@ module FIFO_Array_builtin_extdepth_v6_4
   output [3:0]dout;
   output rd_en_0;
   output rd_clk_0;
-  output rd_clk_1;
+  output wr_clk_0;
   input [6:0]full;
-  input rd_clk;
-  input wr_rst_i;
   input wr_clk;
+  input rd_rst_i;
   input [3:0]din;
   input [6:0]empty;
+  input rd_clk;
   input rd_en;
   input wr_en;
 
@@ -1239,14 +1239,14 @@ module FIFO_Array_builtin_extdepth_v6_4
   wire [0:0]pf;
   wire rd_clk;
   wire rd_clk_0;
-  wire rd_clk_1;
   wire rd_en;
   wire rd_en_0;
+  wire rd_rst_i;
   (* async_reg = "true" *) (* msgon = "true" *) wire sbr_as_reg;
   (* async_reg = "true" *) (* msgon = "true" *) wire sbr_d1;
   wire wr_clk;
+  wire wr_clk_0;
   wire wr_en;
-  wire wr_rst_i;
   wire wr_tmp;
 
   FIFO_Array_builtin_prim_v6_13 \gchain.gp1[1].gbldc.inst_prim 
@@ -1256,11 +1256,10 @@ module FIFO_Array_builtin_extdepth_v6_4
         .ful_2(ful_2),
         .full(full),
         .pf(pf),
-        .rd_clk(rd_clk),
-        .rd_clk_0(rd_clk_1),
+        .rd_rst_i(rd_rst_i),
         .wr_clk(wr_clk),
+        .wr_clk_0(wr_clk_0),
         .wr_en(wr_en),
-        .wr_rst_i(wr_rst_i),
         .wr_tmp(wr_tmp));
   FIFO_Array_builtin_prim_v6_14 \gchain.gp1[2].gbldc.inst_prim 
        (.DO(\d[2]_16 ),
@@ -1269,8 +1268,8 @@ module FIFO_Array_builtin_extdepth_v6_4
         .ful_1(ful_1),
         .ful_2(ful_2),
         .\gf36e1_inst.sngfifo36e1_0 (\d[1]_15 ),
-        .rd_clk(rd_clk),
-        .wr_rst_i(wr_rst_i));
+        .rd_rst_i(rd_rst_i),
+        .wr_clk(wr_clk));
   FIFO_Array_builtin_prim_v6_15 \gchain.gp1[3].gbldc.inst_prim 
        (.DO(\d[3]_17 ),
         .\dout[23] (\d[2]_16 ),
@@ -1278,8 +1277,8 @@ module FIFO_Array_builtin_extdepth_v6_4
         .e_2(e_2),
         .ful_0(ful_0),
         .ful_1(ful_1),
-        .rd_clk(rd_clk),
-        .wr_rst_i(wr_rst_i));
+        .rd_rst_i(rd_rst_i),
+        .wr_clk(wr_clk));
   FIFO_Array_builtin_prim_v6__parameterized0_16 \gchain.gp1[4].gbldl.inst_prim 
        (.DO(\d[3]_17 ),
         .dout(dout),
@@ -1291,7 +1290,8 @@ module FIFO_Array_builtin_extdepth_v6_4
         .rd_clk_0(rd_clk_0),
         .rd_en(rd_en),
         .rd_en_0(rd_en_0),
-        .wr_rst_i(wr_rst_i));
+        .rd_rst_i(rd_rst_i),
+        .wr_clk(wr_clk));
   LUT1 #(
     .INIT(2'h2)) 
     i_0
@@ -1317,26 +1317,26 @@ endmodule
 (* ORIG_REF_NAME = "builtin_extdepth_v6" *) 
 module FIFO_Array_builtin_extdepth_v6_5
    (pf,
-    rd_clk_0,
+    wr_clk_0,
     pe,
-    rd_clk_1,
+    rd_clk_0,
     dout,
-    rd_clk,
-    wr_rst_i,
     wr_clk,
+    rd_rst_i,
     wr_tmp,
     din,
+    rd_clk,
     \dout[27] );
   output [0:0]pf;
-  output [0:0]rd_clk_0;
+  output [0:0]wr_clk_0;
   output [0:0]pe;
-  output [0:0]rd_clk_1;
+  output [0:0]rd_clk_0;
   output [3:0]dout;
-  input rd_clk;
-  input wr_rst_i;
   input wr_clk;
+  input rd_rst_i;
   input wr_tmp;
   input [3:0]din;
+  input rd_clk;
   input \dout[27] ;
 
   wire [3:0]\d[1]_18 ;
@@ -1357,11 +1357,11 @@ module FIFO_Array_builtin_extdepth_v6_5
   wire [0:0]pf;
   wire rd_clk;
   wire [0:0]rd_clk_0;
-  wire [0:0]rd_clk_1;
+  wire rd_rst_i;
   (* async_reg = "true" *) (* msgon = "true" *) wire sbr_as_reg;
   (* async_reg = "true" *) (* msgon = "true" *) wire sbr_d1;
   wire wr_clk;
-  wire wr_rst_i;
+  wire [0:0]wr_clk_0;
   wire wr_tmp;
 
   FIFO_Array_builtin_prim_v6_9 \gchain.gp1[1].gbldc.inst_prim 
@@ -1370,10 +1370,9 @@ module FIFO_Array_builtin_extdepth_v6_5
         .e_3(e_3),
         .ful_2(ful_2),
         .pf(pf),
-        .rd_clk(rd_clk),
-        .rd_clk_0(rd_clk_0),
+        .rd_rst_i(rd_rst_i),
         .wr_clk(wr_clk),
-        .wr_rst_i(wr_rst_i),
+        .wr_clk_0(wr_clk_0),
         .wr_tmp(wr_tmp));
   FIFO_Array_builtin_prim_v6_10 \gchain.gp1[2].gbldc.inst_prim 
        (.DO(\d[2]_19 ),
@@ -1382,8 +1381,8 @@ module FIFO_Array_builtin_extdepth_v6_5
         .ful_1(ful_1),
         .ful_2(ful_2),
         .\gf36e1_inst.sngfifo36e1_0 (\d[1]_18 ),
-        .rd_clk(rd_clk),
-        .wr_rst_i(wr_rst_i));
+        .rd_rst_i(rd_rst_i),
+        .wr_clk(wr_clk));
   FIFO_Array_builtin_prim_v6_11 \gchain.gp1[3].gbldc.inst_prim 
        (.DO(\d[3]_20 ),
         .\dout[27] (\d[2]_19 ),
@@ -1391,8 +1390,8 @@ module FIFO_Array_builtin_extdepth_v6_5
         .e_2(e_2),
         .ful_0(ful_0),
         .ful_1(ful_1),
-        .rd_clk(rd_clk),
-        .wr_rst_i(wr_rst_i));
+        .rd_rst_i(rd_rst_i),
+        .wr_clk(wr_clk));
   FIFO_Array_builtin_prim_v6__parameterized0_12 \gchain.gp1[4].gbldl.inst_prim 
        (.DO(\d[3]_20 ),
         .dout(dout),
@@ -1401,8 +1400,9 @@ module FIFO_Array_builtin_extdepth_v6_5
         .ful_0(ful_0),
         .pe(pe),
         .rd_clk(rd_clk),
-        .rd_clk_0(rd_clk_1),
-        .wr_rst_i(wr_rst_i));
+        .rd_clk_0(rd_clk_0),
+        .rd_rst_i(rd_rst_i),
+        .wr_clk(wr_clk));
   LUT1 #(
     .INIT(2'h2)) 
     i_0
@@ -1428,26 +1428,26 @@ endmodule
 (* ORIG_REF_NAME = "builtin_extdepth_v6" *) 
 module FIFO_Array_builtin_extdepth_v6_6
    (pf,
-    rd_clk_0,
+    wr_clk_0,
     pe,
-    rd_clk_1,
+    rd_clk_0,
     dout,
-    rd_clk,
-    wr_rst_i,
     wr_clk,
+    rd_rst_i,
     wr_tmp,
     din,
+    rd_clk,
     \dout[31] );
   output [0:0]pf;
-  output [0:0]rd_clk_0;
+  output [0:0]wr_clk_0;
   output [0:0]pe;
-  output [0:0]rd_clk_1;
+  output [0:0]rd_clk_0;
   output [3:0]dout;
-  input rd_clk;
-  input wr_rst_i;
   input wr_clk;
+  input rd_rst_i;
   input wr_tmp;
   input [3:0]din;
+  input rd_clk;
   input \dout[31] ;
 
   wire [3:0]\d[1]_21 ;
@@ -1468,11 +1468,11 @@ module FIFO_Array_builtin_extdepth_v6_6
   wire [0:0]pf;
   wire rd_clk;
   wire [0:0]rd_clk_0;
-  wire [0:0]rd_clk_1;
+  wire rd_rst_i;
   (* async_reg = "true" *) (* msgon = "true" *) wire sbr_as_reg;
   (* async_reg = "true" *) (* msgon = "true" *) wire sbr_d1;
   wire wr_clk;
-  wire wr_rst_i;
+  wire [0:0]wr_clk_0;
   wire wr_tmp;
 
   FIFO_Array_builtin_prim_v6 \gchain.gp1[1].gbldc.inst_prim 
@@ -1481,10 +1481,9 @@ module FIFO_Array_builtin_extdepth_v6_6
         .e_3(e_3),
         .ful_2(ful_2),
         .pf(pf),
-        .rd_clk(rd_clk),
-        .rd_clk_0(rd_clk_0),
+        .rd_rst_i(rd_rst_i),
         .wr_clk(wr_clk),
-        .wr_rst_i(wr_rst_i),
+        .wr_clk_0(wr_clk_0),
         .wr_tmp(wr_tmp));
   FIFO_Array_builtin_prim_v6_7 \gchain.gp1[2].gbldc.inst_prim 
        (.DO(\d[2]_22 ),
@@ -1493,8 +1492,8 @@ module FIFO_Array_builtin_extdepth_v6_6
         .ful_1(ful_1),
         .ful_2(ful_2),
         .\gf36e1_inst.sngfifo36e1_0 (\d[1]_21 ),
-        .rd_clk(rd_clk),
-        .wr_rst_i(wr_rst_i));
+        .rd_rst_i(rd_rst_i),
+        .wr_clk(wr_clk));
   FIFO_Array_builtin_prim_v6_8 \gchain.gp1[3].gbldc.inst_prim 
        (.DO(\d[3]_23 ),
         .\dout[31] (\d[2]_22 ),
@@ -1502,8 +1501,8 @@ module FIFO_Array_builtin_extdepth_v6_6
         .e_2(e_2),
         .ful_0(ful_0),
         .ful_1(ful_1),
-        .rd_clk(rd_clk),
-        .wr_rst_i(wr_rst_i));
+        .rd_rst_i(rd_rst_i),
+        .wr_clk(wr_clk));
   FIFO_Array_builtin_prim_v6__parameterized0 \gchain.gp1[4].gbldl.inst_prim 
        (.DO(\d[3]_23 ),
         .dout(dout),
@@ -1512,8 +1511,9 @@ module FIFO_Array_builtin_extdepth_v6_6
         .ful_0(ful_0),
         .pe(pe),
         .rd_clk(rd_clk),
-        .rd_clk_0(rd_clk_1),
-        .wr_rst_i(wr_rst_i));
+        .rd_clk_0(rd_clk_0),
+        .rd_rst_i(rd_rst_i),
+        .wr_clk(wr_clk));
   LUT1 #(
     .INIT(2'h2)) 
     i_0
@@ -1539,22 +1539,20 @@ endmodule
 (* ORIG_REF_NAME = "builtin_prim_v6" *) 
 module FIFO_Array_builtin_prim_v6
    (pf,
-    rd_clk_0,
+    wr_clk_0,
     DO,
     e_3,
-    rd_clk,
-    wr_rst_i,
     wr_clk,
+    rd_rst_i,
     wr_tmp,
     din,
     ful_2);
   output [0:0]pf;
-  output [0:0]rd_clk_0;
+  output [0:0]wr_clk_0;
   output [3:0]DO;
   output e_3;
-  input rd_clk;
-  input wr_rst_i;
   input wr_clk;
+  input rd_rst_i;
   input wr_tmp;
   input [3:0]din;
   input ful_2;
@@ -1597,10 +1595,9 @@ module FIFO_Array_builtin_prim_v6
   wire \gf36e1_inst.sngfifo36e1_n_8 ;
   wire \gf36e1_inst.sngfifo36e1_n_9 ;
   wire [0:0]pf;
-  wire rd_clk;
-  wire [0:0]rd_clk_0;
+  wire rd_rst_i;
   wire wr_clk;
-  wire wr_rst_i;
+  wire [0:0]wr_clk_0;
   wire wr_tmp;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_DOP_UNCONNECTED ;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_ECCPARITY_UNCONNECTED ;
@@ -1608,7 +1605,7 @@ module FIFO_Array_builtin_prim_v6
   (* box_type = "PRIMITIVE" *) 
   FIFO36E1 #(
     .ALMOST_EMPTY_OFFSET(13'h000A),
-    .ALMOST_FULL_OFFSET(13'h1FF3),
+    .ALMOST_FULL_OFFSET(13'h000D),
     .DATA_WIDTH(4),
     .DO_REG(1),
     .EN_ECC_READ("FALSE"),
@@ -1635,15 +1632,15 @@ module FIFO_Array_builtin_prim_v6
         .DOP(\NLW_gf36e1_inst.sngfifo36e1_DOP_UNCONNECTED [7:0]),
         .ECCPARITY(\NLW_gf36e1_inst.sngfifo36e1_ECCPARITY_UNCONNECTED [7:0]),
         .EMPTY(emp_3),
-        .FULL(rd_clk_0),
+        .FULL(wr_clk_0),
         .INJECTDBITERR(1'b0),
         .INJECTSBITERR(1'b0),
-        .RDCLK(rd_clk),
+        .RDCLK(wr_clk),
         .RDCOUNT({\gf36e1_inst.sngfifo36e1_n_8 ,\gf36e1_inst.sngfifo36e1_n_9 ,\gf36e1_inst.sngfifo36e1_n_10 ,\gf36e1_inst.sngfifo36e1_n_11 ,\gf36e1_inst.sngfifo36e1_n_12 ,\gf36e1_inst.sngfifo36e1_n_13 ,\gf36e1_inst.sngfifo36e1_n_14 ,\gf36e1_inst.sngfifo36e1_n_15 ,\gf36e1_inst.sngfifo36e1_n_16 ,\gf36e1_inst.sngfifo36e1_n_17 ,\gf36e1_inst.sngfifo36e1_n_18 ,\gf36e1_inst.sngfifo36e1_n_19 ,\gf36e1_inst.sngfifo36e1_n_20 }),
         .RDEN(e_3),
         .RDERR(\gf36e1_inst.sngfifo36e1_n_5 ),
         .REGCE(1'b0),
-        .RST(wr_rst_i),
+        .RST(rd_rst_i),
         .RSTREG(1'b0),
         .SBITERR(\gf36e1_inst.sngfifo36e1_n_6 ),
         .WRCLK(wr_clk),
@@ -1663,16 +1660,16 @@ module FIFO_Array_builtin_prim_v6_10
    (ful_2,
     DO,
     e_2,
-    rd_clk,
-    wr_rst_i,
+    wr_clk,
+    rd_rst_i,
     e_3,
     \gf36e1_inst.sngfifo36e1_0 ,
     ful_1);
   output ful_2;
   output [3:0]DO;
   output e_2;
-  input rd_clk;
-  input wr_rst_i;
+  input wr_clk;
+  input rd_rst_i;
   input e_3;
   input [3:0]\gf36e1_inst.sngfifo36e1_0 ;
   input ful_1;
@@ -1717,15 +1714,15 @@ module FIFO_Array_builtin_prim_v6_10
   wire \gf36e1_inst.sngfifo36e1_n_7 ;
   wire \gf36e1_inst.sngfifo36e1_n_8 ;
   wire \gf36e1_inst.sngfifo36e1_n_9 ;
-  wire rd_clk;
-  wire wr_rst_i;
+  wire rd_rst_i;
+  wire wr_clk;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_DOP_UNCONNECTED ;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_ECCPARITY_UNCONNECTED ;
 
   (* box_type = "PRIMITIVE" *) 
   FIFO36E1 #(
     .ALMOST_EMPTY_OFFSET(13'h000A),
-    .ALMOST_FULL_OFFSET(13'h1FF3),
+    .ALMOST_FULL_OFFSET(13'h000D),
     .DATA_WIDTH(4),
     .DO_REG(1),
     .EN_ECC_READ("FALSE"),
@@ -1755,15 +1752,15 @@ module FIFO_Array_builtin_prim_v6_10
         .FULL(ful_2),
         .INJECTDBITERR(1'b0),
         .INJECTSBITERR(1'b0),
-        .RDCLK(rd_clk),
+        .RDCLK(wr_clk),
         .RDCOUNT({\gf36e1_inst.sngfifo36e1_n_8 ,\gf36e1_inst.sngfifo36e1_n_9 ,\gf36e1_inst.sngfifo36e1_n_10 ,\gf36e1_inst.sngfifo36e1_n_11 ,\gf36e1_inst.sngfifo36e1_n_12 ,\gf36e1_inst.sngfifo36e1_n_13 ,\gf36e1_inst.sngfifo36e1_n_14 ,\gf36e1_inst.sngfifo36e1_n_15 ,\gf36e1_inst.sngfifo36e1_n_16 ,\gf36e1_inst.sngfifo36e1_n_17 ,\gf36e1_inst.sngfifo36e1_n_18 ,\gf36e1_inst.sngfifo36e1_n_19 ,\gf36e1_inst.sngfifo36e1_n_20 }),
         .RDEN(e_2),
         .RDERR(\gf36e1_inst.sngfifo36e1_n_5 ),
         .REGCE(1'b0),
-        .RST(wr_rst_i),
+        .RST(rd_rst_i),
         .RSTREG(1'b0),
         .SBITERR(\gf36e1_inst.sngfifo36e1_n_6 ),
-        .WRCLK(rd_clk),
+        .WRCLK(wr_clk),
         .WRCOUNT({\gf36e1_inst.sngfifo36e1_n_21 ,\gf36e1_inst.sngfifo36e1_n_22 ,\gf36e1_inst.sngfifo36e1_n_23 ,\gf36e1_inst.sngfifo36e1_n_24 ,\gf36e1_inst.sngfifo36e1_n_25 ,\gf36e1_inst.sngfifo36e1_n_26 ,\gf36e1_inst.sngfifo36e1_n_27 ,\gf36e1_inst.sngfifo36e1_n_28 ,\gf36e1_inst.sngfifo36e1_n_29 ,\gf36e1_inst.sngfifo36e1_n_30 ,\gf36e1_inst.sngfifo36e1_n_31 ,\gf36e1_inst.sngfifo36e1_n_32 ,\gf36e1_inst.sngfifo36e1_n_33 }),
         .WREN(e_3),
         .WRERR(\gf36e1_inst.sngfifo36e1_n_7 ));
@@ -1780,16 +1777,16 @@ module FIFO_Array_builtin_prim_v6_11
    (ful_1,
     DO,
     e_1,
-    rd_clk,
-    wr_rst_i,
+    wr_clk,
+    rd_rst_i,
     e_2,
     \dout[27] ,
     ful_0);
   output ful_1;
   output [3:0]DO;
   output e_1;
-  input rd_clk;
-  input wr_rst_i;
+  input wr_clk;
+  input rd_rst_i;
   input e_2;
   input [3:0]\dout[27] ;
   input ful_0;
@@ -1834,15 +1831,15 @@ module FIFO_Array_builtin_prim_v6_11
   wire \gf36e1_inst.sngfifo36e1_n_7 ;
   wire \gf36e1_inst.sngfifo36e1_n_8 ;
   wire \gf36e1_inst.sngfifo36e1_n_9 ;
-  wire rd_clk;
-  wire wr_rst_i;
+  wire rd_rst_i;
+  wire wr_clk;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_DOP_UNCONNECTED ;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_ECCPARITY_UNCONNECTED ;
 
   (* box_type = "PRIMITIVE" *) 
   FIFO36E1 #(
     .ALMOST_EMPTY_OFFSET(13'h000A),
-    .ALMOST_FULL_OFFSET(13'h1FF3),
+    .ALMOST_FULL_OFFSET(13'h000D),
     .DATA_WIDTH(4),
     .DO_REG(1),
     .EN_ECC_READ("FALSE"),
@@ -1872,15 +1869,15 @@ module FIFO_Array_builtin_prim_v6_11
         .FULL(ful_1),
         .INJECTDBITERR(1'b0),
         .INJECTSBITERR(1'b0),
-        .RDCLK(rd_clk),
+        .RDCLK(wr_clk),
         .RDCOUNT({\gf36e1_inst.sngfifo36e1_n_8 ,\gf36e1_inst.sngfifo36e1_n_9 ,\gf36e1_inst.sngfifo36e1_n_10 ,\gf36e1_inst.sngfifo36e1_n_11 ,\gf36e1_inst.sngfifo36e1_n_12 ,\gf36e1_inst.sngfifo36e1_n_13 ,\gf36e1_inst.sngfifo36e1_n_14 ,\gf36e1_inst.sngfifo36e1_n_15 ,\gf36e1_inst.sngfifo36e1_n_16 ,\gf36e1_inst.sngfifo36e1_n_17 ,\gf36e1_inst.sngfifo36e1_n_18 ,\gf36e1_inst.sngfifo36e1_n_19 ,\gf36e1_inst.sngfifo36e1_n_20 }),
         .RDEN(e_1),
         .RDERR(\gf36e1_inst.sngfifo36e1_n_5 ),
         .REGCE(1'b0),
-        .RST(wr_rst_i),
+        .RST(rd_rst_i),
         .RSTREG(1'b0),
         .SBITERR(\gf36e1_inst.sngfifo36e1_n_6 ),
-        .WRCLK(rd_clk),
+        .WRCLK(wr_clk),
         .WRCOUNT({\gf36e1_inst.sngfifo36e1_n_21 ,\gf36e1_inst.sngfifo36e1_n_22 ,\gf36e1_inst.sngfifo36e1_n_23 ,\gf36e1_inst.sngfifo36e1_n_24 ,\gf36e1_inst.sngfifo36e1_n_25 ,\gf36e1_inst.sngfifo36e1_n_26 ,\gf36e1_inst.sngfifo36e1_n_27 ,\gf36e1_inst.sngfifo36e1_n_28 ,\gf36e1_inst.sngfifo36e1_n_29 ,\gf36e1_inst.sngfifo36e1_n_30 ,\gf36e1_inst.sngfifo36e1_n_31 ,\gf36e1_inst.sngfifo36e1_n_32 ,\gf36e1_inst.sngfifo36e1_n_33 }),
         .WREN(e_2),
         .WRERR(\gf36e1_inst.sngfifo36e1_n_7 ));
@@ -1898,10 +1895,9 @@ module FIFO_Array_builtin_prim_v6_13
     DO,
     e_3,
     wr_tmp,
-    rd_clk_0,
-    rd_clk,
-    wr_rst_i,
+    wr_clk_0,
     wr_clk,
+    rd_rst_i,
     din,
     ful_2,
     wr_en,
@@ -1910,10 +1906,9 @@ module FIFO_Array_builtin_prim_v6_13
   output [3:0]DO;
   output e_3;
   output wr_tmp;
-  output rd_clk_0;
-  input rd_clk;
-  input wr_rst_i;
+  output wr_clk_0;
   input wr_clk;
+  input rd_rst_i;
   input [3:0]din;
   input ful_2;
   input wr_en;
@@ -1959,11 +1954,10 @@ module FIFO_Array_builtin_prim_v6_13
   wire \gf36e1_inst.sngfifo36e1_n_8 ;
   wire \gf36e1_inst.sngfifo36e1_n_9 ;
   wire [0:0]pf;
-  wire rd_clk;
-  wire rd_clk_0;
+  wire rd_rst_i;
   wire wr_clk;
+  wire wr_clk_0;
   wire wr_en;
-  wire wr_rst_i;
   wire wr_tmp;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_DOP_UNCONNECTED ;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_ECCPARITY_UNCONNECTED ;
@@ -1975,11 +1969,11 @@ module FIFO_Array_builtin_prim_v6_13
         .I1(full[4]),
         .I2(full[6]),
         .I3(full[5]),
-        .O(rd_clk_0));
+        .O(wr_clk_0));
   (* box_type = "PRIMITIVE" *) 
   FIFO36E1 #(
     .ALMOST_EMPTY_OFFSET(13'h000A),
-    .ALMOST_FULL_OFFSET(13'h1FF3),
+    .ALMOST_FULL_OFFSET(13'h000D),
     .DATA_WIDTH(4),
     .DO_REG(1),
     .EN_ECC_READ("FALSE"),
@@ -2009,12 +2003,12 @@ module FIFO_Array_builtin_prim_v6_13
         .FULL(ful),
         .INJECTDBITERR(1'b0),
         .INJECTSBITERR(1'b0),
-        .RDCLK(rd_clk),
+        .RDCLK(wr_clk),
         .RDCOUNT({\gf36e1_inst.sngfifo36e1_n_8 ,\gf36e1_inst.sngfifo36e1_n_9 ,\gf36e1_inst.sngfifo36e1_n_10 ,\gf36e1_inst.sngfifo36e1_n_11 ,\gf36e1_inst.sngfifo36e1_n_12 ,\gf36e1_inst.sngfifo36e1_n_13 ,\gf36e1_inst.sngfifo36e1_n_14 ,\gf36e1_inst.sngfifo36e1_n_15 ,\gf36e1_inst.sngfifo36e1_n_16 ,\gf36e1_inst.sngfifo36e1_n_17 ,\gf36e1_inst.sngfifo36e1_n_18 ,\gf36e1_inst.sngfifo36e1_n_19 ,\gf36e1_inst.sngfifo36e1_n_20 }),
         .RDEN(e_3),
         .RDERR(\gf36e1_inst.sngfifo36e1_n_5 ),
         .REGCE(1'b0),
-        .RST(wr_rst_i),
+        .RST(rd_rst_i),
         .RSTREG(1'b0),
         .SBITERR(\gf36e1_inst.sngfifo36e1_n_6 ),
         .WRCLK(wr_clk),
@@ -2031,7 +2025,7 @@ module FIFO_Array_builtin_prim_v6_13
     .INIT(64'h0000000000000002)) 
     \gf36e1_inst.sngfifo36e1_i_2 
        (.I0(wr_en),
-        .I1(rd_clk_0),
+        .I1(wr_clk_0),
         .I2(full[1]),
         .I3(full[0]),
         .I4(full[3]),
@@ -2044,16 +2038,16 @@ module FIFO_Array_builtin_prim_v6_14
    (ful_2,
     DO,
     e_2,
-    rd_clk,
-    wr_rst_i,
+    wr_clk,
+    rd_rst_i,
     e_3,
     \gf36e1_inst.sngfifo36e1_0 ,
     ful_1);
   output ful_2;
   output [3:0]DO;
   output e_2;
-  input rd_clk;
-  input wr_rst_i;
+  input wr_clk;
+  input rd_rst_i;
   input e_3;
   input [3:0]\gf36e1_inst.sngfifo36e1_0 ;
   input ful_1;
@@ -2098,15 +2092,15 @@ module FIFO_Array_builtin_prim_v6_14
   wire \gf36e1_inst.sngfifo36e1_n_7 ;
   wire \gf36e1_inst.sngfifo36e1_n_8 ;
   wire \gf36e1_inst.sngfifo36e1_n_9 ;
-  wire rd_clk;
-  wire wr_rst_i;
+  wire rd_rst_i;
+  wire wr_clk;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_DOP_UNCONNECTED ;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_ECCPARITY_UNCONNECTED ;
 
   (* box_type = "PRIMITIVE" *) 
   FIFO36E1 #(
     .ALMOST_EMPTY_OFFSET(13'h000A),
-    .ALMOST_FULL_OFFSET(13'h1FF3),
+    .ALMOST_FULL_OFFSET(13'h000D),
     .DATA_WIDTH(4),
     .DO_REG(1),
     .EN_ECC_READ("FALSE"),
@@ -2136,15 +2130,15 @@ module FIFO_Array_builtin_prim_v6_14
         .FULL(ful_2),
         .INJECTDBITERR(1'b0),
         .INJECTSBITERR(1'b0),
-        .RDCLK(rd_clk),
+        .RDCLK(wr_clk),
         .RDCOUNT({\gf36e1_inst.sngfifo36e1_n_8 ,\gf36e1_inst.sngfifo36e1_n_9 ,\gf36e1_inst.sngfifo36e1_n_10 ,\gf36e1_inst.sngfifo36e1_n_11 ,\gf36e1_inst.sngfifo36e1_n_12 ,\gf36e1_inst.sngfifo36e1_n_13 ,\gf36e1_inst.sngfifo36e1_n_14 ,\gf36e1_inst.sngfifo36e1_n_15 ,\gf36e1_inst.sngfifo36e1_n_16 ,\gf36e1_inst.sngfifo36e1_n_17 ,\gf36e1_inst.sngfifo36e1_n_18 ,\gf36e1_inst.sngfifo36e1_n_19 ,\gf36e1_inst.sngfifo36e1_n_20 }),
         .RDEN(e_2),
         .RDERR(\gf36e1_inst.sngfifo36e1_n_5 ),
         .REGCE(1'b0),
-        .RST(wr_rst_i),
+        .RST(rd_rst_i),
         .RSTREG(1'b0),
         .SBITERR(\gf36e1_inst.sngfifo36e1_n_6 ),
-        .WRCLK(rd_clk),
+        .WRCLK(wr_clk),
         .WRCOUNT({\gf36e1_inst.sngfifo36e1_n_21 ,\gf36e1_inst.sngfifo36e1_n_22 ,\gf36e1_inst.sngfifo36e1_n_23 ,\gf36e1_inst.sngfifo36e1_n_24 ,\gf36e1_inst.sngfifo36e1_n_25 ,\gf36e1_inst.sngfifo36e1_n_26 ,\gf36e1_inst.sngfifo36e1_n_27 ,\gf36e1_inst.sngfifo36e1_n_28 ,\gf36e1_inst.sngfifo36e1_n_29 ,\gf36e1_inst.sngfifo36e1_n_30 ,\gf36e1_inst.sngfifo36e1_n_31 ,\gf36e1_inst.sngfifo36e1_n_32 ,\gf36e1_inst.sngfifo36e1_n_33 }),
         .WREN(e_3),
         .WRERR(\gf36e1_inst.sngfifo36e1_n_7 ));
@@ -2161,16 +2155,16 @@ module FIFO_Array_builtin_prim_v6_15
    (ful_1,
     DO,
     e_1,
-    rd_clk,
-    wr_rst_i,
+    wr_clk,
+    rd_rst_i,
     e_2,
     \dout[23] ,
     ful_0);
   output ful_1;
   output [3:0]DO;
   output e_1;
-  input rd_clk;
-  input wr_rst_i;
+  input wr_clk;
+  input rd_rst_i;
   input e_2;
   input [3:0]\dout[23] ;
   input ful_0;
@@ -2215,15 +2209,15 @@ module FIFO_Array_builtin_prim_v6_15
   wire \gf36e1_inst.sngfifo36e1_n_7 ;
   wire \gf36e1_inst.sngfifo36e1_n_8 ;
   wire \gf36e1_inst.sngfifo36e1_n_9 ;
-  wire rd_clk;
-  wire wr_rst_i;
+  wire rd_rst_i;
+  wire wr_clk;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_DOP_UNCONNECTED ;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_ECCPARITY_UNCONNECTED ;
 
   (* box_type = "PRIMITIVE" *) 
   FIFO36E1 #(
     .ALMOST_EMPTY_OFFSET(13'h000A),
-    .ALMOST_FULL_OFFSET(13'h1FF3),
+    .ALMOST_FULL_OFFSET(13'h000D),
     .DATA_WIDTH(4),
     .DO_REG(1),
     .EN_ECC_READ("FALSE"),
@@ -2253,15 +2247,15 @@ module FIFO_Array_builtin_prim_v6_15
         .FULL(ful_1),
         .INJECTDBITERR(1'b0),
         .INJECTSBITERR(1'b0),
-        .RDCLK(rd_clk),
+        .RDCLK(wr_clk),
         .RDCOUNT({\gf36e1_inst.sngfifo36e1_n_8 ,\gf36e1_inst.sngfifo36e1_n_9 ,\gf36e1_inst.sngfifo36e1_n_10 ,\gf36e1_inst.sngfifo36e1_n_11 ,\gf36e1_inst.sngfifo36e1_n_12 ,\gf36e1_inst.sngfifo36e1_n_13 ,\gf36e1_inst.sngfifo36e1_n_14 ,\gf36e1_inst.sngfifo36e1_n_15 ,\gf36e1_inst.sngfifo36e1_n_16 ,\gf36e1_inst.sngfifo36e1_n_17 ,\gf36e1_inst.sngfifo36e1_n_18 ,\gf36e1_inst.sngfifo36e1_n_19 ,\gf36e1_inst.sngfifo36e1_n_20 }),
         .RDEN(e_1),
         .RDERR(\gf36e1_inst.sngfifo36e1_n_5 ),
         .REGCE(1'b0),
-        .RST(wr_rst_i),
+        .RST(rd_rst_i),
         .RSTREG(1'b0),
         .SBITERR(\gf36e1_inst.sngfifo36e1_n_6 ),
-        .WRCLK(rd_clk),
+        .WRCLK(wr_clk),
         .WRCOUNT({\gf36e1_inst.sngfifo36e1_n_21 ,\gf36e1_inst.sngfifo36e1_n_22 ,\gf36e1_inst.sngfifo36e1_n_23 ,\gf36e1_inst.sngfifo36e1_n_24 ,\gf36e1_inst.sngfifo36e1_n_25 ,\gf36e1_inst.sngfifo36e1_n_26 ,\gf36e1_inst.sngfifo36e1_n_27 ,\gf36e1_inst.sngfifo36e1_n_28 ,\gf36e1_inst.sngfifo36e1_n_29 ,\gf36e1_inst.sngfifo36e1_n_30 ,\gf36e1_inst.sngfifo36e1_n_31 ,\gf36e1_inst.sngfifo36e1_n_32 ,\gf36e1_inst.sngfifo36e1_n_33 }),
         .WREN(e_2),
         .WRERR(\gf36e1_inst.sngfifo36e1_n_7 ));
@@ -2279,9 +2273,8 @@ module FIFO_Array_builtin_prim_v6_17
     ful,
     DO,
     e_3,
-    rd_clk,
-    wr_rst_i,
     wr_clk,
+    rd_rst_i,
     wr_tmp,
     din,
     ful_2);
@@ -2289,9 +2282,8 @@ module FIFO_Array_builtin_prim_v6_17
   output [0:0]ful;
   output [3:0]DO;
   output e_3;
-  input rd_clk;
-  input wr_rst_i;
   input wr_clk;
+  input rd_rst_i;
   input wr_tmp;
   input [3:0]din;
   input ful_2;
@@ -2335,9 +2327,8 @@ module FIFO_Array_builtin_prim_v6_17
   wire \gf36e1_inst.sngfifo36e1_n_8 ;
   wire \gf36e1_inst.sngfifo36e1_n_9 ;
   wire [0:0]pf;
-  wire rd_clk;
+  wire rd_rst_i;
   wire wr_clk;
-  wire wr_rst_i;
   wire wr_tmp;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_DOP_UNCONNECTED ;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_ECCPARITY_UNCONNECTED ;
@@ -2345,7 +2336,7 @@ module FIFO_Array_builtin_prim_v6_17
   (* box_type = "PRIMITIVE" *) 
   FIFO36E1 #(
     .ALMOST_EMPTY_OFFSET(13'h000A),
-    .ALMOST_FULL_OFFSET(13'h1FF3),
+    .ALMOST_FULL_OFFSET(13'h000D),
     .DATA_WIDTH(4),
     .DO_REG(1),
     .EN_ECC_READ("FALSE"),
@@ -2375,12 +2366,12 @@ module FIFO_Array_builtin_prim_v6_17
         .FULL(ful),
         .INJECTDBITERR(1'b0),
         .INJECTSBITERR(1'b0),
-        .RDCLK(rd_clk),
+        .RDCLK(wr_clk),
         .RDCOUNT({\gf36e1_inst.sngfifo36e1_n_8 ,\gf36e1_inst.sngfifo36e1_n_9 ,\gf36e1_inst.sngfifo36e1_n_10 ,\gf36e1_inst.sngfifo36e1_n_11 ,\gf36e1_inst.sngfifo36e1_n_12 ,\gf36e1_inst.sngfifo36e1_n_13 ,\gf36e1_inst.sngfifo36e1_n_14 ,\gf36e1_inst.sngfifo36e1_n_15 ,\gf36e1_inst.sngfifo36e1_n_16 ,\gf36e1_inst.sngfifo36e1_n_17 ,\gf36e1_inst.sngfifo36e1_n_18 ,\gf36e1_inst.sngfifo36e1_n_19 ,\gf36e1_inst.sngfifo36e1_n_20 }),
         .RDEN(e_3),
         .RDERR(\gf36e1_inst.sngfifo36e1_n_5 ),
         .REGCE(1'b0),
-        .RST(wr_rst_i),
+        .RST(rd_rst_i),
         .RSTREG(1'b0),
         .SBITERR(\gf36e1_inst.sngfifo36e1_n_6 ),
         .WRCLK(wr_clk),
@@ -2400,16 +2391,16 @@ module FIFO_Array_builtin_prim_v6_18
    (ful_2,
     DO,
     e_2,
-    rd_clk,
-    wr_rst_i,
+    wr_clk,
+    rd_rst_i,
     e_3,
     \gf36e1_inst.sngfifo36e1_0 ,
     ful_1);
   output ful_2;
   output [3:0]DO;
   output e_2;
-  input rd_clk;
-  input wr_rst_i;
+  input wr_clk;
+  input rd_rst_i;
   input e_3;
   input [3:0]\gf36e1_inst.sngfifo36e1_0 ;
   input ful_1;
@@ -2454,15 +2445,15 @@ module FIFO_Array_builtin_prim_v6_18
   wire \gf36e1_inst.sngfifo36e1_n_7 ;
   wire \gf36e1_inst.sngfifo36e1_n_8 ;
   wire \gf36e1_inst.sngfifo36e1_n_9 ;
-  wire rd_clk;
-  wire wr_rst_i;
+  wire rd_rst_i;
+  wire wr_clk;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_DOP_UNCONNECTED ;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_ECCPARITY_UNCONNECTED ;
 
   (* box_type = "PRIMITIVE" *) 
   FIFO36E1 #(
     .ALMOST_EMPTY_OFFSET(13'h000A),
-    .ALMOST_FULL_OFFSET(13'h1FF3),
+    .ALMOST_FULL_OFFSET(13'h000D),
     .DATA_WIDTH(4),
     .DO_REG(1),
     .EN_ECC_READ("FALSE"),
@@ -2492,15 +2483,15 @@ module FIFO_Array_builtin_prim_v6_18
         .FULL(ful_2),
         .INJECTDBITERR(1'b0),
         .INJECTSBITERR(1'b0),
-        .RDCLK(rd_clk),
+        .RDCLK(wr_clk),
         .RDCOUNT({\gf36e1_inst.sngfifo36e1_n_8 ,\gf36e1_inst.sngfifo36e1_n_9 ,\gf36e1_inst.sngfifo36e1_n_10 ,\gf36e1_inst.sngfifo36e1_n_11 ,\gf36e1_inst.sngfifo36e1_n_12 ,\gf36e1_inst.sngfifo36e1_n_13 ,\gf36e1_inst.sngfifo36e1_n_14 ,\gf36e1_inst.sngfifo36e1_n_15 ,\gf36e1_inst.sngfifo36e1_n_16 ,\gf36e1_inst.sngfifo36e1_n_17 ,\gf36e1_inst.sngfifo36e1_n_18 ,\gf36e1_inst.sngfifo36e1_n_19 ,\gf36e1_inst.sngfifo36e1_n_20 }),
         .RDEN(e_2),
         .RDERR(\gf36e1_inst.sngfifo36e1_n_5 ),
         .REGCE(1'b0),
-        .RST(wr_rst_i),
+        .RST(rd_rst_i),
         .RSTREG(1'b0),
         .SBITERR(\gf36e1_inst.sngfifo36e1_n_6 ),
-        .WRCLK(rd_clk),
+        .WRCLK(wr_clk),
         .WRCOUNT({\gf36e1_inst.sngfifo36e1_n_21 ,\gf36e1_inst.sngfifo36e1_n_22 ,\gf36e1_inst.sngfifo36e1_n_23 ,\gf36e1_inst.sngfifo36e1_n_24 ,\gf36e1_inst.sngfifo36e1_n_25 ,\gf36e1_inst.sngfifo36e1_n_26 ,\gf36e1_inst.sngfifo36e1_n_27 ,\gf36e1_inst.sngfifo36e1_n_28 ,\gf36e1_inst.sngfifo36e1_n_29 ,\gf36e1_inst.sngfifo36e1_n_30 ,\gf36e1_inst.sngfifo36e1_n_31 ,\gf36e1_inst.sngfifo36e1_n_32 ,\gf36e1_inst.sngfifo36e1_n_33 }),
         .WREN(e_3),
         .WRERR(\gf36e1_inst.sngfifo36e1_n_7 ));
@@ -2517,16 +2508,16 @@ module FIFO_Array_builtin_prim_v6_19
    (ful_1,
     DO,
     e_1,
-    rd_clk,
-    wr_rst_i,
+    wr_clk,
+    rd_rst_i,
     e_2,
     \dout[19] ,
     ful_0);
   output ful_1;
   output [3:0]DO;
   output e_1;
-  input rd_clk;
-  input wr_rst_i;
+  input wr_clk;
+  input rd_rst_i;
   input e_2;
   input [3:0]\dout[19] ;
   input ful_0;
@@ -2571,15 +2562,15 @@ module FIFO_Array_builtin_prim_v6_19
   wire \gf36e1_inst.sngfifo36e1_n_7 ;
   wire \gf36e1_inst.sngfifo36e1_n_8 ;
   wire \gf36e1_inst.sngfifo36e1_n_9 ;
-  wire rd_clk;
-  wire wr_rst_i;
+  wire rd_rst_i;
+  wire wr_clk;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_DOP_UNCONNECTED ;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_ECCPARITY_UNCONNECTED ;
 
   (* box_type = "PRIMITIVE" *) 
   FIFO36E1 #(
     .ALMOST_EMPTY_OFFSET(13'h000A),
-    .ALMOST_FULL_OFFSET(13'h1FF3),
+    .ALMOST_FULL_OFFSET(13'h000D),
     .DATA_WIDTH(4),
     .DO_REG(1),
     .EN_ECC_READ("FALSE"),
@@ -2609,15 +2600,15 @@ module FIFO_Array_builtin_prim_v6_19
         .FULL(ful_1),
         .INJECTDBITERR(1'b0),
         .INJECTSBITERR(1'b0),
-        .RDCLK(rd_clk),
+        .RDCLK(wr_clk),
         .RDCOUNT({\gf36e1_inst.sngfifo36e1_n_8 ,\gf36e1_inst.sngfifo36e1_n_9 ,\gf36e1_inst.sngfifo36e1_n_10 ,\gf36e1_inst.sngfifo36e1_n_11 ,\gf36e1_inst.sngfifo36e1_n_12 ,\gf36e1_inst.sngfifo36e1_n_13 ,\gf36e1_inst.sngfifo36e1_n_14 ,\gf36e1_inst.sngfifo36e1_n_15 ,\gf36e1_inst.sngfifo36e1_n_16 ,\gf36e1_inst.sngfifo36e1_n_17 ,\gf36e1_inst.sngfifo36e1_n_18 ,\gf36e1_inst.sngfifo36e1_n_19 ,\gf36e1_inst.sngfifo36e1_n_20 }),
         .RDEN(e_1),
         .RDERR(\gf36e1_inst.sngfifo36e1_n_5 ),
         .REGCE(1'b0),
-        .RST(wr_rst_i),
+        .RST(rd_rst_i),
         .RSTREG(1'b0),
         .SBITERR(\gf36e1_inst.sngfifo36e1_n_6 ),
-        .WRCLK(rd_clk),
+        .WRCLK(wr_clk),
         .WRCOUNT({\gf36e1_inst.sngfifo36e1_n_21 ,\gf36e1_inst.sngfifo36e1_n_22 ,\gf36e1_inst.sngfifo36e1_n_23 ,\gf36e1_inst.sngfifo36e1_n_24 ,\gf36e1_inst.sngfifo36e1_n_25 ,\gf36e1_inst.sngfifo36e1_n_26 ,\gf36e1_inst.sngfifo36e1_n_27 ,\gf36e1_inst.sngfifo36e1_n_28 ,\gf36e1_inst.sngfifo36e1_n_29 ,\gf36e1_inst.sngfifo36e1_n_30 ,\gf36e1_inst.sngfifo36e1_n_31 ,\gf36e1_inst.sngfifo36e1_n_32 ,\gf36e1_inst.sngfifo36e1_n_33 }),
         .WREN(e_2),
         .WRERR(\gf36e1_inst.sngfifo36e1_n_7 ));
@@ -2632,22 +2623,20 @@ endmodule
 (* ORIG_REF_NAME = "builtin_prim_v6" *) 
 module FIFO_Array_builtin_prim_v6_21
    (pf,
-    rd_clk_0,
+    wr_clk_0,
     DO,
     e_3,
-    rd_clk,
-    wr_rst_i,
     wr_clk,
+    rd_rst_i,
     wr_tmp,
     din,
     ful_2);
   output [0:0]pf;
-  output [0:0]rd_clk_0;
+  output [0:0]wr_clk_0;
   output [3:0]DO;
   output e_3;
-  input rd_clk;
-  input wr_rst_i;
   input wr_clk;
+  input rd_rst_i;
   input wr_tmp;
   input [3:0]din;
   input ful_2;
@@ -2690,10 +2679,9 @@ module FIFO_Array_builtin_prim_v6_21
   wire \gf36e1_inst.sngfifo36e1_n_8 ;
   wire \gf36e1_inst.sngfifo36e1_n_9 ;
   wire [0:0]pf;
-  wire rd_clk;
-  wire [0:0]rd_clk_0;
+  wire rd_rst_i;
   wire wr_clk;
-  wire wr_rst_i;
+  wire [0:0]wr_clk_0;
   wire wr_tmp;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_DOP_UNCONNECTED ;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_ECCPARITY_UNCONNECTED ;
@@ -2701,7 +2689,7 @@ module FIFO_Array_builtin_prim_v6_21
   (* box_type = "PRIMITIVE" *) 
   FIFO36E1 #(
     .ALMOST_EMPTY_OFFSET(13'h000A),
-    .ALMOST_FULL_OFFSET(13'h1FF3),
+    .ALMOST_FULL_OFFSET(13'h000D),
     .DATA_WIDTH(4),
     .DO_REG(1),
     .EN_ECC_READ("FALSE"),
@@ -2728,15 +2716,15 @@ module FIFO_Array_builtin_prim_v6_21
         .DOP(\NLW_gf36e1_inst.sngfifo36e1_DOP_UNCONNECTED [7:0]),
         .ECCPARITY(\NLW_gf36e1_inst.sngfifo36e1_ECCPARITY_UNCONNECTED [7:0]),
         .EMPTY(emp_3),
-        .FULL(rd_clk_0),
+        .FULL(wr_clk_0),
         .INJECTDBITERR(1'b0),
         .INJECTSBITERR(1'b0),
-        .RDCLK(rd_clk),
+        .RDCLK(wr_clk),
         .RDCOUNT({\gf36e1_inst.sngfifo36e1_n_8 ,\gf36e1_inst.sngfifo36e1_n_9 ,\gf36e1_inst.sngfifo36e1_n_10 ,\gf36e1_inst.sngfifo36e1_n_11 ,\gf36e1_inst.sngfifo36e1_n_12 ,\gf36e1_inst.sngfifo36e1_n_13 ,\gf36e1_inst.sngfifo36e1_n_14 ,\gf36e1_inst.sngfifo36e1_n_15 ,\gf36e1_inst.sngfifo36e1_n_16 ,\gf36e1_inst.sngfifo36e1_n_17 ,\gf36e1_inst.sngfifo36e1_n_18 ,\gf36e1_inst.sngfifo36e1_n_19 ,\gf36e1_inst.sngfifo36e1_n_20 }),
         .RDEN(e_3),
         .RDERR(\gf36e1_inst.sngfifo36e1_n_5 ),
         .REGCE(1'b0),
-        .RST(wr_rst_i),
+        .RST(rd_rst_i),
         .RSTREG(1'b0),
         .SBITERR(\gf36e1_inst.sngfifo36e1_n_6 ),
         .WRCLK(wr_clk),
@@ -2756,16 +2744,16 @@ module FIFO_Array_builtin_prim_v6_22
    (ful_2,
     DO,
     e_2,
-    rd_clk,
-    wr_rst_i,
+    wr_clk,
+    rd_rst_i,
     e_3,
     \gf36e1_inst.sngfifo36e1_0 ,
     ful_1);
   output ful_2;
   output [3:0]DO;
   output e_2;
-  input rd_clk;
-  input wr_rst_i;
+  input wr_clk;
+  input rd_rst_i;
   input e_3;
   input [3:0]\gf36e1_inst.sngfifo36e1_0 ;
   input ful_1;
@@ -2810,15 +2798,15 @@ module FIFO_Array_builtin_prim_v6_22
   wire \gf36e1_inst.sngfifo36e1_n_7 ;
   wire \gf36e1_inst.sngfifo36e1_n_8 ;
   wire \gf36e1_inst.sngfifo36e1_n_9 ;
-  wire rd_clk;
-  wire wr_rst_i;
+  wire rd_rst_i;
+  wire wr_clk;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_DOP_UNCONNECTED ;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_ECCPARITY_UNCONNECTED ;
 
   (* box_type = "PRIMITIVE" *) 
   FIFO36E1 #(
     .ALMOST_EMPTY_OFFSET(13'h000A),
-    .ALMOST_FULL_OFFSET(13'h1FF3),
+    .ALMOST_FULL_OFFSET(13'h000D),
     .DATA_WIDTH(4),
     .DO_REG(1),
     .EN_ECC_READ("FALSE"),
@@ -2848,15 +2836,15 @@ module FIFO_Array_builtin_prim_v6_22
         .FULL(ful_2),
         .INJECTDBITERR(1'b0),
         .INJECTSBITERR(1'b0),
-        .RDCLK(rd_clk),
+        .RDCLK(wr_clk),
         .RDCOUNT({\gf36e1_inst.sngfifo36e1_n_8 ,\gf36e1_inst.sngfifo36e1_n_9 ,\gf36e1_inst.sngfifo36e1_n_10 ,\gf36e1_inst.sngfifo36e1_n_11 ,\gf36e1_inst.sngfifo36e1_n_12 ,\gf36e1_inst.sngfifo36e1_n_13 ,\gf36e1_inst.sngfifo36e1_n_14 ,\gf36e1_inst.sngfifo36e1_n_15 ,\gf36e1_inst.sngfifo36e1_n_16 ,\gf36e1_inst.sngfifo36e1_n_17 ,\gf36e1_inst.sngfifo36e1_n_18 ,\gf36e1_inst.sngfifo36e1_n_19 ,\gf36e1_inst.sngfifo36e1_n_20 }),
         .RDEN(e_2),
         .RDERR(\gf36e1_inst.sngfifo36e1_n_5 ),
         .REGCE(1'b0),
-        .RST(wr_rst_i),
+        .RST(rd_rst_i),
         .RSTREG(1'b0),
         .SBITERR(\gf36e1_inst.sngfifo36e1_n_6 ),
-        .WRCLK(rd_clk),
+        .WRCLK(wr_clk),
         .WRCOUNT({\gf36e1_inst.sngfifo36e1_n_21 ,\gf36e1_inst.sngfifo36e1_n_22 ,\gf36e1_inst.sngfifo36e1_n_23 ,\gf36e1_inst.sngfifo36e1_n_24 ,\gf36e1_inst.sngfifo36e1_n_25 ,\gf36e1_inst.sngfifo36e1_n_26 ,\gf36e1_inst.sngfifo36e1_n_27 ,\gf36e1_inst.sngfifo36e1_n_28 ,\gf36e1_inst.sngfifo36e1_n_29 ,\gf36e1_inst.sngfifo36e1_n_30 ,\gf36e1_inst.sngfifo36e1_n_31 ,\gf36e1_inst.sngfifo36e1_n_32 ,\gf36e1_inst.sngfifo36e1_n_33 }),
         .WREN(e_3),
         .WRERR(\gf36e1_inst.sngfifo36e1_n_7 ));
@@ -2873,16 +2861,16 @@ module FIFO_Array_builtin_prim_v6_23
    (ful_1,
     DO,
     e_1,
-    rd_clk,
-    wr_rst_i,
+    wr_clk,
+    rd_rst_i,
     e_2,
     \dout[15] ,
     ful_0);
   output ful_1;
   output [3:0]DO;
   output e_1;
-  input rd_clk;
-  input wr_rst_i;
+  input wr_clk;
+  input rd_rst_i;
   input e_2;
   input [3:0]\dout[15] ;
   input ful_0;
@@ -2927,15 +2915,15 @@ module FIFO_Array_builtin_prim_v6_23
   wire \gf36e1_inst.sngfifo36e1_n_7 ;
   wire \gf36e1_inst.sngfifo36e1_n_8 ;
   wire \gf36e1_inst.sngfifo36e1_n_9 ;
-  wire rd_clk;
-  wire wr_rst_i;
+  wire rd_rst_i;
+  wire wr_clk;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_DOP_UNCONNECTED ;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_ECCPARITY_UNCONNECTED ;
 
   (* box_type = "PRIMITIVE" *) 
   FIFO36E1 #(
     .ALMOST_EMPTY_OFFSET(13'h000A),
-    .ALMOST_FULL_OFFSET(13'h1FF3),
+    .ALMOST_FULL_OFFSET(13'h000D),
     .DATA_WIDTH(4),
     .DO_REG(1),
     .EN_ECC_READ("FALSE"),
@@ -2965,15 +2953,15 @@ module FIFO_Array_builtin_prim_v6_23
         .FULL(ful_1),
         .INJECTDBITERR(1'b0),
         .INJECTSBITERR(1'b0),
-        .RDCLK(rd_clk),
+        .RDCLK(wr_clk),
         .RDCOUNT({\gf36e1_inst.sngfifo36e1_n_8 ,\gf36e1_inst.sngfifo36e1_n_9 ,\gf36e1_inst.sngfifo36e1_n_10 ,\gf36e1_inst.sngfifo36e1_n_11 ,\gf36e1_inst.sngfifo36e1_n_12 ,\gf36e1_inst.sngfifo36e1_n_13 ,\gf36e1_inst.sngfifo36e1_n_14 ,\gf36e1_inst.sngfifo36e1_n_15 ,\gf36e1_inst.sngfifo36e1_n_16 ,\gf36e1_inst.sngfifo36e1_n_17 ,\gf36e1_inst.sngfifo36e1_n_18 ,\gf36e1_inst.sngfifo36e1_n_19 ,\gf36e1_inst.sngfifo36e1_n_20 }),
         .RDEN(e_1),
         .RDERR(\gf36e1_inst.sngfifo36e1_n_5 ),
         .REGCE(1'b0),
-        .RST(wr_rst_i),
+        .RST(rd_rst_i),
         .RSTREG(1'b0),
         .SBITERR(\gf36e1_inst.sngfifo36e1_n_6 ),
-        .WRCLK(rd_clk),
+        .WRCLK(wr_clk),
         .WRCOUNT({\gf36e1_inst.sngfifo36e1_n_21 ,\gf36e1_inst.sngfifo36e1_n_22 ,\gf36e1_inst.sngfifo36e1_n_23 ,\gf36e1_inst.sngfifo36e1_n_24 ,\gf36e1_inst.sngfifo36e1_n_25 ,\gf36e1_inst.sngfifo36e1_n_26 ,\gf36e1_inst.sngfifo36e1_n_27 ,\gf36e1_inst.sngfifo36e1_n_28 ,\gf36e1_inst.sngfifo36e1_n_29 ,\gf36e1_inst.sngfifo36e1_n_30 ,\gf36e1_inst.sngfifo36e1_n_31 ,\gf36e1_inst.sngfifo36e1_n_32 ,\gf36e1_inst.sngfifo36e1_n_33 }),
         .WREN(e_2),
         .WRERR(\gf36e1_inst.sngfifo36e1_n_7 ));
@@ -2992,9 +2980,8 @@ module FIFO_Array_builtin_prim_v6_25
     DO,
     e_3,
     full,
-    rd_clk,
-    wr_rst_i,
     wr_clk,
+    rd_rst_i,
     wr_tmp,
     din,
     ful_2,
@@ -3005,9 +2992,8 @@ module FIFO_Array_builtin_prim_v6_25
   output [3:0]DO;
   output e_3;
   output full;
-  input rd_clk;
-  input wr_rst_i;
   input wr_clk;
+  input rd_rst_i;
   input wr_tmp;
   input [3:0]din;
   input ful_2;
@@ -3056,9 +3042,8 @@ module FIFO_Array_builtin_prim_v6_25
   wire \gf36e1_inst.sngfifo36e1_n_8 ;
   wire \gf36e1_inst.sngfifo36e1_n_9 ;
   wire [0:0]pf;
-  wire rd_clk;
+  wire rd_rst_i;
   wire wr_clk;
-  wire wr_rst_i;
   wire wr_tmp;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_DOP_UNCONNECTED ;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_ECCPARITY_UNCONNECTED ;
@@ -3075,7 +3060,7 @@ module FIFO_Array_builtin_prim_v6_25
   (* box_type = "PRIMITIVE" *) 
   FIFO36E1 #(
     .ALMOST_EMPTY_OFFSET(13'h000A),
-    .ALMOST_FULL_OFFSET(13'h1FF3),
+    .ALMOST_FULL_OFFSET(13'h000D),
     .DATA_WIDTH(4),
     .DO_REG(1),
     .EN_ECC_READ("FALSE"),
@@ -3105,12 +3090,12 @@ module FIFO_Array_builtin_prim_v6_25
         .FULL(ful),
         .INJECTDBITERR(1'b0),
         .INJECTSBITERR(1'b0),
-        .RDCLK(rd_clk),
+        .RDCLK(wr_clk),
         .RDCOUNT({\gf36e1_inst.sngfifo36e1_n_8 ,\gf36e1_inst.sngfifo36e1_n_9 ,\gf36e1_inst.sngfifo36e1_n_10 ,\gf36e1_inst.sngfifo36e1_n_11 ,\gf36e1_inst.sngfifo36e1_n_12 ,\gf36e1_inst.sngfifo36e1_n_13 ,\gf36e1_inst.sngfifo36e1_n_14 ,\gf36e1_inst.sngfifo36e1_n_15 ,\gf36e1_inst.sngfifo36e1_n_16 ,\gf36e1_inst.sngfifo36e1_n_17 ,\gf36e1_inst.sngfifo36e1_n_18 ,\gf36e1_inst.sngfifo36e1_n_19 ,\gf36e1_inst.sngfifo36e1_n_20 }),
         .RDEN(e_3),
         .RDERR(\gf36e1_inst.sngfifo36e1_n_5 ),
         .REGCE(1'b0),
-        .RST(wr_rst_i),
+        .RST(rd_rst_i),
         .RSTREG(1'b0),
         .SBITERR(\gf36e1_inst.sngfifo36e1_n_6 ),
         .WRCLK(wr_clk),
@@ -3130,16 +3115,16 @@ module FIFO_Array_builtin_prim_v6_26
    (ful_2,
     DO,
     e_2,
-    rd_clk,
-    wr_rst_i,
+    wr_clk,
+    rd_rst_i,
     e_3,
     \gf36e1_inst.sngfifo36e1_0 ,
     ful_1);
   output ful_2;
   output [3:0]DO;
   output e_2;
-  input rd_clk;
-  input wr_rst_i;
+  input wr_clk;
+  input rd_rst_i;
   input e_3;
   input [3:0]\gf36e1_inst.sngfifo36e1_0 ;
   input ful_1;
@@ -3184,15 +3169,15 @@ module FIFO_Array_builtin_prim_v6_26
   wire \gf36e1_inst.sngfifo36e1_n_7 ;
   wire \gf36e1_inst.sngfifo36e1_n_8 ;
   wire \gf36e1_inst.sngfifo36e1_n_9 ;
-  wire rd_clk;
-  wire wr_rst_i;
+  wire rd_rst_i;
+  wire wr_clk;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_DOP_UNCONNECTED ;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_ECCPARITY_UNCONNECTED ;
 
   (* box_type = "PRIMITIVE" *) 
   FIFO36E1 #(
     .ALMOST_EMPTY_OFFSET(13'h000A),
-    .ALMOST_FULL_OFFSET(13'h1FF3),
+    .ALMOST_FULL_OFFSET(13'h000D),
     .DATA_WIDTH(4),
     .DO_REG(1),
     .EN_ECC_READ("FALSE"),
@@ -3222,15 +3207,15 @@ module FIFO_Array_builtin_prim_v6_26
         .FULL(ful_2),
         .INJECTDBITERR(1'b0),
         .INJECTSBITERR(1'b0),
-        .RDCLK(rd_clk),
+        .RDCLK(wr_clk),
         .RDCOUNT({\gf36e1_inst.sngfifo36e1_n_8 ,\gf36e1_inst.sngfifo36e1_n_9 ,\gf36e1_inst.sngfifo36e1_n_10 ,\gf36e1_inst.sngfifo36e1_n_11 ,\gf36e1_inst.sngfifo36e1_n_12 ,\gf36e1_inst.sngfifo36e1_n_13 ,\gf36e1_inst.sngfifo36e1_n_14 ,\gf36e1_inst.sngfifo36e1_n_15 ,\gf36e1_inst.sngfifo36e1_n_16 ,\gf36e1_inst.sngfifo36e1_n_17 ,\gf36e1_inst.sngfifo36e1_n_18 ,\gf36e1_inst.sngfifo36e1_n_19 ,\gf36e1_inst.sngfifo36e1_n_20 }),
         .RDEN(e_2),
         .RDERR(\gf36e1_inst.sngfifo36e1_n_5 ),
         .REGCE(1'b0),
-        .RST(wr_rst_i),
+        .RST(rd_rst_i),
         .RSTREG(1'b0),
         .SBITERR(\gf36e1_inst.sngfifo36e1_n_6 ),
-        .WRCLK(rd_clk),
+        .WRCLK(wr_clk),
         .WRCOUNT({\gf36e1_inst.sngfifo36e1_n_21 ,\gf36e1_inst.sngfifo36e1_n_22 ,\gf36e1_inst.sngfifo36e1_n_23 ,\gf36e1_inst.sngfifo36e1_n_24 ,\gf36e1_inst.sngfifo36e1_n_25 ,\gf36e1_inst.sngfifo36e1_n_26 ,\gf36e1_inst.sngfifo36e1_n_27 ,\gf36e1_inst.sngfifo36e1_n_28 ,\gf36e1_inst.sngfifo36e1_n_29 ,\gf36e1_inst.sngfifo36e1_n_30 ,\gf36e1_inst.sngfifo36e1_n_31 ,\gf36e1_inst.sngfifo36e1_n_32 ,\gf36e1_inst.sngfifo36e1_n_33 }),
         .WREN(e_3),
         .WRERR(\gf36e1_inst.sngfifo36e1_n_7 ));
@@ -3247,16 +3232,16 @@ module FIFO_Array_builtin_prim_v6_27
    (ful_1,
     DO,
     e_1,
-    rd_clk,
-    wr_rst_i,
+    wr_clk,
+    rd_rst_i,
     e_2,
     \dout[11] ,
     ful_0);
   output ful_1;
   output [3:0]DO;
   output e_1;
-  input rd_clk;
-  input wr_rst_i;
+  input wr_clk;
+  input rd_rst_i;
   input e_2;
   input [3:0]\dout[11] ;
   input ful_0;
@@ -3301,15 +3286,15 @@ module FIFO_Array_builtin_prim_v6_27
   wire \gf36e1_inst.sngfifo36e1_n_7 ;
   wire \gf36e1_inst.sngfifo36e1_n_8 ;
   wire \gf36e1_inst.sngfifo36e1_n_9 ;
-  wire rd_clk;
-  wire wr_rst_i;
+  wire rd_rst_i;
+  wire wr_clk;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_DOP_UNCONNECTED ;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_ECCPARITY_UNCONNECTED ;
 
   (* box_type = "PRIMITIVE" *) 
   FIFO36E1 #(
     .ALMOST_EMPTY_OFFSET(13'h000A),
-    .ALMOST_FULL_OFFSET(13'h1FF3),
+    .ALMOST_FULL_OFFSET(13'h000D),
     .DATA_WIDTH(4),
     .DO_REG(1),
     .EN_ECC_READ("FALSE"),
@@ -3339,15 +3324,15 @@ module FIFO_Array_builtin_prim_v6_27
         .FULL(ful_1),
         .INJECTDBITERR(1'b0),
         .INJECTSBITERR(1'b0),
-        .RDCLK(rd_clk),
+        .RDCLK(wr_clk),
         .RDCOUNT({\gf36e1_inst.sngfifo36e1_n_8 ,\gf36e1_inst.sngfifo36e1_n_9 ,\gf36e1_inst.sngfifo36e1_n_10 ,\gf36e1_inst.sngfifo36e1_n_11 ,\gf36e1_inst.sngfifo36e1_n_12 ,\gf36e1_inst.sngfifo36e1_n_13 ,\gf36e1_inst.sngfifo36e1_n_14 ,\gf36e1_inst.sngfifo36e1_n_15 ,\gf36e1_inst.sngfifo36e1_n_16 ,\gf36e1_inst.sngfifo36e1_n_17 ,\gf36e1_inst.sngfifo36e1_n_18 ,\gf36e1_inst.sngfifo36e1_n_19 ,\gf36e1_inst.sngfifo36e1_n_20 }),
         .RDEN(e_1),
         .RDERR(\gf36e1_inst.sngfifo36e1_n_5 ),
         .REGCE(1'b0),
-        .RST(wr_rst_i),
+        .RST(rd_rst_i),
         .RSTREG(1'b0),
         .SBITERR(\gf36e1_inst.sngfifo36e1_n_6 ),
-        .WRCLK(rd_clk),
+        .WRCLK(wr_clk),
         .WRCOUNT({\gf36e1_inst.sngfifo36e1_n_21 ,\gf36e1_inst.sngfifo36e1_n_22 ,\gf36e1_inst.sngfifo36e1_n_23 ,\gf36e1_inst.sngfifo36e1_n_24 ,\gf36e1_inst.sngfifo36e1_n_25 ,\gf36e1_inst.sngfifo36e1_n_26 ,\gf36e1_inst.sngfifo36e1_n_27 ,\gf36e1_inst.sngfifo36e1_n_28 ,\gf36e1_inst.sngfifo36e1_n_29 ,\gf36e1_inst.sngfifo36e1_n_30 ,\gf36e1_inst.sngfifo36e1_n_31 ,\gf36e1_inst.sngfifo36e1_n_32 ,\gf36e1_inst.sngfifo36e1_n_33 }),
         .WREN(e_2),
         .WRERR(\gf36e1_inst.sngfifo36e1_n_7 ));
@@ -3365,9 +3350,8 @@ module FIFO_Array_builtin_prim_v6_29
     ful,
     DO,
     e_3,
-    rd_clk,
-    wr_rst_i,
     wr_clk,
+    rd_rst_i,
     wr_tmp,
     din,
     ful_2);
@@ -3375,9 +3359,8 @@ module FIFO_Array_builtin_prim_v6_29
   output [0:0]ful;
   output [3:0]DO;
   output e_3;
-  input rd_clk;
-  input wr_rst_i;
   input wr_clk;
+  input rd_rst_i;
   input wr_tmp;
   input [3:0]din;
   input ful_2;
@@ -3421,9 +3404,8 @@ module FIFO_Array_builtin_prim_v6_29
   wire \gf36e1_inst.sngfifo36e1_n_8 ;
   wire \gf36e1_inst.sngfifo36e1_n_9 ;
   wire [0:0]pf;
-  wire rd_clk;
+  wire rd_rst_i;
   wire wr_clk;
-  wire wr_rst_i;
   wire wr_tmp;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_DOP_UNCONNECTED ;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_ECCPARITY_UNCONNECTED ;
@@ -3431,7 +3413,7 @@ module FIFO_Array_builtin_prim_v6_29
   (* box_type = "PRIMITIVE" *) 
   FIFO36E1 #(
     .ALMOST_EMPTY_OFFSET(13'h000A),
-    .ALMOST_FULL_OFFSET(13'h1FF3),
+    .ALMOST_FULL_OFFSET(13'h000D),
     .DATA_WIDTH(4),
     .DO_REG(1),
     .EN_ECC_READ("FALSE"),
@@ -3461,12 +3443,12 @@ module FIFO_Array_builtin_prim_v6_29
         .FULL(ful),
         .INJECTDBITERR(1'b0),
         .INJECTSBITERR(1'b0),
-        .RDCLK(rd_clk),
+        .RDCLK(wr_clk),
         .RDCOUNT({\gf36e1_inst.sngfifo36e1_n_8 ,\gf36e1_inst.sngfifo36e1_n_9 ,\gf36e1_inst.sngfifo36e1_n_10 ,\gf36e1_inst.sngfifo36e1_n_11 ,\gf36e1_inst.sngfifo36e1_n_12 ,\gf36e1_inst.sngfifo36e1_n_13 ,\gf36e1_inst.sngfifo36e1_n_14 ,\gf36e1_inst.sngfifo36e1_n_15 ,\gf36e1_inst.sngfifo36e1_n_16 ,\gf36e1_inst.sngfifo36e1_n_17 ,\gf36e1_inst.sngfifo36e1_n_18 ,\gf36e1_inst.sngfifo36e1_n_19 ,\gf36e1_inst.sngfifo36e1_n_20 }),
         .RDEN(e_3),
         .RDERR(\gf36e1_inst.sngfifo36e1_n_5 ),
         .REGCE(1'b0),
-        .RST(wr_rst_i),
+        .RST(rd_rst_i),
         .RSTREG(1'b0),
         .SBITERR(\gf36e1_inst.sngfifo36e1_n_6 ),
         .WRCLK(wr_clk),
@@ -3486,16 +3468,16 @@ module FIFO_Array_builtin_prim_v6_30
    (ful_2,
     DO,
     e_2,
-    rd_clk,
-    wr_rst_i,
+    wr_clk,
+    rd_rst_i,
     e_3,
     \gf36e1_inst.sngfifo36e1_0 ,
     ful_1);
   output ful_2;
   output [3:0]DO;
   output e_2;
-  input rd_clk;
-  input wr_rst_i;
+  input wr_clk;
+  input rd_rst_i;
   input e_3;
   input [3:0]\gf36e1_inst.sngfifo36e1_0 ;
   input ful_1;
@@ -3540,15 +3522,15 @@ module FIFO_Array_builtin_prim_v6_30
   wire \gf36e1_inst.sngfifo36e1_n_7 ;
   wire \gf36e1_inst.sngfifo36e1_n_8 ;
   wire \gf36e1_inst.sngfifo36e1_n_9 ;
-  wire rd_clk;
-  wire wr_rst_i;
+  wire rd_rst_i;
+  wire wr_clk;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_DOP_UNCONNECTED ;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_ECCPARITY_UNCONNECTED ;
 
   (* box_type = "PRIMITIVE" *) 
   FIFO36E1 #(
     .ALMOST_EMPTY_OFFSET(13'h000A),
-    .ALMOST_FULL_OFFSET(13'h1FF3),
+    .ALMOST_FULL_OFFSET(13'h000D),
     .DATA_WIDTH(4),
     .DO_REG(1),
     .EN_ECC_READ("FALSE"),
@@ -3578,15 +3560,15 @@ module FIFO_Array_builtin_prim_v6_30
         .FULL(ful_2),
         .INJECTDBITERR(1'b0),
         .INJECTSBITERR(1'b0),
-        .RDCLK(rd_clk),
+        .RDCLK(wr_clk),
         .RDCOUNT({\gf36e1_inst.sngfifo36e1_n_8 ,\gf36e1_inst.sngfifo36e1_n_9 ,\gf36e1_inst.sngfifo36e1_n_10 ,\gf36e1_inst.sngfifo36e1_n_11 ,\gf36e1_inst.sngfifo36e1_n_12 ,\gf36e1_inst.sngfifo36e1_n_13 ,\gf36e1_inst.sngfifo36e1_n_14 ,\gf36e1_inst.sngfifo36e1_n_15 ,\gf36e1_inst.sngfifo36e1_n_16 ,\gf36e1_inst.sngfifo36e1_n_17 ,\gf36e1_inst.sngfifo36e1_n_18 ,\gf36e1_inst.sngfifo36e1_n_19 ,\gf36e1_inst.sngfifo36e1_n_20 }),
         .RDEN(e_2),
         .RDERR(\gf36e1_inst.sngfifo36e1_n_5 ),
         .REGCE(1'b0),
-        .RST(wr_rst_i),
+        .RST(rd_rst_i),
         .RSTREG(1'b0),
         .SBITERR(\gf36e1_inst.sngfifo36e1_n_6 ),
-        .WRCLK(rd_clk),
+        .WRCLK(wr_clk),
         .WRCOUNT({\gf36e1_inst.sngfifo36e1_n_21 ,\gf36e1_inst.sngfifo36e1_n_22 ,\gf36e1_inst.sngfifo36e1_n_23 ,\gf36e1_inst.sngfifo36e1_n_24 ,\gf36e1_inst.sngfifo36e1_n_25 ,\gf36e1_inst.sngfifo36e1_n_26 ,\gf36e1_inst.sngfifo36e1_n_27 ,\gf36e1_inst.sngfifo36e1_n_28 ,\gf36e1_inst.sngfifo36e1_n_29 ,\gf36e1_inst.sngfifo36e1_n_30 ,\gf36e1_inst.sngfifo36e1_n_31 ,\gf36e1_inst.sngfifo36e1_n_32 ,\gf36e1_inst.sngfifo36e1_n_33 }),
         .WREN(e_3),
         .WRERR(\gf36e1_inst.sngfifo36e1_n_7 ));
@@ -3603,16 +3585,16 @@ module FIFO_Array_builtin_prim_v6_31
    (ful_1,
     DO,
     e_1,
-    rd_clk,
-    wr_rst_i,
+    wr_clk,
+    rd_rst_i,
     e_2,
     \dout[7] ,
     ful_0);
   output ful_1;
   output [3:0]DO;
   output e_1;
-  input rd_clk;
-  input wr_rst_i;
+  input wr_clk;
+  input rd_rst_i;
   input e_2;
   input [3:0]\dout[7] ;
   input ful_0;
@@ -3657,15 +3639,15 @@ module FIFO_Array_builtin_prim_v6_31
   wire \gf36e1_inst.sngfifo36e1_n_7 ;
   wire \gf36e1_inst.sngfifo36e1_n_8 ;
   wire \gf36e1_inst.sngfifo36e1_n_9 ;
-  wire rd_clk;
-  wire wr_rst_i;
+  wire rd_rst_i;
+  wire wr_clk;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_DOP_UNCONNECTED ;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_ECCPARITY_UNCONNECTED ;
 
   (* box_type = "PRIMITIVE" *) 
   FIFO36E1 #(
     .ALMOST_EMPTY_OFFSET(13'h000A),
-    .ALMOST_FULL_OFFSET(13'h1FF3),
+    .ALMOST_FULL_OFFSET(13'h000D),
     .DATA_WIDTH(4),
     .DO_REG(1),
     .EN_ECC_READ("FALSE"),
@@ -3695,15 +3677,15 @@ module FIFO_Array_builtin_prim_v6_31
         .FULL(ful_1),
         .INJECTDBITERR(1'b0),
         .INJECTSBITERR(1'b0),
-        .RDCLK(rd_clk),
+        .RDCLK(wr_clk),
         .RDCOUNT({\gf36e1_inst.sngfifo36e1_n_8 ,\gf36e1_inst.sngfifo36e1_n_9 ,\gf36e1_inst.sngfifo36e1_n_10 ,\gf36e1_inst.sngfifo36e1_n_11 ,\gf36e1_inst.sngfifo36e1_n_12 ,\gf36e1_inst.sngfifo36e1_n_13 ,\gf36e1_inst.sngfifo36e1_n_14 ,\gf36e1_inst.sngfifo36e1_n_15 ,\gf36e1_inst.sngfifo36e1_n_16 ,\gf36e1_inst.sngfifo36e1_n_17 ,\gf36e1_inst.sngfifo36e1_n_18 ,\gf36e1_inst.sngfifo36e1_n_19 ,\gf36e1_inst.sngfifo36e1_n_20 }),
         .RDEN(e_1),
         .RDERR(\gf36e1_inst.sngfifo36e1_n_5 ),
         .REGCE(1'b0),
-        .RST(wr_rst_i),
+        .RST(rd_rst_i),
         .RSTREG(1'b0),
         .SBITERR(\gf36e1_inst.sngfifo36e1_n_6 ),
-        .WRCLK(rd_clk),
+        .WRCLK(wr_clk),
         .WRCOUNT({\gf36e1_inst.sngfifo36e1_n_21 ,\gf36e1_inst.sngfifo36e1_n_22 ,\gf36e1_inst.sngfifo36e1_n_23 ,\gf36e1_inst.sngfifo36e1_n_24 ,\gf36e1_inst.sngfifo36e1_n_25 ,\gf36e1_inst.sngfifo36e1_n_26 ,\gf36e1_inst.sngfifo36e1_n_27 ,\gf36e1_inst.sngfifo36e1_n_28 ,\gf36e1_inst.sngfifo36e1_n_29 ,\gf36e1_inst.sngfifo36e1_n_30 ,\gf36e1_inst.sngfifo36e1_n_31 ,\gf36e1_inst.sngfifo36e1_n_32 ,\gf36e1_inst.sngfifo36e1_n_33 }),
         .WREN(e_2),
         .WRERR(\gf36e1_inst.sngfifo36e1_n_7 ));
@@ -3721,9 +3703,8 @@ module FIFO_Array_builtin_prim_v6_33
     ful,
     DO,
     e_3,
-    rd_clk,
-    wr_rst_i,
     wr_clk,
+    rd_rst_i,
     wr_tmp,
     din,
     ful_2);
@@ -3731,9 +3712,8 @@ module FIFO_Array_builtin_prim_v6_33
   output [0:0]ful;
   output [3:0]DO;
   output e_3;
-  input rd_clk;
-  input wr_rst_i;
   input wr_clk;
+  input rd_rst_i;
   input wr_tmp;
   input [3:0]din;
   input ful_2;
@@ -3777,9 +3757,8 @@ module FIFO_Array_builtin_prim_v6_33
   wire \gf36e1_inst.sngfifo36e1_n_8 ;
   wire \gf36e1_inst.sngfifo36e1_n_9 ;
   wire [0:0]pf;
-  wire rd_clk;
+  wire rd_rst_i;
   wire wr_clk;
-  wire wr_rst_i;
   wire wr_tmp;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_DOP_UNCONNECTED ;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_ECCPARITY_UNCONNECTED ;
@@ -3787,7 +3766,7 @@ module FIFO_Array_builtin_prim_v6_33
   (* box_type = "PRIMITIVE" *) 
   FIFO36E1 #(
     .ALMOST_EMPTY_OFFSET(13'h000A),
-    .ALMOST_FULL_OFFSET(13'h1FF3),
+    .ALMOST_FULL_OFFSET(13'h000D),
     .DATA_WIDTH(4),
     .DO_REG(1),
     .EN_ECC_READ("FALSE"),
@@ -3817,12 +3796,12 @@ module FIFO_Array_builtin_prim_v6_33
         .FULL(ful),
         .INJECTDBITERR(1'b0),
         .INJECTSBITERR(1'b0),
-        .RDCLK(rd_clk),
+        .RDCLK(wr_clk),
         .RDCOUNT({\gf36e1_inst.sngfifo36e1_n_8 ,\gf36e1_inst.sngfifo36e1_n_9 ,\gf36e1_inst.sngfifo36e1_n_10 ,\gf36e1_inst.sngfifo36e1_n_11 ,\gf36e1_inst.sngfifo36e1_n_12 ,\gf36e1_inst.sngfifo36e1_n_13 ,\gf36e1_inst.sngfifo36e1_n_14 ,\gf36e1_inst.sngfifo36e1_n_15 ,\gf36e1_inst.sngfifo36e1_n_16 ,\gf36e1_inst.sngfifo36e1_n_17 ,\gf36e1_inst.sngfifo36e1_n_18 ,\gf36e1_inst.sngfifo36e1_n_19 ,\gf36e1_inst.sngfifo36e1_n_20 }),
         .RDEN(e_3),
         .RDERR(\gf36e1_inst.sngfifo36e1_n_5 ),
         .REGCE(1'b0),
-        .RST(wr_rst_i),
+        .RST(rd_rst_i),
         .RSTREG(1'b0),
         .SBITERR(\gf36e1_inst.sngfifo36e1_n_6 ),
         .WRCLK(wr_clk),
@@ -3842,16 +3821,16 @@ module FIFO_Array_builtin_prim_v6_34
    (ful_2,
     DO,
     e_2,
-    rd_clk,
-    wr_rst_i,
+    wr_clk,
+    rd_rst_i,
     e_3,
     \gf36e1_inst.sngfifo36e1_0 ,
     ful_1);
   output ful_2;
   output [3:0]DO;
   output e_2;
-  input rd_clk;
-  input wr_rst_i;
+  input wr_clk;
+  input rd_rst_i;
   input e_3;
   input [3:0]\gf36e1_inst.sngfifo36e1_0 ;
   input ful_1;
@@ -3896,15 +3875,15 @@ module FIFO_Array_builtin_prim_v6_34
   wire \gf36e1_inst.sngfifo36e1_n_7 ;
   wire \gf36e1_inst.sngfifo36e1_n_8 ;
   wire \gf36e1_inst.sngfifo36e1_n_9 ;
-  wire rd_clk;
-  wire wr_rst_i;
+  wire rd_rst_i;
+  wire wr_clk;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_DOP_UNCONNECTED ;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_ECCPARITY_UNCONNECTED ;
 
   (* box_type = "PRIMITIVE" *) 
   FIFO36E1 #(
     .ALMOST_EMPTY_OFFSET(13'h000A),
-    .ALMOST_FULL_OFFSET(13'h1FF3),
+    .ALMOST_FULL_OFFSET(13'h000D),
     .DATA_WIDTH(4),
     .DO_REG(1),
     .EN_ECC_READ("FALSE"),
@@ -3934,15 +3913,15 @@ module FIFO_Array_builtin_prim_v6_34
         .FULL(ful_2),
         .INJECTDBITERR(1'b0),
         .INJECTSBITERR(1'b0),
-        .RDCLK(rd_clk),
+        .RDCLK(wr_clk),
         .RDCOUNT({\gf36e1_inst.sngfifo36e1_n_8 ,\gf36e1_inst.sngfifo36e1_n_9 ,\gf36e1_inst.sngfifo36e1_n_10 ,\gf36e1_inst.sngfifo36e1_n_11 ,\gf36e1_inst.sngfifo36e1_n_12 ,\gf36e1_inst.sngfifo36e1_n_13 ,\gf36e1_inst.sngfifo36e1_n_14 ,\gf36e1_inst.sngfifo36e1_n_15 ,\gf36e1_inst.sngfifo36e1_n_16 ,\gf36e1_inst.sngfifo36e1_n_17 ,\gf36e1_inst.sngfifo36e1_n_18 ,\gf36e1_inst.sngfifo36e1_n_19 ,\gf36e1_inst.sngfifo36e1_n_20 }),
         .RDEN(e_2),
         .RDERR(\gf36e1_inst.sngfifo36e1_n_5 ),
         .REGCE(1'b0),
-        .RST(wr_rst_i),
+        .RST(rd_rst_i),
         .RSTREG(1'b0),
         .SBITERR(\gf36e1_inst.sngfifo36e1_n_6 ),
-        .WRCLK(rd_clk),
+        .WRCLK(wr_clk),
         .WRCOUNT({\gf36e1_inst.sngfifo36e1_n_21 ,\gf36e1_inst.sngfifo36e1_n_22 ,\gf36e1_inst.sngfifo36e1_n_23 ,\gf36e1_inst.sngfifo36e1_n_24 ,\gf36e1_inst.sngfifo36e1_n_25 ,\gf36e1_inst.sngfifo36e1_n_26 ,\gf36e1_inst.sngfifo36e1_n_27 ,\gf36e1_inst.sngfifo36e1_n_28 ,\gf36e1_inst.sngfifo36e1_n_29 ,\gf36e1_inst.sngfifo36e1_n_30 ,\gf36e1_inst.sngfifo36e1_n_31 ,\gf36e1_inst.sngfifo36e1_n_32 ,\gf36e1_inst.sngfifo36e1_n_33 }),
         .WREN(e_3),
         .WRERR(\gf36e1_inst.sngfifo36e1_n_7 ));
@@ -3959,16 +3938,16 @@ module FIFO_Array_builtin_prim_v6_35
    (ful_1,
     DO,
     e_1,
-    rd_clk,
-    wr_rst_i,
+    wr_clk,
+    rd_rst_i,
     e_2,
     \dout[3] ,
     ful_0);
   output ful_1;
   output [3:0]DO;
   output e_1;
-  input rd_clk;
-  input wr_rst_i;
+  input wr_clk;
+  input rd_rst_i;
   input e_2;
   input [3:0]\dout[3] ;
   input ful_0;
@@ -4013,15 +3992,15 @@ module FIFO_Array_builtin_prim_v6_35
   wire \gf36e1_inst.sngfifo36e1_n_7 ;
   wire \gf36e1_inst.sngfifo36e1_n_8 ;
   wire \gf36e1_inst.sngfifo36e1_n_9 ;
-  wire rd_clk;
-  wire wr_rst_i;
+  wire rd_rst_i;
+  wire wr_clk;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_DOP_UNCONNECTED ;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_ECCPARITY_UNCONNECTED ;
 
   (* box_type = "PRIMITIVE" *) 
   FIFO36E1 #(
     .ALMOST_EMPTY_OFFSET(13'h000A),
-    .ALMOST_FULL_OFFSET(13'h1FF3),
+    .ALMOST_FULL_OFFSET(13'h000D),
     .DATA_WIDTH(4),
     .DO_REG(1),
     .EN_ECC_READ("FALSE"),
@@ -4051,15 +4030,15 @@ module FIFO_Array_builtin_prim_v6_35
         .FULL(ful_1),
         .INJECTDBITERR(1'b0),
         .INJECTSBITERR(1'b0),
-        .RDCLK(rd_clk),
+        .RDCLK(wr_clk),
         .RDCOUNT({\gf36e1_inst.sngfifo36e1_n_8 ,\gf36e1_inst.sngfifo36e1_n_9 ,\gf36e1_inst.sngfifo36e1_n_10 ,\gf36e1_inst.sngfifo36e1_n_11 ,\gf36e1_inst.sngfifo36e1_n_12 ,\gf36e1_inst.sngfifo36e1_n_13 ,\gf36e1_inst.sngfifo36e1_n_14 ,\gf36e1_inst.sngfifo36e1_n_15 ,\gf36e1_inst.sngfifo36e1_n_16 ,\gf36e1_inst.sngfifo36e1_n_17 ,\gf36e1_inst.sngfifo36e1_n_18 ,\gf36e1_inst.sngfifo36e1_n_19 ,\gf36e1_inst.sngfifo36e1_n_20 }),
         .RDEN(e_1),
         .RDERR(\gf36e1_inst.sngfifo36e1_n_5 ),
         .REGCE(1'b0),
-        .RST(wr_rst_i),
+        .RST(rd_rst_i),
         .RSTREG(1'b0),
         .SBITERR(\gf36e1_inst.sngfifo36e1_n_6 ),
-        .WRCLK(rd_clk),
+        .WRCLK(wr_clk),
         .WRCOUNT({\gf36e1_inst.sngfifo36e1_n_21 ,\gf36e1_inst.sngfifo36e1_n_22 ,\gf36e1_inst.sngfifo36e1_n_23 ,\gf36e1_inst.sngfifo36e1_n_24 ,\gf36e1_inst.sngfifo36e1_n_25 ,\gf36e1_inst.sngfifo36e1_n_26 ,\gf36e1_inst.sngfifo36e1_n_27 ,\gf36e1_inst.sngfifo36e1_n_28 ,\gf36e1_inst.sngfifo36e1_n_29 ,\gf36e1_inst.sngfifo36e1_n_30 ,\gf36e1_inst.sngfifo36e1_n_31 ,\gf36e1_inst.sngfifo36e1_n_32 ,\gf36e1_inst.sngfifo36e1_n_33 }),
         .WREN(e_2),
         .WRERR(\gf36e1_inst.sngfifo36e1_n_7 ));
@@ -4076,16 +4055,16 @@ module FIFO_Array_builtin_prim_v6_7
    (ful_2,
     DO,
     e_2,
-    rd_clk,
-    wr_rst_i,
+    wr_clk,
+    rd_rst_i,
     e_3,
     \gf36e1_inst.sngfifo36e1_0 ,
     ful_1);
   output ful_2;
   output [3:0]DO;
   output e_2;
-  input rd_clk;
-  input wr_rst_i;
+  input wr_clk;
+  input rd_rst_i;
   input e_3;
   input [3:0]\gf36e1_inst.sngfifo36e1_0 ;
   input ful_1;
@@ -4130,15 +4109,15 @@ module FIFO_Array_builtin_prim_v6_7
   wire \gf36e1_inst.sngfifo36e1_n_7 ;
   wire \gf36e1_inst.sngfifo36e1_n_8 ;
   wire \gf36e1_inst.sngfifo36e1_n_9 ;
-  wire rd_clk;
-  wire wr_rst_i;
+  wire rd_rst_i;
+  wire wr_clk;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_DOP_UNCONNECTED ;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_ECCPARITY_UNCONNECTED ;
 
   (* box_type = "PRIMITIVE" *) 
   FIFO36E1 #(
     .ALMOST_EMPTY_OFFSET(13'h000A),
-    .ALMOST_FULL_OFFSET(13'h1FF3),
+    .ALMOST_FULL_OFFSET(13'h000D),
     .DATA_WIDTH(4),
     .DO_REG(1),
     .EN_ECC_READ("FALSE"),
@@ -4168,15 +4147,15 @@ module FIFO_Array_builtin_prim_v6_7
         .FULL(ful_2),
         .INJECTDBITERR(1'b0),
         .INJECTSBITERR(1'b0),
-        .RDCLK(rd_clk),
+        .RDCLK(wr_clk),
         .RDCOUNT({\gf36e1_inst.sngfifo36e1_n_8 ,\gf36e1_inst.sngfifo36e1_n_9 ,\gf36e1_inst.sngfifo36e1_n_10 ,\gf36e1_inst.sngfifo36e1_n_11 ,\gf36e1_inst.sngfifo36e1_n_12 ,\gf36e1_inst.sngfifo36e1_n_13 ,\gf36e1_inst.sngfifo36e1_n_14 ,\gf36e1_inst.sngfifo36e1_n_15 ,\gf36e1_inst.sngfifo36e1_n_16 ,\gf36e1_inst.sngfifo36e1_n_17 ,\gf36e1_inst.sngfifo36e1_n_18 ,\gf36e1_inst.sngfifo36e1_n_19 ,\gf36e1_inst.sngfifo36e1_n_20 }),
         .RDEN(e_2),
         .RDERR(\gf36e1_inst.sngfifo36e1_n_5 ),
         .REGCE(1'b0),
-        .RST(wr_rst_i),
+        .RST(rd_rst_i),
         .RSTREG(1'b0),
         .SBITERR(\gf36e1_inst.sngfifo36e1_n_6 ),
-        .WRCLK(rd_clk),
+        .WRCLK(wr_clk),
         .WRCOUNT({\gf36e1_inst.sngfifo36e1_n_21 ,\gf36e1_inst.sngfifo36e1_n_22 ,\gf36e1_inst.sngfifo36e1_n_23 ,\gf36e1_inst.sngfifo36e1_n_24 ,\gf36e1_inst.sngfifo36e1_n_25 ,\gf36e1_inst.sngfifo36e1_n_26 ,\gf36e1_inst.sngfifo36e1_n_27 ,\gf36e1_inst.sngfifo36e1_n_28 ,\gf36e1_inst.sngfifo36e1_n_29 ,\gf36e1_inst.sngfifo36e1_n_30 ,\gf36e1_inst.sngfifo36e1_n_31 ,\gf36e1_inst.sngfifo36e1_n_32 ,\gf36e1_inst.sngfifo36e1_n_33 }),
         .WREN(e_3),
         .WRERR(\gf36e1_inst.sngfifo36e1_n_7 ));
@@ -4193,16 +4172,16 @@ module FIFO_Array_builtin_prim_v6_8
    (ful_1,
     DO,
     e_1,
-    rd_clk,
-    wr_rst_i,
+    wr_clk,
+    rd_rst_i,
     e_2,
     \dout[31] ,
     ful_0);
   output ful_1;
   output [3:0]DO;
   output e_1;
-  input rd_clk;
-  input wr_rst_i;
+  input wr_clk;
+  input rd_rst_i;
   input e_2;
   input [3:0]\dout[31] ;
   input ful_0;
@@ -4247,15 +4226,15 @@ module FIFO_Array_builtin_prim_v6_8
   wire \gf36e1_inst.sngfifo36e1_n_7 ;
   wire \gf36e1_inst.sngfifo36e1_n_8 ;
   wire \gf36e1_inst.sngfifo36e1_n_9 ;
-  wire rd_clk;
-  wire wr_rst_i;
+  wire rd_rst_i;
+  wire wr_clk;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_DOP_UNCONNECTED ;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_ECCPARITY_UNCONNECTED ;
 
   (* box_type = "PRIMITIVE" *) 
   FIFO36E1 #(
     .ALMOST_EMPTY_OFFSET(13'h000A),
-    .ALMOST_FULL_OFFSET(13'h1FF3),
+    .ALMOST_FULL_OFFSET(13'h000D),
     .DATA_WIDTH(4),
     .DO_REG(1),
     .EN_ECC_READ("FALSE"),
@@ -4285,15 +4264,15 @@ module FIFO_Array_builtin_prim_v6_8
         .FULL(ful_1),
         .INJECTDBITERR(1'b0),
         .INJECTSBITERR(1'b0),
-        .RDCLK(rd_clk),
+        .RDCLK(wr_clk),
         .RDCOUNT({\gf36e1_inst.sngfifo36e1_n_8 ,\gf36e1_inst.sngfifo36e1_n_9 ,\gf36e1_inst.sngfifo36e1_n_10 ,\gf36e1_inst.sngfifo36e1_n_11 ,\gf36e1_inst.sngfifo36e1_n_12 ,\gf36e1_inst.sngfifo36e1_n_13 ,\gf36e1_inst.sngfifo36e1_n_14 ,\gf36e1_inst.sngfifo36e1_n_15 ,\gf36e1_inst.sngfifo36e1_n_16 ,\gf36e1_inst.sngfifo36e1_n_17 ,\gf36e1_inst.sngfifo36e1_n_18 ,\gf36e1_inst.sngfifo36e1_n_19 ,\gf36e1_inst.sngfifo36e1_n_20 }),
         .RDEN(e_1),
         .RDERR(\gf36e1_inst.sngfifo36e1_n_5 ),
         .REGCE(1'b0),
-        .RST(wr_rst_i),
+        .RST(rd_rst_i),
         .RSTREG(1'b0),
         .SBITERR(\gf36e1_inst.sngfifo36e1_n_6 ),
-        .WRCLK(rd_clk),
+        .WRCLK(wr_clk),
         .WRCOUNT({\gf36e1_inst.sngfifo36e1_n_21 ,\gf36e1_inst.sngfifo36e1_n_22 ,\gf36e1_inst.sngfifo36e1_n_23 ,\gf36e1_inst.sngfifo36e1_n_24 ,\gf36e1_inst.sngfifo36e1_n_25 ,\gf36e1_inst.sngfifo36e1_n_26 ,\gf36e1_inst.sngfifo36e1_n_27 ,\gf36e1_inst.sngfifo36e1_n_28 ,\gf36e1_inst.sngfifo36e1_n_29 ,\gf36e1_inst.sngfifo36e1_n_30 ,\gf36e1_inst.sngfifo36e1_n_31 ,\gf36e1_inst.sngfifo36e1_n_32 ,\gf36e1_inst.sngfifo36e1_n_33 }),
         .WREN(e_2),
         .WRERR(\gf36e1_inst.sngfifo36e1_n_7 ));
@@ -4308,22 +4287,20 @@ endmodule
 (* ORIG_REF_NAME = "builtin_prim_v6" *) 
 module FIFO_Array_builtin_prim_v6_9
    (pf,
-    rd_clk_0,
+    wr_clk_0,
     DO,
     e_3,
-    rd_clk,
-    wr_rst_i,
     wr_clk,
+    rd_rst_i,
     wr_tmp,
     din,
     ful_2);
   output [0:0]pf;
-  output [0:0]rd_clk_0;
+  output [0:0]wr_clk_0;
   output [3:0]DO;
   output e_3;
-  input rd_clk;
-  input wr_rst_i;
   input wr_clk;
+  input rd_rst_i;
   input wr_tmp;
   input [3:0]din;
   input ful_2;
@@ -4366,10 +4343,9 @@ module FIFO_Array_builtin_prim_v6_9
   wire \gf36e1_inst.sngfifo36e1_n_8 ;
   wire \gf36e1_inst.sngfifo36e1_n_9 ;
   wire [0:0]pf;
-  wire rd_clk;
-  wire [0:0]rd_clk_0;
+  wire rd_rst_i;
   wire wr_clk;
-  wire wr_rst_i;
+  wire [0:0]wr_clk_0;
   wire wr_tmp;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_DOP_UNCONNECTED ;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_ECCPARITY_UNCONNECTED ;
@@ -4377,7 +4353,7 @@ module FIFO_Array_builtin_prim_v6_9
   (* box_type = "PRIMITIVE" *) 
   FIFO36E1 #(
     .ALMOST_EMPTY_OFFSET(13'h000A),
-    .ALMOST_FULL_OFFSET(13'h1FF3),
+    .ALMOST_FULL_OFFSET(13'h000D),
     .DATA_WIDTH(4),
     .DO_REG(1),
     .EN_ECC_READ("FALSE"),
@@ -4404,15 +4380,15 @@ module FIFO_Array_builtin_prim_v6_9
         .DOP(\NLW_gf36e1_inst.sngfifo36e1_DOP_UNCONNECTED [7:0]),
         .ECCPARITY(\NLW_gf36e1_inst.sngfifo36e1_ECCPARITY_UNCONNECTED [7:0]),
         .EMPTY(emp_3),
-        .FULL(rd_clk_0),
+        .FULL(wr_clk_0),
         .INJECTDBITERR(1'b0),
         .INJECTSBITERR(1'b0),
-        .RDCLK(rd_clk),
+        .RDCLK(wr_clk),
         .RDCOUNT({\gf36e1_inst.sngfifo36e1_n_8 ,\gf36e1_inst.sngfifo36e1_n_9 ,\gf36e1_inst.sngfifo36e1_n_10 ,\gf36e1_inst.sngfifo36e1_n_11 ,\gf36e1_inst.sngfifo36e1_n_12 ,\gf36e1_inst.sngfifo36e1_n_13 ,\gf36e1_inst.sngfifo36e1_n_14 ,\gf36e1_inst.sngfifo36e1_n_15 ,\gf36e1_inst.sngfifo36e1_n_16 ,\gf36e1_inst.sngfifo36e1_n_17 ,\gf36e1_inst.sngfifo36e1_n_18 ,\gf36e1_inst.sngfifo36e1_n_19 ,\gf36e1_inst.sngfifo36e1_n_20 }),
         .RDEN(e_3),
         .RDERR(\gf36e1_inst.sngfifo36e1_n_5 ),
         .REGCE(1'b0),
-        .RST(wr_rst_i),
+        .RST(rd_rst_i),
         .RSTREG(1'b0),
         .SBITERR(\gf36e1_inst.sngfifo36e1_n_6 ),
         .WRCLK(wr_clk),
@@ -4435,7 +4411,8 @@ module FIFO_Array_builtin_prim_v6__parameterized0
     dout,
     rd_clk,
     \dout[31] ,
-    wr_rst_i,
+    rd_rst_i,
+    wr_clk,
     e_1,
     DO);
   output [0:0]pe;
@@ -4444,7 +4421,8 @@ module FIFO_Array_builtin_prim_v6__parameterized0
   output [3:0]dout;
   input rd_clk;
   input \dout[31] ;
-  input wr_rst_i;
+  input rd_rst_i;
+  input wr_clk;
   input e_1;
   input [3:0]DO;
 
@@ -4487,8 +4465,9 @@ module FIFO_Array_builtin_prim_v6__parameterized0
   wire [0:0]pe;
   wire rd_clk;
   wire [0:0]rd_clk_0;
+  wire rd_rst_i;
   wire [8:8]sbiterr_col;
-  wire wr_rst_i;
+  wire wr_clk;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_DOP_UNCONNECTED ;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_ECCPARITY_UNCONNECTED ;
 
@@ -4530,10 +4509,10 @@ module FIFO_Array_builtin_prim_v6__parameterized0
         .RDEN(\dout[31] ),
         .RDERR(\gf36e1_inst.sngfifo36e1_n_5 ),
         .REGCE(1'b0),
-        .RST(wr_rst_i),
+        .RST(rd_rst_i),
         .RSTREG(1'b0),
         .SBITERR(sbiterr_col),
-        .WRCLK(rd_clk),
+        .WRCLK(wr_clk),
         .WRCOUNT({\gf36e1_inst.sngfifo36e1_n_21 ,\gf36e1_inst.sngfifo36e1_n_22 ,\gf36e1_inst.sngfifo36e1_n_23 ,\gf36e1_inst.sngfifo36e1_n_24 ,\gf36e1_inst.sngfifo36e1_n_25 ,\gf36e1_inst.sngfifo36e1_n_26 ,\gf36e1_inst.sngfifo36e1_n_27 ,\gf36e1_inst.sngfifo36e1_n_28 ,\gf36e1_inst.sngfifo36e1_n_29 ,\gf36e1_inst.sngfifo36e1_n_30 ,\gf36e1_inst.sngfifo36e1_n_31 ,\gf36e1_inst.sngfifo36e1_n_32 ,\gf36e1_inst.sngfifo36e1_n_33 }),
         .WREN(e_1),
         .WRERR(\gf36e1_inst.sngfifo36e1_n_7 ));
@@ -4547,7 +4526,8 @@ module FIFO_Array_builtin_prim_v6__parameterized0_12
     dout,
     rd_clk,
     \dout[27] ,
-    wr_rst_i,
+    rd_rst_i,
+    wr_clk,
     e_1,
     DO);
   output [0:0]pe;
@@ -4556,7 +4536,8 @@ module FIFO_Array_builtin_prim_v6__parameterized0_12
   output [3:0]dout;
   input rd_clk;
   input \dout[27] ;
-  input wr_rst_i;
+  input rd_rst_i;
+  input wr_clk;
   input e_1;
   input [3:0]DO;
 
@@ -4599,8 +4580,9 @@ module FIFO_Array_builtin_prim_v6__parameterized0_12
   wire [0:0]pe;
   wire rd_clk;
   wire [0:0]rd_clk_0;
+  wire rd_rst_i;
   wire [7:7]sbiterr_col;
-  wire wr_rst_i;
+  wire wr_clk;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_DOP_UNCONNECTED ;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_ECCPARITY_UNCONNECTED ;
 
@@ -4642,10 +4624,10 @@ module FIFO_Array_builtin_prim_v6__parameterized0_12
         .RDEN(\dout[27] ),
         .RDERR(\gf36e1_inst.sngfifo36e1_n_5 ),
         .REGCE(1'b0),
-        .RST(wr_rst_i),
+        .RST(rd_rst_i),
         .RSTREG(1'b0),
         .SBITERR(sbiterr_col),
-        .WRCLK(rd_clk),
+        .WRCLK(wr_clk),
         .WRCOUNT({\gf36e1_inst.sngfifo36e1_n_21 ,\gf36e1_inst.sngfifo36e1_n_22 ,\gf36e1_inst.sngfifo36e1_n_23 ,\gf36e1_inst.sngfifo36e1_n_24 ,\gf36e1_inst.sngfifo36e1_n_25 ,\gf36e1_inst.sngfifo36e1_n_26 ,\gf36e1_inst.sngfifo36e1_n_27 ,\gf36e1_inst.sngfifo36e1_n_28 ,\gf36e1_inst.sngfifo36e1_n_29 ,\gf36e1_inst.sngfifo36e1_n_30 ,\gf36e1_inst.sngfifo36e1_n_31 ,\gf36e1_inst.sngfifo36e1_n_32 ,\gf36e1_inst.sngfifo36e1_n_33 }),
         .WREN(e_1),
         .WRERR(\gf36e1_inst.sngfifo36e1_n_7 ));
@@ -4659,7 +4641,8 @@ module FIFO_Array_builtin_prim_v6__parameterized0_16
     rd_en_0,
     rd_clk_0,
     rd_clk,
-    wr_rst_i,
+    rd_rst_i,
+    wr_clk,
     e_1,
     DO,
     rd_en,
@@ -4670,7 +4653,8 @@ module FIFO_Array_builtin_prim_v6__parameterized0_16
   output rd_en_0;
   output rd_clk_0;
   input rd_clk;
-  input wr_rst_i;
+  input rd_rst_i;
+  input wr_clk;
   input e_1;
   input [3:0]DO;
   input rd_en;
@@ -4718,8 +4702,9 @@ module FIFO_Array_builtin_prim_v6__parameterized0_16
   wire rd_clk_0;
   wire rd_en;
   wire rd_en_0;
+  wire rd_rst_i;
   wire [6:6]sbiterr_col;
-  wire wr_rst_i;
+  wire wr_clk;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_DOP_UNCONNECTED ;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_ECCPARITY_UNCONNECTED ;
 
@@ -4769,10 +4754,10 @@ module FIFO_Array_builtin_prim_v6__parameterized0_16
         .RDEN(rd_en_0),
         .RDERR(\gf36e1_inst.sngfifo36e1_n_5 ),
         .REGCE(1'b0),
-        .RST(wr_rst_i),
+        .RST(rd_rst_i),
         .RSTREG(1'b0),
         .SBITERR(sbiterr_col),
-        .WRCLK(rd_clk),
+        .WRCLK(wr_clk),
         .WRCOUNT({\gf36e1_inst.sngfifo36e1_n_21 ,\gf36e1_inst.sngfifo36e1_n_22 ,\gf36e1_inst.sngfifo36e1_n_23 ,\gf36e1_inst.sngfifo36e1_n_24 ,\gf36e1_inst.sngfifo36e1_n_25 ,\gf36e1_inst.sngfifo36e1_n_26 ,\gf36e1_inst.sngfifo36e1_n_27 ,\gf36e1_inst.sngfifo36e1_n_28 ,\gf36e1_inst.sngfifo36e1_n_29 ,\gf36e1_inst.sngfifo36e1_n_30 ,\gf36e1_inst.sngfifo36e1_n_31 ,\gf36e1_inst.sngfifo36e1_n_32 ,\gf36e1_inst.sngfifo36e1_n_33 }),
         .WREN(e_1),
         .WRERR(\gf36e1_inst.sngfifo36e1_n_7 ));
@@ -4796,7 +4781,8 @@ module FIFO_Array_builtin_prim_v6__parameterized0_20
     dout,
     rd_clk,
     \dout[19] ,
-    wr_rst_i,
+    rd_rst_i,
+    wr_clk,
     e_1,
     DO);
   output [0:0]pe;
@@ -4805,7 +4791,8 @@ module FIFO_Array_builtin_prim_v6__parameterized0_20
   output [3:0]dout;
   input rd_clk;
   input \dout[19] ;
-  input wr_rst_i;
+  input rd_rst_i;
+  input wr_clk;
   input e_1;
   input [3:0]DO;
 
@@ -4848,8 +4835,9 @@ module FIFO_Array_builtin_prim_v6__parameterized0_20
   wire \gf36e1_inst.sngfifo36e1_n_9 ;
   wire [0:0]pe;
   wire rd_clk;
+  wire rd_rst_i;
   wire [5:5]sbiterr_col;
-  wire wr_rst_i;
+  wire wr_clk;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_DOP_UNCONNECTED ;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_ECCPARITY_UNCONNECTED ;
 
@@ -4891,10 +4879,10 @@ module FIFO_Array_builtin_prim_v6__parameterized0_20
         .RDEN(\dout[19] ),
         .RDERR(\gf36e1_inst.sngfifo36e1_n_5 ),
         .REGCE(1'b0),
-        .RST(wr_rst_i),
+        .RST(rd_rst_i),
         .RSTREG(1'b0),
         .SBITERR(sbiterr_col),
-        .WRCLK(rd_clk),
+        .WRCLK(wr_clk),
         .WRCOUNT({\gf36e1_inst.sngfifo36e1_n_21 ,\gf36e1_inst.sngfifo36e1_n_22 ,\gf36e1_inst.sngfifo36e1_n_23 ,\gf36e1_inst.sngfifo36e1_n_24 ,\gf36e1_inst.sngfifo36e1_n_25 ,\gf36e1_inst.sngfifo36e1_n_26 ,\gf36e1_inst.sngfifo36e1_n_27 ,\gf36e1_inst.sngfifo36e1_n_28 ,\gf36e1_inst.sngfifo36e1_n_29 ,\gf36e1_inst.sngfifo36e1_n_30 ,\gf36e1_inst.sngfifo36e1_n_31 ,\gf36e1_inst.sngfifo36e1_n_32 ,\gf36e1_inst.sngfifo36e1_n_33 }),
         .WREN(e_1),
         .WRERR(\gf36e1_inst.sngfifo36e1_n_7 ));
@@ -4908,7 +4896,8 @@ module FIFO_Array_builtin_prim_v6__parameterized0_24
     dout,
     rd_clk,
     \dout[15] ,
-    wr_rst_i,
+    rd_rst_i,
+    wr_clk,
     e_1,
     DO);
   output [0:0]pe;
@@ -4917,7 +4906,8 @@ module FIFO_Array_builtin_prim_v6__parameterized0_24
   output [3:0]dout;
   input rd_clk;
   input \dout[15] ;
-  input wr_rst_i;
+  input rd_rst_i;
+  input wr_clk;
   input e_1;
   input [3:0]DO;
 
@@ -4960,8 +4950,9 @@ module FIFO_Array_builtin_prim_v6__parameterized0_24
   wire [0:0]pe;
   wire rd_clk;
   wire [0:0]rd_clk_0;
+  wire rd_rst_i;
   wire [4:4]sbiterr_col;
-  wire wr_rst_i;
+  wire wr_clk;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_DOP_UNCONNECTED ;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_ECCPARITY_UNCONNECTED ;
 
@@ -5003,10 +4994,10 @@ module FIFO_Array_builtin_prim_v6__parameterized0_24
         .RDEN(\dout[15] ),
         .RDERR(\gf36e1_inst.sngfifo36e1_n_5 ),
         .REGCE(1'b0),
-        .RST(wr_rst_i),
+        .RST(rd_rst_i),
         .RSTREG(1'b0),
         .SBITERR(sbiterr_col),
-        .WRCLK(rd_clk),
+        .WRCLK(wr_clk),
         .WRCOUNT({\gf36e1_inst.sngfifo36e1_n_21 ,\gf36e1_inst.sngfifo36e1_n_22 ,\gf36e1_inst.sngfifo36e1_n_23 ,\gf36e1_inst.sngfifo36e1_n_24 ,\gf36e1_inst.sngfifo36e1_n_25 ,\gf36e1_inst.sngfifo36e1_n_26 ,\gf36e1_inst.sngfifo36e1_n_27 ,\gf36e1_inst.sngfifo36e1_n_28 ,\gf36e1_inst.sngfifo36e1_n_29 ,\gf36e1_inst.sngfifo36e1_n_30 ,\gf36e1_inst.sngfifo36e1_n_31 ,\gf36e1_inst.sngfifo36e1_n_32 ,\gf36e1_inst.sngfifo36e1_n_33 }),
         .WREN(e_1),
         .WRERR(\gf36e1_inst.sngfifo36e1_n_7 ));
@@ -5021,7 +5012,8 @@ module FIFO_Array_builtin_prim_v6__parameterized0_28
     empty,
     rd_clk,
     \dout[11] ,
-    wr_rst_i,
+    rd_rst_i,
+    wr_clk,
     e_1,
     DO,
     empty_0,
@@ -5033,7 +5025,8 @@ module FIFO_Array_builtin_prim_v6__parameterized0_28
   output empty;
   input rd_clk;
   input \dout[11] ;
-  input wr_rst_i;
+  input rd_rst_i;
+  input wr_clk;
   input e_1;
   input [3:0]DO;
   input [2:0]empty_0;
@@ -5081,8 +5074,9 @@ module FIFO_Array_builtin_prim_v6__parameterized0_28
   wire \gf36e1_inst.sngfifo36e1_n_9 ;
   wire [0:0]pe;
   wire rd_clk;
+  wire rd_rst_i;
   wire [3:3]sbiterr_col;
-  wire wr_rst_i;
+  wire wr_clk;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_DOP_UNCONNECTED ;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_ECCPARITY_UNCONNECTED ;
 
@@ -5133,10 +5127,10 @@ module FIFO_Array_builtin_prim_v6__parameterized0_28
         .RDEN(\dout[11] ),
         .RDERR(\gf36e1_inst.sngfifo36e1_n_5 ),
         .REGCE(1'b0),
-        .RST(wr_rst_i),
+        .RST(rd_rst_i),
         .RSTREG(1'b0),
         .SBITERR(sbiterr_col),
-        .WRCLK(rd_clk),
+        .WRCLK(wr_clk),
         .WRCOUNT({\gf36e1_inst.sngfifo36e1_n_21 ,\gf36e1_inst.sngfifo36e1_n_22 ,\gf36e1_inst.sngfifo36e1_n_23 ,\gf36e1_inst.sngfifo36e1_n_24 ,\gf36e1_inst.sngfifo36e1_n_25 ,\gf36e1_inst.sngfifo36e1_n_26 ,\gf36e1_inst.sngfifo36e1_n_27 ,\gf36e1_inst.sngfifo36e1_n_28 ,\gf36e1_inst.sngfifo36e1_n_29 ,\gf36e1_inst.sngfifo36e1_n_30 ,\gf36e1_inst.sngfifo36e1_n_31 ,\gf36e1_inst.sngfifo36e1_n_32 ,\gf36e1_inst.sngfifo36e1_n_33 }),
         .WREN(e_1),
         .WRERR(\gf36e1_inst.sngfifo36e1_n_7 ));
@@ -5150,7 +5144,8 @@ module FIFO_Array_builtin_prim_v6__parameterized0_32
     dout,
     rd_clk,
     \dout[7] ,
-    wr_rst_i,
+    rd_rst_i,
+    wr_clk,
     e_1,
     DO);
   output [0:0]pe;
@@ -5159,7 +5154,8 @@ module FIFO_Array_builtin_prim_v6__parameterized0_32
   output [3:0]dout;
   input rd_clk;
   input \dout[7] ;
-  input wr_rst_i;
+  input rd_rst_i;
+  input wr_clk;
   input e_1;
   input [3:0]DO;
 
@@ -5202,8 +5198,9 @@ module FIFO_Array_builtin_prim_v6__parameterized0_32
   wire \gf36e1_inst.sngfifo36e1_n_9 ;
   wire [0:0]pe;
   wire rd_clk;
+  wire rd_rst_i;
   wire [2:2]sbiterr_col;
-  wire wr_rst_i;
+  wire wr_clk;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_DOP_UNCONNECTED ;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_ECCPARITY_UNCONNECTED ;
 
@@ -5245,10 +5242,10 @@ module FIFO_Array_builtin_prim_v6__parameterized0_32
         .RDEN(\dout[7] ),
         .RDERR(\gf36e1_inst.sngfifo36e1_n_5 ),
         .REGCE(1'b0),
-        .RST(wr_rst_i),
+        .RST(rd_rst_i),
         .RSTREG(1'b0),
         .SBITERR(sbiterr_col),
-        .WRCLK(rd_clk),
+        .WRCLK(wr_clk),
         .WRCOUNT({\gf36e1_inst.sngfifo36e1_n_21 ,\gf36e1_inst.sngfifo36e1_n_22 ,\gf36e1_inst.sngfifo36e1_n_23 ,\gf36e1_inst.sngfifo36e1_n_24 ,\gf36e1_inst.sngfifo36e1_n_25 ,\gf36e1_inst.sngfifo36e1_n_26 ,\gf36e1_inst.sngfifo36e1_n_27 ,\gf36e1_inst.sngfifo36e1_n_28 ,\gf36e1_inst.sngfifo36e1_n_29 ,\gf36e1_inst.sngfifo36e1_n_30 ,\gf36e1_inst.sngfifo36e1_n_31 ,\gf36e1_inst.sngfifo36e1_n_32 ,\gf36e1_inst.sngfifo36e1_n_33 }),
         .WREN(e_1),
         .WRERR(\gf36e1_inst.sngfifo36e1_n_7 ));
@@ -5262,7 +5259,8 @@ module FIFO_Array_builtin_prim_v6__parameterized0_36
     dout,
     rd_clk,
     dout_3_sp_1,
-    wr_rst_i,
+    rd_rst_i,
+    wr_clk,
     e_1,
     DO);
   output [0:0]pe;
@@ -5271,7 +5269,8 @@ module FIFO_Array_builtin_prim_v6__parameterized0_36
   output [3:0]dout;
   input rd_clk;
   input dout_3_sp_1;
-  input wr_rst_i;
+  input rd_rst_i;
+  input wr_clk;
   input e_1;
   input [3:0]DO;
 
@@ -5314,8 +5313,9 @@ module FIFO_Array_builtin_prim_v6__parameterized0_36
   wire \gf36e1_inst.sngfifo36e1_n_9 ;
   wire [0:0]pe;
   wire rd_clk;
+  wire rd_rst_i;
   wire [1:1]sbiterr_col;
-  wire wr_rst_i;
+  wire wr_clk;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_DOP_UNCONNECTED ;
   wire [7:0]\NLW_gf36e1_inst.sngfifo36e1_ECCPARITY_UNCONNECTED ;
 
@@ -5358,10 +5358,10 @@ module FIFO_Array_builtin_prim_v6__parameterized0_36
         .RDEN(dout_3_sn_1),
         .RDERR(\gf36e1_inst.sngfifo36e1_n_5 ),
         .REGCE(1'b0),
-        .RST(wr_rst_i),
+        .RST(rd_rst_i),
         .RSTREG(1'b0),
         .SBITERR(sbiterr_col),
-        .WRCLK(rd_clk),
+        .WRCLK(wr_clk),
         .WRCOUNT({\gf36e1_inst.sngfifo36e1_n_21 ,\gf36e1_inst.sngfifo36e1_n_22 ,\gf36e1_inst.sngfifo36e1_n_23 ,\gf36e1_inst.sngfifo36e1_n_24 ,\gf36e1_inst.sngfifo36e1_n_25 ,\gf36e1_inst.sngfifo36e1_n_26 ,\gf36e1_inst.sngfifo36e1_n_27 ,\gf36e1_inst.sngfifo36e1_n_28 ,\gf36e1_inst.sngfifo36e1_n_29 ,\gf36e1_inst.sngfifo36e1_n_30 ,\gf36e1_inst.sngfifo36e1_n_31 ,\gf36e1_inst.sngfifo36e1_n_32 ,\gf36e1_inst.sngfifo36e1_n_33 }),
         .WREN(e_1),
         .WRERR(\gf36e1_inst.sngfifo36e1_n_7 ));
@@ -5374,10 +5374,10 @@ module FIFO_Array_builtin_top_v6
     prog_empty,
     full,
     empty,
-    rd_clk,
-    wr_rst_i,
     wr_clk,
+    rd_rst_i,
     din,
+    rd_clk,
     rd_en,
     wr_en);
   output [31:0]dout;
@@ -5385,10 +5385,10 @@ module FIFO_Array_builtin_top_v6
   output prog_empty;
   output full;
   output empty;
-  input rd_clk;
-  input wr_rst_i;
   input wr_clk;
+  input rd_rst_i;
   input [31:0]din;
+  input rd_clk;
   input rd_en;
   input wr_en;
 
@@ -5409,9 +5409,9 @@ module FIFO_Array_builtin_top_v6
   wire prog_full_INST_0_i_1_n_0;
   wire rd_clk;
   wire rd_en;
+  wire rd_rst_i;
   wire wr_clk;
   wire wr_en;
-  wire wr_rst_i;
   wire wr_tmp;
 
   FIFO_Array_builtin_extdepth_v6 \gextw[1].gnll_fifo.inst_extd 
@@ -5423,8 +5423,8 @@ module FIFO_Array_builtin_top_v6
         .pe(pe[1]),
         .pf(pf[1]),
         .rd_clk(rd_clk),
+        .rd_rst_i(rd_rst_i),
         .wr_clk(wr_clk),
-        .wr_rst_i(wr_rst_i),
         .wr_tmp(wr_tmp));
   FIFO_Array_builtin_extdepth_v6_0 \gextw[2].gnll_fifo.inst_extd 
        (.din(din[7:4]),
@@ -5435,8 +5435,8 @@ module FIFO_Array_builtin_top_v6
         .pe(pe[2]),
         .pf(pf[2]),
         .rd_clk(rd_clk),
+        .rd_rst_i(rd_rst_i),
         .wr_clk(wr_clk),
-        .wr_rst_i(wr_rst_i),
         .wr_tmp(wr_tmp));
   FIFO_Array_builtin_extdepth_v6_1 \gextw[3].gnll_fifo.inst_extd 
        (.din(din[11:8]),
@@ -5453,8 +5453,8 @@ module FIFO_Array_builtin_top_v6
         .pe(pe[3]),
         .pf(pf[3]),
         .rd_clk(rd_clk),
+        .rd_rst_i(rd_rst_i),
         .wr_clk(wr_clk),
-        .wr_rst_i(wr_rst_i),
         .wr_tmp(wr_tmp));
   FIFO_Array_builtin_extdepth_v6_2 \gextw[4].gnll_fifo.inst_extd 
        (.din(din[15:12]),
@@ -5463,10 +5463,10 @@ module FIFO_Array_builtin_top_v6
         .pe(pe[4]),
         .pf(pf[4]),
         .rd_clk(rd_clk),
-        .rd_clk_0(ful[4]),
-        .rd_clk_1(emp[4]),
+        .rd_clk_0(emp[4]),
+        .rd_rst_i(rd_rst_i),
         .wr_clk(wr_clk),
-        .wr_rst_i(wr_rst_i),
+        .wr_clk_0(ful[4]),
         .wr_tmp(wr_tmp));
   FIFO_Array_builtin_extdepth_v6_3 \gextw[5].gnll_fifo.inst_extd 
        (.din(din[19:16]),
@@ -5477,8 +5477,8 @@ module FIFO_Array_builtin_top_v6
         .pe(pe[5]),
         .pf(pf[5]),
         .rd_clk(rd_clk),
+        .rd_rst_i(rd_rst_i),
         .wr_clk(wr_clk),
-        .wr_rst_i(wr_rst_i),
         .wr_tmp(wr_tmp));
   FIFO_Array_builtin_extdepth_v6_4 \gextw[6].gnll_fifo.inst_extd 
        (.din(din[23:20]),
@@ -5489,12 +5489,12 @@ module FIFO_Array_builtin_top_v6
         .pf(pf[6]),
         .rd_clk(rd_clk),
         .rd_clk_0(\gextw[6].gnll_fifo.inst_extd_n_8 ),
-        .rd_clk_1(\gextw[6].gnll_fifo.inst_extd_n_9 ),
         .rd_en(rd_en),
         .rd_en_0(\gextw[6].gnll_fifo.inst_extd_n_7 ),
+        .rd_rst_i(rd_rst_i),
         .wr_clk(wr_clk),
+        .wr_clk_0(\gextw[6].gnll_fifo.inst_extd_n_9 ),
         .wr_en(wr_en),
-        .wr_rst_i(wr_rst_i),
         .wr_tmp(wr_tmp));
   FIFO_Array_builtin_extdepth_v6_5 \gextw[7].gnll_fifo.inst_extd 
        (.din(din[27:24]),
@@ -5503,10 +5503,10 @@ module FIFO_Array_builtin_top_v6
         .pe(pe[7]),
         .pf(pf[7]),
         .rd_clk(rd_clk),
-        .rd_clk_0(ful[7]),
-        .rd_clk_1(emp[7]),
+        .rd_clk_0(emp[7]),
+        .rd_rst_i(rd_rst_i),
         .wr_clk(wr_clk),
-        .wr_rst_i(wr_rst_i),
+        .wr_clk_0(ful[7]),
         .wr_tmp(wr_tmp));
   FIFO_Array_builtin_extdepth_v6_6 \gextw[8].gnll_fifo.inst_extd 
        (.din(din[31:28]),
@@ -5515,10 +5515,10 @@ module FIFO_Array_builtin_top_v6
         .pe(pe[8]),
         .pf(pf[8]),
         .rd_clk(rd_clk),
-        .rd_clk_0(ful[8]),
-        .rd_clk_1(emp[8]),
+        .rd_clk_0(emp[8]),
+        .rd_rst_i(rd_rst_i),
         .wr_clk(wr_clk),
-        .wr_rst_i(wr_rst_i),
+        .wr_clk_0(ful[8]),
         .wr_tmp(wr_tmp));
   LUT5 #(
     .INIT(32'hFFFFFFFE)) 
@@ -5563,9 +5563,9 @@ module FIFO_Array_fifo_generator_top
     prog_empty,
     full,
     empty,
-    wr_clk,
-    rd_en,
     rd_clk,
+    rd_en,
+    wr_clk,
     din,
     rst,
     wr_en);
@@ -5574,9 +5574,9 @@ module FIFO_Array_fifo_generator_top
   output prog_empty;
   output full;
   output empty;
-  input wr_clk;
-  input rd_en;
   input rd_clk;
+  input rd_en;
+  input wr_clk;
   input [31:0]din;
   input rst;
   input wr_en;
@@ -5652,9 +5652,9 @@ endmodule
 (* C_PROG_EMPTY_THRESH_ASSERT_VAL_WRCH = "1022" *) (* C_PROG_EMPTY_THRESH_NEGATE_VAL = "253" *) (* C_PROG_EMPTY_TYPE = "1" *) 
 (* C_PROG_EMPTY_TYPE_AXIS = "0" *) (* C_PROG_EMPTY_TYPE_RACH = "0" *) (* C_PROG_EMPTY_TYPE_RDCH = "0" *) 
 (* C_PROG_EMPTY_TYPE_WACH = "0" *) (* C_PROG_EMPTY_TYPE_WDCH = "0" *) (* C_PROG_EMPTY_TYPE_WRCH = "0" *) 
-(* C_PROG_FULL_THRESH_ASSERT_VAL = "24593" *) (* C_PROG_FULL_THRESH_ASSERT_VAL_AXIS = "1023" *) (* C_PROG_FULL_THRESH_ASSERT_VAL_RACH = "1023" *) 
+(* C_PROG_FULL_THRESH_ASSERT_VAL = "32759" *) (* C_PROG_FULL_THRESH_ASSERT_VAL_AXIS = "1023" *) (* C_PROG_FULL_THRESH_ASSERT_VAL_RACH = "1023" *) 
 (* C_PROG_FULL_THRESH_ASSERT_VAL_RDCH = "1023" *) (* C_PROG_FULL_THRESH_ASSERT_VAL_WACH = "1023" *) (* C_PROG_FULL_THRESH_ASSERT_VAL_WDCH = "1023" *) 
-(* C_PROG_FULL_THRESH_ASSERT_VAL_WRCH = "1023" *) (* C_PROG_FULL_THRESH_NEGATE_VAL = "24592" *) (* C_PROG_FULL_TYPE = "1" *) 
+(* C_PROG_FULL_THRESH_ASSERT_VAL_WRCH = "1023" *) (* C_PROG_FULL_THRESH_NEGATE_VAL = "32758" *) (* C_PROG_FULL_TYPE = "1" *) 
 (* C_PROG_FULL_TYPE_AXIS = "0" *) (* C_PROG_FULL_TYPE_RACH = "0" *) (* C_PROG_FULL_TYPE_RDCH = "0" *) 
 (* C_PROG_FULL_TYPE_WACH = "0" *) (* C_PROG_FULL_TYPE_WDCH = "0" *) (* C_PROG_FULL_TYPE_WRCH = "0" *) 
 (* C_RACH_TYPE = "0" *) (* C_RDCH_TYPE = "0" *) (* C_RD_DATA_COUNT_WIDTH = "15" *) 
@@ -5671,7 +5671,7 @@ endmodule
 (* C_WRCH_TYPE = "0" *) (* C_WR_ACK_LOW = "0" *) (* C_WR_DATA_COUNT_WIDTH = "15" *) 
 (* C_WR_DEPTH = "32768" *) (* C_WR_DEPTH_AXIS = "1024" *) (* C_WR_DEPTH_RACH = "16" *) 
 (* C_WR_DEPTH_RDCH = "1024" *) (* C_WR_DEPTH_WACH = "16" *) (* C_WR_DEPTH_WDCH = "1024" *) 
-(* C_WR_DEPTH_WRCH = "16" *) (* C_WR_FREQ = "40" *) (* C_WR_PNTR_WIDTH = "15" *) 
+(* C_WR_DEPTH_WRCH = "16" *) (* C_WR_FREQ = "166" *) (* C_WR_PNTR_WIDTH = "15" *) 
 (* C_WR_PNTR_WIDTH_AXIS = "10" *) (* C_WR_PNTR_WIDTH_RACH = "4" *) (* C_WR_PNTR_WIDTH_RDCH = "10" *) 
 (* C_WR_PNTR_WIDTH_WACH = "4" *) (* C_WR_PNTR_WIDTH_WDCH = "10" *) (* C_WR_PNTR_WIDTH_WRCH = "4" *) 
 (* C_WR_RESPONSE_LATENCY = "1" *) (* ORIG_REF_NAME = "fifo_generator_v13_2_5" *) 
@@ -6716,9 +6716,9 @@ module FIFO_Array_fifo_generator_v13_2_5_builtin
     prog_empty,
     full,
     empty,
-    wr_clk,
-    rd_en,
     rd_clk,
+    rd_en,
+    wr_clk,
     din,
     rst,
     wr_en);
@@ -6727,9 +6727,9 @@ module FIFO_Array_fifo_generator_v13_2_5_builtin
   output prog_empty;
   output full;
   output empty;
-  input wr_clk;
-  input rd_en;
   input rd_clk;
+  input rd_en;
+  input wr_clk;
   input [31:0]din;
   input rst;
   input wr_en;
@@ -6742,16 +6742,16 @@ module FIFO_Array_fifo_generator_v13_2_5_builtin
   wire prog_full;
   wire rd_clk;
   wire rd_en;
+  wire rd_rst_i;
   wire rst;
   wire wr_clk;
   wire wr_en;
-  wire wr_rst_i;
 
   FIFO_Array_reset_builtin \g7ser_birst.rstbt 
        (.rd_clk(rd_clk),
+        .rd_rst_i(rd_rst_i),
         .rst(rst),
-        .wr_clk(wr_clk),
-        .wr_rst_i(wr_rst_i));
+        .wr_clk(wr_clk));
   FIFO_Array_builtin_top_v6 \v7_bi_fifo.fblk 
        (.din(din),
         .dout(dout),
@@ -6761,9 +6761,9 @@ module FIFO_Array_fifo_generator_v13_2_5_builtin
         .prog_full(prog_full),
         .rd_clk(rd_clk),
         .rd_en(rd_en),
+        .rd_rst_i(rd_rst_i),
         .wr_clk(wr_clk),
-        .wr_en(wr_en),
-        .wr_rst_i(wr_rst_i));
+        .wr_en(wr_en));
 endmodule
 
 (* ORIG_REF_NAME = "fifo_generator_v13_2_5_synth" *) 
@@ -6773,9 +6773,9 @@ module FIFO_Array_fifo_generator_v13_2_5_synth
     prog_empty,
     full,
     empty,
-    wr_clk,
-    rd_en,
     rd_clk,
+    rd_en,
+    wr_clk,
     din,
     rst,
     wr_en);
@@ -6784,9 +6784,9 @@ module FIFO_Array_fifo_generator_v13_2_5_synth
   output prog_empty;
   output full;
   output empty;
-  input wr_clk;
-  input rd_en;
   input rd_clk;
+  input rd_en;
+  input wr_clk;
   input [31:0]din;
   input rst;
   input wr_en;
@@ -6819,36 +6819,36 @@ endmodule
 
 (* ORIG_REF_NAME = "reset_builtin" *) 
 module FIFO_Array_reset_builtin
-   (wr_rst_i,
+   (rd_rst_i,
+    rd_clk,
     wr_clk,
-    rst,
-    rd_clk);
-  output wr_rst_i;
+    rst);
+  output rd_rst_i;
+  input rd_clk;
   input wr_clk;
   input rst;
-  input rd_clk;
 
   (* async_reg = "true" *) (* msgon = "true" *) wire [5:0]power_on_rd_rst;
   (* async_reg = "true" *) (* msgon = "true" *) wire [5:0]power_on_wr_rst;
   wire rd_clk;
+  wire rd_rst_i;
+  wire rd_rst_reg;
   (* async_reg = "true" *) (* msgon = "true" *) wire rd_rst_reg1;
   (* async_reg = "true" *) (* msgon = "true" *) wire rd_rst_reg2;
   wire rst;
-  wire \rsync.ric.wr_rst_fb_reg[1]_srl4_n_0 ;
-  wire \rsync.ric.wr_rst_fb_reg_n_0_[0] ;
-  wire \rsync.ric.wr_rst_reg_i_1_n_0 ;
+  wire \rsync.ric.rd_rst_fb_reg[1]_srl4_n_0 ;
+  wire \rsync.ric.rd_rst_fb_reg_n_0_[0] ;
+  wire \rsync.ric.rd_rst_reg_i_1_n_0 ;
   wire wr_clk;
-  wire wr_rst_i;
-  wire wr_rst_reg;
   (* async_reg = "true" *) (* msgon = "true" *) wire wr_rst_reg1;
   (* async_reg = "true" *) (* msgon = "true" *) wire wr_rst_reg2;
 
   LUT2 #(
     .INIT(4'hE)) 
     \gf36e1_inst.sngfifo36e1_i_2__0 
-       (.I0(wr_rst_reg),
-        .I1(power_on_wr_rst[0]),
-        .O(wr_rst_i));
+       (.I0(rd_rst_reg),
+        .I1(power_on_rd_rst[0]),
+        .O(rd_rst_i));
   (* ASYNC_REG *) 
   (* KEEP = "yes" *) 
   (* msgon = "true" *) 
@@ -6981,6 +6981,27 @@ module FIFO_Array_reset_builtin
         .D(1'b0),
         .Q(power_on_wr_rst[5]),
         .R(1'b0));
+  FDRE #(
+    .INIT(1'b0)) 
+    \rsync.ric.rd_rst_fb_reg[0] 
+       (.C(rd_clk),
+        .CE(1'b1),
+        .D(\rsync.ric.rd_rst_fb_reg[1]_srl4_n_0 ),
+        .Q(\rsync.ric.rd_rst_fb_reg_n_0_[0] ),
+        .R(1'b0));
+  (* srl_bus_name = "U0/\inst_fifo_gen/gconvfifo.rf/gbi.bi/g7ser_birst.rstbt/rsync.ric.rd_rst_fb_reg " *) 
+  (* srl_name = "U0/\inst_fifo_gen/gconvfifo.rf/gbi.bi/g7ser_birst.rstbt/rsync.ric.rd_rst_fb_reg[1]_srl4 " *) 
+  SRL16E #(
+    .INIT(16'h0000)) 
+    \rsync.ric.rd_rst_fb_reg[1]_srl4 
+       (.A0(1'b1),
+        .A1(1'b1),
+        .A2(1'b0),
+        .A3(1'b0),
+        .CE(1'b1),
+        .CLK(rd_clk),
+        .D(rd_rst_reg),
+        .Q(\rsync.ric.rd_rst_fb_reg[1]_srl4_n_0 ));
   (* ASYNC_REG *) 
   (* KEEP = "yes" *) 
   (* msgon = "true" *) 
@@ -7003,27 +7024,20 @@ module FIFO_Array_reset_builtin
         .D(rd_rst_reg1),
         .PRE(rst),
         .Q(rd_rst_reg2));
-  FDRE #(
+  LUT2 #(
+    .INIT(4'h2)) 
+    \rsync.ric.rd_rst_reg_i_1 
+       (.I0(rd_rst_reg),
+        .I1(\rsync.ric.rd_rst_fb_reg_n_0_[0] ),
+        .O(\rsync.ric.rd_rst_reg_i_1_n_0 ));
+  FDPE #(
     .INIT(1'b0)) 
-    \rsync.ric.wr_rst_fb_reg[0] 
-       (.C(wr_clk),
+    \rsync.ric.rd_rst_reg_reg 
+       (.C(rd_clk),
         .CE(1'b1),
-        .D(\rsync.ric.wr_rst_fb_reg[1]_srl4_n_0 ),
-        .Q(\rsync.ric.wr_rst_fb_reg_n_0_[0] ),
-        .R(1'b0));
-  (* srl_bus_name = "U0/\inst_fifo_gen/gconvfifo.rf/gbi.bi/g7ser_birst.rstbt/rsync.ric.wr_rst_fb_reg " *) 
-  (* srl_name = "U0/\inst_fifo_gen/gconvfifo.rf/gbi.bi/g7ser_birst.rstbt/rsync.ric.wr_rst_fb_reg[1]_srl4 " *) 
-  SRL16E #(
-    .INIT(16'h0000)) 
-    \rsync.ric.wr_rst_fb_reg[1]_srl4 
-       (.A0(1'b1),
-        .A1(1'b1),
-        .A2(1'b0),
-        .A3(1'b0),
-        .CE(1'b1),
-        .CLK(wr_clk),
-        .D(wr_rst_reg),
-        .Q(\rsync.ric.wr_rst_fb_reg[1]_srl4_n_0 ));
+        .D(\rsync.ric.rd_rst_reg_i_1_n_0 ),
+        .PRE(rd_rst_reg2),
+        .Q(rd_rst_reg));
   (* ASYNC_REG *) 
   (* KEEP = "yes" *) 
   (* msgon = "true" *) 
@@ -7046,20 +7060,6 @@ module FIFO_Array_reset_builtin
         .D(wr_rst_reg1),
         .PRE(rst),
         .Q(wr_rst_reg2));
-  LUT2 #(
-    .INIT(4'h2)) 
-    \rsync.ric.wr_rst_reg_i_1 
-       (.I0(wr_rst_reg),
-        .I1(\rsync.ric.wr_rst_fb_reg_n_0_[0] ),
-        .O(\rsync.ric.wr_rst_reg_i_1_n_0 ));
-  FDPE #(
-    .INIT(1'b0)) 
-    \rsync.ric.wr_rst_reg_reg 
-       (.C(wr_clk),
-        .CE(1'b1),
-        .D(\rsync.ric.wr_rst_reg_i_1_n_0 ),
-        .PRE(wr_rst_reg2),
-        .Q(wr_rst_reg));
 endmodule
 `ifndef GLBL
 `define GLBL

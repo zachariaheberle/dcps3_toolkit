@@ -1,4 +1,4 @@
-// (c) Copyright 1995-2022 Xilinx, Inc. All rights reserved.
+// (c) Copyright 1995-2023 Xilinx, Inc. All rights reserved.
 // 
 // This file contains confidential and proprietary information
 // of Xilinx, Inc. and is protected under U.S. and
@@ -68,7 +68,7 @@ module FIFO_Array (
 );
 
 input wire rst;
-(* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME write_clk, FREQ_HZ 40000000, PHASE 0.000, INSERT_VIP 0" *)
+(* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME write_clk, FREQ_HZ 166000000, PHASE 0.000, INSERT_VIP 0" *)
 (* X_INTERFACE_INFO = "xilinx.com:signal:clock:1.0 write_clk CLK" *)
 input wire wr_clk;
 (* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME read_clk, FREQ_HZ 100000000, PHASE 0.000, INSERT_VIP 0" *)
@@ -129,8 +129,8 @@ output wire prog_empty;
     .C_PROG_EMPTY_THRESH_ASSERT_VAL(252),
     .C_PROG_EMPTY_THRESH_NEGATE_VAL(253),
     .C_PROG_EMPTY_TYPE(1),
-    .C_PROG_FULL_THRESH_ASSERT_VAL(24593),
-    .C_PROG_FULL_THRESH_NEGATE_VAL(24592),
+    .C_PROG_FULL_THRESH_ASSERT_VAL(32759),
+    .C_PROG_FULL_THRESH_NEGATE_VAL(32758),
     .C_PROG_FULL_TYPE(1),
     .C_RD_DATA_COUNT_WIDTH(15),
     .C_RD_DEPTH(32768),
@@ -148,7 +148,7 @@ output wire prog_empty;
     .C_WR_ACK_LOW(0),
     .C_WR_DATA_COUNT_WIDTH(15),
     .C_WR_DEPTH(32768),
-    .C_WR_FREQ(40),
+    .C_WR_FREQ(166),
     .C_WR_PNTR_WIDTH(15),
     .C_WR_RESPONSE_LATENCY(1),
     .C_MSGON_VAL(1),

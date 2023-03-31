@@ -1,10 +1,10 @@
 -- Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2019.2 (lin64) Build 2708876 Wed Nov  6 21:39:14 MST 2019
--- Date        : Sat Dec  3 08:27:50 2022
+-- Date        : Fri Mar 31 03:35:20 2023
 -- Host        : ubuntu running 64-bit Ubuntu 18.04.6 LTS
 -- Command     : write_vhdl -force -mode funcsim
---               /home/rsaradhy/work/nexys_ddmtd_latest/Firmware/Nexys.srcs/sources_1/ip/FIFO_Array/FIFO_Array_sim_netlist.vhdl
+--               /home/rsaradhy/work/nexys_ddmtd_github/firmware/source/ip/FIFO_Array/FIFO_Array_sim_netlist.vhdl
 -- Design      : FIFO_Array
 -- Purpose     : This VHDL netlist is a functional simulation representation of the design and should not be modified or
 --               synthesized. This netlist cannot be used for SDF annotated simulation.
@@ -17,12 +17,11 @@ use UNISIM.VCOMPONENTS.ALL;
 entity FIFO_Array_builtin_prim_v6 is
   port (
     pf : out STD_LOGIC_VECTOR ( 0 to 0 );
-    rd_clk_0 : out STD_LOGIC_VECTOR ( 0 to 0 );
+    wr_clk_0 : out STD_LOGIC_VECTOR ( 0 to 0 );
     DO : out STD_LOGIC_VECTOR ( 3 downto 0 );
     e_3 : out STD_LOGIC;
-    rd_clk : in STD_LOGIC;
-    wr_rst_i : in STD_LOGIC;
     wr_clk : in STD_LOGIC;
+    rd_rst_i : in STD_LOGIC;
     wr_tmp : in STD_LOGIC;
     din : in STD_LOGIC_VECTOR ( 3 downto 0 );
     ful_2 : in STD_LOGIC
@@ -75,7 +74,7 @@ begin
 \gf36e1_inst.sngfifo36e1\: unisim.vcomponents.FIFO36E1
     generic map(
       ALMOST_EMPTY_OFFSET => X"000A",
-      ALMOST_FULL_OFFSET => X"1FF3",
+      ALMOST_FULL_OFFSET => X"000D",
       DATA_WIDTH => 4,
       DO_REG => 1,
       EN_ECC_READ => false,
@@ -105,10 +104,10 @@ begin
       DOP(7 downto 0) => \NLW_gf36e1_inst.sngfifo36e1_DOP_UNCONNECTED\(7 downto 0),
       ECCPARITY(7 downto 0) => \NLW_gf36e1_inst.sngfifo36e1_ECCPARITY_UNCONNECTED\(7 downto 0),
       EMPTY => emp_3,
-      FULL => rd_clk_0(0),
+      FULL => wr_clk_0(0),
       INJECTDBITERR => '0',
       INJECTSBITERR => '0',
-      RDCLK => rd_clk,
+      RDCLK => wr_clk,
       RDCOUNT(12) => \gf36e1_inst.sngfifo36e1_n_8\,
       RDCOUNT(11) => \gf36e1_inst.sngfifo36e1_n_9\,
       RDCOUNT(10) => \gf36e1_inst.sngfifo36e1_n_10\,
@@ -125,7 +124,7 @@ begin
       RDEN => \^e_3\,
       RDERR => \gf36e1_inst.sngfifo36e1_n_5\,
       REGCE => '0',
-      RST => wr_rst_i,
+      RST => rd_rst_i,
       RSTREG => '0',
       SBITERR => \gf36e1_inst.sngfifo36e1_n_6\,
       WRCLK => wr_clk,
@@ -164,8 +163,8 @@ entity FIFO_Array_builtin_prim_v6_10 is
     ful_2 : out STD_LOGIC;
     DO : out STD_LOGIC_VECTOR ( 3 downto 0 );
     e_2 : out STD_LOGIC;
-    rd_clk : in STD_LOGIC;
-    wr_rst_i : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
+    rd_rst_i : in STD_LOGIC;
     e_3 : in STD_LOGIC;
     \gf36e1_inst.sngfifo36e1_0\ : in STD_LOGIC_VECTOR ( 3 downto 0 );
     ful_1 : in STD_LOGIC
@@ -219,7 +218,7 @@ begin
 \gf36e1_inst.sngfifo36e1\: unisim.vcomponents.FIFO36E1
     generic map(
       ALMOST_EMPTY_OFFSET => X"000A",
-      ALMOST_FULL_OFFSET => X"1FF3",
+      ALMOST_FULL_OFFSET => X"000D",
       DATA_WIDTH => 4,
       DO_REG => 1,
       EN_ECC_READ => false,
@@ -252,7 +251,7 @@ begin
       FULL => ful_2,
       INJECTDBITERR => '0',
       INJECTSBITERR => '0',
-      RDCLK => rd_clk,
+      RDCLK => wr_clk,
       RDCOUNT(12) => \gf36e1_inst.sngfifo36e1_n_8\,
       RDCOUNT(11) => \gf36e1_inst.sngfifo36e1_n_9\,
       RDCOUNT(10) => \gf36e1_inst.sngfifo36e1_n_10\,
@@ -269,10 +268,10 @@ begin
       RDEN => \^e_2\,
       RDERR => \gf36e1_inst.sngfifo36e1_n_5\,
       REGCE => '0',
-      RST => wr_rst_i,
+      RST => rd_rst_i,
       RSTREG => '0',
       SBITERR => \gf36e1_inst.sngfifo36e1_n_6\,
-      WRCLK => rd_clk,
+      WRCLK => wr_clk,
       WRCOUNT(12) => \gf36e1_inst.sngfifo36e1_n_21\,
       WRCOUNT(11) => \gf36e1_inst.sngfifo36e1_n_22\,
       WRCOUNT(10) => \gf36e1_inst.sngfifo36e1_n_23\,
@@ -308,8 +307,8 @@ entity FIFO_Array_builtin_prim_v6_11 is
     ful_1 : out STD_LOGIC;
     DO : out STD_LOGIC_VECTOR ( 3 downto 0 );
     e_1 : out STD_LOGIC;
-    rd_clk : in STD_LOGIC;
-    wr_rst_i : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
+    rd_rst_i : in STD_LOGIC;
     e_2 : in STD_LOGIC;
     \dout[27]\ : in STD_LOGIC_VECTOR ( 3 downto 0 );
     ful_0 : in STD_LOGIC
@@ -363,7 +362,7 @@ begin
 \gf36e1_inst.sngfifo36e1\: unisim.vcomponents.FIFO36E1
     generic map(
       ALMOST_EMPTY_OFFSET => X"000A",
-      ALMOST_FULL_OFFSET => X"1FF3",
+      ALMOST_FULL_OFFSET => X"000D",
       DATA_WIDTH => 4,
       DO_REG => 1,
       EN_ECC_READ => false,
@@ -396,7 +395,7 @@ begin
       FULL => ful_1,
       INJECTDBITERR => '0',
       INJECTSBITERR => '0',
-      RDCLK => rd_clk,
+      RDCLK => wr_clk,
       RDCOUNT(12) => \gf36e1_inst.sngfifo36e1_n_8\,
       RDCOUNT(11) => \gf36e1_inst.sngfifo36e1_n_9\,
       RDCOUNT(10) => \gf36e1_inst.sngfifo36e1_n_10\,
@@ -413,10 +412,10 @@ begin
       RDEN => \^e_1\,
       RDERR => \gf36e1_inst.sngfifo36e1_n_5\,
       REGCE => '0',
-      RST => wr_rst_i,
+      RST => rd_rst_i,
       RSTREG => '0',
       SBITERR => \gf36e1_inst.sngfifo36e1_n_6\,
-      WRCLK => rd_clk,
+      WRCLK => wr_clk,
       WRCOUNT(12) => \gf36e1_inst.sngfifo36e1_n_21\,
       WRCOUNT(11) => \gf36e1_inst.sngfifo36e1_n_22\,
       WRCOUNT(10) => \gf36e1_inst.sngfifo36e1_n_23\,
@@ -453,10 +452,9 @@ entity FIFO_Array_builtin_prim_v6_13 is
     DO : out STD_LOGIC_VECTOR ( 3 downto 0 );
     e_3 : out STD_LOGIC;
     wr_tmp : out STD_LOGIC;
-    rd_clk_0 : out STD_LOGIC;
-    rd_clk : in STD_LOGIC;
-    wr_rst_i : in STD_LOGIC;
+    wr_clk_0 : out STD_LOGIC;
     wr_clk : in STD_LOGIC;
+    rd_rst_i : in STD_LOGIC;
     din : in STD_LOGIC_VECTOR ( 3 downto 0 );
     ful_2 : in STD_LOGIC;
     wr_en : in STD_LOGIC;
@@ -502,7 +500,7 @@ architecture STRUCTURE of FIFO_Array_builtin_prim_v6_13 is
   signal \gf36e1_inst.sngfifo36e1_n_7\ : STD_LOGIC;
   signal \gf36e1_inst.sngfifo36e1_n_8\ : STD_LOGIC;
   signal \gf36e1_inst.sngfifo36e1_n_9\ : STD_LOGIC;
-  signal \^rd_clk_0\ : STD_LOGIC;
+  signal \^wr_clk_0\ : STD_LOGIC;
   signal \^wr_tmp\ : STD_LOGIC;
   signal \NLW_gf36e1_inst.sngfifo36e1_DOP_UNCONNECTED\ : STD_LOGIC_VECTOR ( 7 downto 0 );
   signal \NLW_gf36e1_inst.sngfifo36e1_ECCPARITY_UNCONNECTED\ : STD_LOGIC_VECTOR ( 7 downto 0 );
@@ -510,7 +508,7 @@ architecture STRUCTURE of FIFO_Array_builtin_prim_v6_13 is
   attribute box_type of \gf36e1_inst.sngfifo36e1\ : label is "PRIMITIVE";
 begin
   e_3 <= \^e_3\;
-  rd_clk_0 <= \^rd_clk_0\;
+  wr_clk_0 <= \^wr_clk_0\;
   wr_tmp <= \^wr_tmp\;
 full_INST_0_i_1: unisim.vcomponents.LUT4
     generic map(
@@ -521,12 +519,12 @@ full_INST_0_i_1: unisim.vcomponents.LUT4
       I1 => full(4),
       I2 => full(6),
       I3 => full(5),
-      O => \^rd_clk_0\
+      O => \^wr_clk_0\
     );
 \gf36e1_inst.sngfifo36e1\: unisim.vcomponents.FIFO36E1
     generic map(
       ALMOST_EMPTY_OFFSET => X"000A",
-      ALMOST_FULL_OFFSET => X"1FF3",
+      ALMOST_FULL_OFFSET => X"000D",
       DATA_WIDTH => 4,
       DO_REG => 1,
       EN_ECC_READ => false,
@@ -559,7 +557,7 @@ full_INST_0_i_1: unisim.vcomponents.LUT4
       FULL => ful(6),
       INJECTDBITERR => '0',
       INJECTSBITERR => '0',
-      RDCLK => rd_clk,
+      RDCLK => wr_clk,
       RDCOUNT(12) => \gf36e1_inst.sngfifo36e1_n_8\,
       RDCOUNT(11) => \gf36e1_inst.sngfifo36e1_n_9\,
       RDCOUNT(10) => \gf36e1_inst.sngfifo36e1_n_10\,
@@ -576,7 +574,7 @@ full_INST_0_i_1: unisim.vcomponents.LUT4
       RDEN => \^e_3\,
       RDERR => \gf36e1_inst.sngfifo36e1_n_5\,
       REGCE => '0',
-      RST => wr_rst_i,
+      RST => rd_rst_i,
       RSTREG => '0',
       SBITERR => \gf36e1_inst.sngfifo36e1_n_6\,
       WRCLK => wr_clk,
@@ -611,7 +609,7 @@ full_INST_0_i_1: unisim.vcomponents.LUT4
     )
         port map (
       I0 => wr_en,
-      I1 => \^rd_clk_0\,
+      I1 => \^wr_clk_0\,
       I2 => full(1),
       I3 => full(0),
       I4 => full(3),
@@ -628,8 +626,8 @@ entity FIFO_Array_builtin_prim_v6_14 is
     ful_2 : out STD_LOGIC;
     DO : out STD_LOGIC_VECTOR ( 3 downto 0 );
     e_2 : out STD_LOGIC;
-    rd_clk : in STD_LOGIC;
-    wr_rst_i : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
+    rd_rst_i : in STD_LOGIC;
     e_3 : in STD_LOGIC;
     \gf36e1_inst.sngfifo36e1_0\ : in STD_LOGIC_VECTOR ( 3 downto 0 );
     ful_1 : in STD_LOGIC
@@ -683,7 +681,7 @@ begin
 \gf36e1_inst.sngfifo36e1\: unisim.vcomponents.FIFO36E1
     generic map(
       ALMOST_EMPTY_OFFSET => X"000A",
-      ALMOST_FULL_OFFSET => X"1FF3",
+      ALMOST_FULL_OFFSET => X"000D",
       DATA_WIDTH => 4,
       DO_REG => 1,
       EN_ECC_READ => false,
@@ -716,7 +714,7 @@ begin
       FULL => ful_2,
       INJECTDBITERR => '0',
       INJECTSBITERR => '0',
-      RDCLK => rd_clk,
+      RDCLK => wr_clk,
       RDCOUNT(12) => \gf36e1_inst.sngfifo36e1_n_8\,
       RDCOUNT(11) => \gf36e1_inst.sngfifo36e1_n_9\,
       RDCOUNT(10) => \gf36e1_inst.sngfifo36e1_n_10\,
@@ -733,10 +731,10 @@ begin
       RDEN => \^e_2\,
       RDERR => \gf36e1_inst.sngfifo36e1_n_5\,
       REGCE => '0',
-      RST => wr_rst_i,
+      RST => rd_rst_i,
       RSTREG => '0',
       SBITERR => \gf36e1_inst.sngfifo36e1_n_6\,
-      WRCLK => rd_clk,
+      WRCLK => wr_clk,
       WRCOUNT(12) => \gf36e1_inst.sngfifo36e1_n_21\,
       WRCOUNT(11) => \gf36e1_inst.sngfifo36e1_n_22\,
       WRCOUNT(10) => \gf36e1_inst.sngfifo36e1_n_23\,
@@ -772,8 +770,8 @@ entity FIFO_Array_builtin_prim_v6_15 is
     ful_1 : out STD_LOGIC;
     DO : out STD_LOGIC_VECTOR ( 3 downto 0 );
     e_1 : out STD_LOGIC;
-    rd_clk : in STD_LOGIC;
-    wr_rst_i : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
+    rd_rst_i : in STD_LOGIC;
     e_2 : in STD_LOGIC;
     \dout[23]\ : in STD_LOGIC_VECTOR ( 3 downto 0 );
     ful_0 : in STD_LOGIC
@@ -827,7 +825,7 @@ begin
 \gf36e1_inst.sngfifo36e1\: unisim.vcomponents.FIFO36E1
     generic map(
       ALMOST_EMPTY_OFFSET => X"000A",
-      ALMOST_FULL_OFFSET => X"1FF3",
+      ALMOST_FULL_OFFSET => X"000D",
       DATA_WIDTH => 4,
       DO_REG => 1,
       EN_ECC_READ => false,
@@ -860,7 +858,7 @@ begin
       FULL => ful_1,
       INJECTDBITERR => '0',
       INJECTSBITERR => '0',
-      RDCLK => rd_clk,
+      RDCLK => wr_clk,
       RDCOUNT(12) => \gf36e1_inst.sngfifo36e1_n_8\,
       RDCOUNT(11) => \gf36e1_inst.sngfifo36e1_n_9\,
       RDCOUNT(10) => \gf36e1_inst.sngfifo36e1_n_10\,
@@ -877,10 +875,10 @@ begin
       RDEN => \^e_1\,
       RDERR => \gf36e1_inst.sngfifo36e1_n_5\,
       REGCE => '0',
-      RST => wr_rst_i,
+      RST => rd_rst_i,
       RSTREG => '0',
       SBITERR => \gf36e1_inst.sngfifo36e1_n_6\,
-      WRCLK => rd_clk,
+      WRCLK => wr_clk,
       WRCOUNT(12) => \gf36e1_inst.sngfifo36e1_n_21\,
       WRCOUNT(11) => \gf36e1_inst.sngfifo36e1_n_22\,
       WRCOUNT(10) => \gf36e1_inst.sngfifo36e1_n_23\,
@@ -917,9 +915,8 @@ entity FIFO_Array_builtin_prim_v6_17 is
     ful : out STD_LOGIC_VECTOR ( 0 to 0 );
     DO : out STD_LOGIC_VECTOR ( 3 downto 0 );
     e_3 : out STD_LOGIC;
-    rd_clk : in STD_LOGIC;
-    wr_rst_i : in STD_LOGIC;
     wr_clk : in STD_LOGIC;
+    rd_rst_i : in STD_LOGIC;
     wr_tmp : in STD_LOGIC;
     din : in STD_LOGIC_VECTOR ( 3 downto 0 );
     ful_2 : in STD_LOGIC
@@ -972,7 +969,7 @@ begin
 \gf36e1_inst.sngfifo36e1\: unisim.vcomponents.FIFO36E1
     generic map(
       ALMOST_EMPTY_OFFSET => X"000A",
-      ALMOST_FULL_OFFSET => X"1FF3",
+      ALMOST_FULL_OFFSET => X"000D",
       DATA_WIDTH => 4,
       DO_REG => 1,
       EN_ECC_READ => false,
@@ -1005,7 +1002,7 @@ begin
       FULL => ful(0),
       INJECTDBITERR => '0',
       INJECTSBITERR => '0',
-      RDCLK => rd_clk,
+      RDCLK => wr_clk,
       RDCOUNT(12) => \gf36e1_inst.sngfifo36e1_n_8\,
       RDCOUNT(11) => \gf36e1_inst.sngfifo36e1_n_9\,
       RDCOUNT(10) => \gf36e1_inst.sngfifo36e1_n_10\,
@@ -1022,7 +1019,7 @@ begin
       RDEN => \^e_3\,
       RDERR => \gf36e1_inst.sngfifo36e1_n_5\,
       REGCE => '0',
-      RST => wr_rst_i,
+      RST => rd_rst_i,
       RSTREG => '0',
       SBITERR => \gf36e1_inst.sngfifo36e1_n_6\,
       WRCLK => wr_clk,
@@ -1061,8 +1058,8 @@ entity FIFO_Array_builtin_prim_v6_18 is
     ful_2 : out STD_LOGIC;
     DO : out STD_LOGIC_VECTOR ( 3 downto 0 );
     e_2 : out STD_LOGIC;
-    rd_clk : in STD_LOGIC;
-    wr_rst_i : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
+    rd_rst_i : in STD_LOGIC;
     e_3 : in STD_LOGIC;
     \gf36e1_inst.sngfifo36e1_0\ : in STD_LOGIC_VECTOR ( 3 downto 0 );
     ful_1 : in STD_LOGIC
@@ -1116,7 +1113,7 @@ begin
 \gf36e1_inst.sngfifo36e1\: unisim.vcomponents.FIFO36E1
     generic map(
       ALMOST_EMPTY_OFFSET => X"000A",
-      ALMOST_FULL_OFFSET => X"1FF3",
+      ALMOST_FULL_OFFSET => X"000D",
       DATA_WIDTH => 4,
       DO_REG => 1,
       EN_ECC_READ => false,
@@ -1149,7 +1146,7 @@ begin
       FULL => ful_2,
       INJECTDBITERR => '0',
       INJECTSBITERR => '0',
-      RDCLK => rd_clk,
+      RDCLK => wr_clk,
       RDCOUNT(12) => \gf36e1_inst.sngfifo36e1_n_8\,
       RDCOUNT(11) => \gf36e1_inst.sngfifo36e1_n_9\,
       RDCOUNT(10) => \gf36e1_inst.sngfifo36e1_n_10\,
@@ -1166,10 +1163,10 @@ begin
       RDEN => \^e_2\,
       RDERR => \gf36e1_inst.sngfifo36e1_n_5\,
       REGCE => '0',
-      RST => wr_rst_i,
+      RST => rd_rst_i,
       RSTREG => '0',
       SBITERR => \gf36e1_inst.sngfifo36e1_n_6\,
-      WRCLK => rd_clk,
+      WRCLK => wr_clk,
       WRCOUNT(12) => \gf36e1_inst.sngfifo36e1_n_21\,
       WRCOUNT(11) => \gf36e1_inst.sngfifo36e1_n_22\,
       WRCOUNT(10) => \gf36e1_inst.sngfifo36e1_n_23\,
@@ -1205,8 +1202,8 @@ entity FIFO_Array_builtin_prim_v6_19 is
     ful_1 : out STD_LOGIC;
     DO : out STD_LOGIC_VECTOR ( 3 downto 0 );
     e_1 : out STD_LOGIC;
-    rd_clk : in STD_LOGIC;
-    wr_rst_i : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
+    rd_rst_i : in STD_LOGIC;
     e_2 : in STD_LOGIC;
     \dout[19]\ : in STD_LOGIC_VECTOR ( 3 downto 0 );
     ful_0 : in STD_LOGIC
@@ -1260,7 +1257,7 @@ begin
 \gf36e1_inst.sngfifo36e1\: unisim.vcomponents.FIFO36E1
     generic map(
       ALMOST_EMPTY_OFFSET => X"000A",
-      ALMOST_FULL_OFFSET => X"1FF3",
+      ALMOST_FULL_OFFSET => X"000D",
       DATA_WIDTH => 4,
       DO_REG => 1,
       EN_ECC_READ => false,
@@ -1293,7 +1290,7 @@ begin
       FULL => ful_1,
       INJECTDBITERR => '0',
       INJECTSBITERR => '0',
-      RDCLK => rd_clk,
+      RDCLK => wr_clk,
       RDCOUNT(12) => \gf36e1_inst.sngfifo36e1_n_8\,
       RDCOUNT(11) => \gf36e1_inst.sngfifo36e1_n_9\,
       RDCOUNT(10) => \gf36e1_inst.sngfifo36e1_n_10\,
@@ -1310,10 +1307,10 @@ begin
       RDEN => \^e_1\,
       RDERR => \gf36e1_inst.sngfifo36e1_n_5\,
       REGCE => '0',
-      RST => wr_rst_i,
+      RST => rd_rst_i,
       RSTREG => '0',
       SBITERR => \gf36e1_inst.sngfifo36e1_n_6\,
-      WRCLK => rd_clk,
+      WRCLK => wr_clk,
       WRCOUNT(12) => \gf36e1_inst.sngfifo36e1_n_21\,
       WRCOUNT(11) => \gf36e1_inst.sngfifo36e1_n_22\,
       WRCOUNT(10) => \gf36e1_inst.sngfifo36e1_n_23\,
@@ -1347,12 +1344,11 @@ use UNISIM.VCOMPONENTS.ALL;
 entity FIFO_Array_builtin_prim_v6_21 is
   port (
     pf : out STD_LOGIC_VECTOR ( 0 to 0 );
-    rd_clk_0 : out STD_LOGIC_VECTOR ( 0 to 0 );
+    wr_clk_0 : out STD_LOGIC_VECTOR ( 0 to 0 );
     DO : out STD_LOGIC_VECTOR ( 3 downto 0 );
     e_3 : out STD_LOGIC;
-    rd_clk : in STD_LOGIC;
-    wr_rst_i : in STD_LOGIC;
     wr_clk : in STD_LOGIC;
+    rd_rst_i : in STD_LOGIC;
     wr_tmp : in STD_LOGIC;
     din : in STD_LOGIC_VECTOR ( 3 downto 0 );
     ful_2 : in STD_LOGIC
@@ -1405,7 +1401,7 @@ begin
 \gf36e1_inst.sngfifo36e1\: unisim.vcomponents.FIFO36E1
     generic map(
       ALMOST_EMPTY_OFFSET => X"000A",
-      ALMOST_FULL_OFFSET => X"1FF3",
+      ALMOST_FULL_OFFSET => X"000D",
       DATA_WIDTH => 4,
       DO_REG => 1,
       EN_ECC_READ => false,
@@ -1435,10 +1431,10 @@ begin
       DOP(7 downto 0) => \NLW_gf36e1_inst.sngfifo36e1_DOP_UNCONNECTED\(7 downto 0),
       ECCPARITY(7 downto 0) => \NLW_gf36e1_inst.sngfifo36e1_ECCPARITY_UNCONNECTED\(7 downto 0),
       EMPTY => emp_3,
-      FULL => rd_clk_0(0),
+      FULL => wr_clk_0(0),
       INJECTDBITERR => '0',
       INJECTSBITERR => '0',
-      RDCLK => rd_clk,
+      RDCLK => wr_clk,
       RDCOUNT(12) => \gf36e1_inst.sngfifo36e1_n_8\,
       RDCOUNT(11) => \gf36e1_inst.sngfifo36e1_n_9\,
       RDCOUNT(10) => \gf36e1_inst.sngfifo36e1_n_10\,
@@ -1455,7 +1451,7 @@ begin
       RDEN => \^e_3\,
       RDERR => \gf36e1_inst.sngfifo36e1_n_5\,
       REGCE => '0',
-      RST => wr_rst_i,
+      RST => rd_rst_i,
       RSTREG => '0',
       SBITERR => \gf36e1_inst.sngfifo36e1_n_6\,
       WRCLK => wr_clk,
@@ -1494,8 +1490,8 @@ entity FIFO_Array_builtin_prim_v6_22 is
     ful_2 : out STD_LOGIC;
     DO : out STD_LOGIC_VECTOR ( 3 downto 0 );
     e_2 : out STD_LOGIC;
-    rd_clk : in STD_LOGIC;
-    wr_rst_i : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
+    rd_rst_i : in STD_LOGIC;
     e_3 : in STD_LOGIC;
     \gf36e1_inst.sngfifo36e1_0\ : in STD_LOGIC_VECTOR ( 3 downto 0 );
     ful_1 : in STD_LOGIC
@@ -1549,7 +1545,7 @@ begin
 \gf36e1_inst.sngfifo36e1\: unisim.vcomponents.FIFO36E1
     generic map(
       ALMOST_EMPTY_OFFSET => X"000A",
-      ALMOST_FULL_OFFSET => X"1FF3",
+      ALMOST_FULL_OFFSET => X"000D",
       DATA_WIDTH => 4,
       DO_REG => 1,
       EN_ECC_READ => false,
@@ -1582,7 +1578,7 @@ begin
       FULL => ful_2,
       INJECTDBITERR => '0',
       INJECTSBITERR => '0',
-      RDCLK => rd_clk,
+      RDCLK => wr_clk,
       RDCOUNT(12) => \gf36e1_inst.sngfifo36e1_n_8\,
       RDCOUNT(11) => \gf36e1_inst.sngfifo36e1_n_9\,
       RDCOUNT(10) => \gf36e1_inst.sngfifo36e1_n_10\,
@@ -1599,10 +1595,10 @@ begin
       RDEN => \^e_2\,
       RDERR => \gf36e1_inst.sngfifo36e1_n_5\,
       REGCE => '0',
-      RST => wr_rst_i,
+      RST => rd_rst_i,
       RSTREG => '0',
       SBITERR => \gf36e1_inst.sngfifo36e1_n_6\,
-      WRCLK => rd_clk,
+      WRCLK => wr_clk,
       WRCOUNT(12) => \gf36e1_inst.sngfifo36e1_n_21\,
       WRCOUNT(11) => \gf36e1_inst.sngfifo36e1_n_22\,
       WRCOUNT(10) => \gf36e1_inst.sngfifo36e1_n_23\,
@@ -1638,8 +1634,8 @@ entity FIFO_Array_builtin_prim_v6_23 is
     ful_1 : out STD_LOGIC;
     DO : out STD_LOGIC_VECTOR ( 3 downto 0 );
     e_1 : out STD_LOGIC;
-    rd_clk : in STD_LOGIC;
-    wr_rst_i : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
+    rd_rst_i : in STD_LOGIC;
     e_2 : in STD_LOGIC;
     \dout[15]\ : in STD_LOGIC_VECTOR ( 3 downto 0 );
     ful_0 : in STD_LOGIC
@@ -1693,7 +1689,7 @@ begin
 \gf36e1_inst.sngfifo36e1\: unisim.vcomponents.FIFO36E1
     generic map(
       ALMOST_EMPTY_OFFSET => X"000A",
-      ALMOST_FULL_OFFSET => X"1FF3",
+      ALMOST_FULL_OFFSET => X"000D",
       DATA_WIDTH => 4,
       DO_REG => 1,
       EN_ECC_READ => false,
@@ -1726,7 +1722,7 @@ begin
       FULL => ful_1,
       INJECTDBITERR => '0',
       INJECTSBITERR => '0',
-      RDCLK => rd_clk,
+      RDCLK => wr_clk,
       RDCOUNT(12) => \gf36e1_inst.sngfifo36e1_n_8\,
       RDCOUNT(11) => \gf36e1_inst.sngfifo36e1_n_9\,
       RDCOUNT(10) => \gf36e1_inst.sngfifo36e1_n_10\,
@@ -1743,10 +1739,10 @@ begin
       RDEN => \^e_1\,
       RDERR => \gf36e1_inst.sngfifo36e1_n_5\,
       REGCE => '0',
-      RST => wr_rst_i,
+      RST => rd_rst_i,
       RSTREG => '0',
       SBITERR => \gf36e1_inst.sngfifo36e1_n_6\,
-      WRCLK => rd_clk,
+      WRCLK => wr_clk,
       WRCOUNT(12) => \gf36e1_inst.sngfifo36e1_n_21\,
       WRCOUNT(11) => \gf36e1_inst.sngfifo36e1_n_22\,
       WRCOUNT(10) => \gf36e1_inst.sngfifo36e1_n_23\,
@@ -1784,9 +1780,8 @@ entity FIFO_Array_builtin_prim_v6_25 is
     DO : out STD_LOGIC_VECTOR ( 3 downto 0 );
     e_3 : out STD_LOGIC;
     full : out STD_LOGIC;
-    rd_clk : in STD_LOGIC;
-    wr_rst_i : in STD_LOGIC;
     wr_clk : in STD_LOGIC;
+    rd_rst_i : in STD_LOGIC;
     wr_tmp : in STD_LOGIC;
     din : in STD_LOGIC_VECTOR ( 3 downto 0 );
     ful_2 : in STD_LOGIC;
@@ -1855,7 +1850,7 @@ full_INST_0: unisim.vcomponents.LUT5
 \gf36e1_inst.sngfifo36e1\: unisim.vcomponents.FIFO36E1
     generic map(
       ALMOST_EMPTY_OFFSET => X"000A",
-      ALMOST_FULL_OFFSET => X"1FF3",
+      ALMOST_FULL_OFFSET => X"000D",
       DATA_WIDTH => 4,
       DO_REG => 1,
       EN_ECC_READ => false,
@@ -1888,7 +1883,7 @@ full_INST_0: unisim.vcomponents.LUT5
       FULL => \^ful\(0),
       INJECTDBITERR => '0',
       INJECTSBITERR => '0',
-      RDCLK => rd_clk,
+      RDCLK => wr_clk,
       RDCOUNT(12) => \gf36e1_inst.sngfifo36e1_n_8\,
       RDCOUNT(11) => \gf36e1_inst.sngfifo36e1_n_9\,
       RDCOUNT(10) => \gf36e1_inst.sngfifo36e1_n_10\,
@@ -1905,7 +1900,7 @@ full_INST_0: unisim.vcomponents.LUT5
       RDEN => \^e_3\,
       RDERR => \gf36e1_inst.sngfifo36e1_n_5\,
       REGCE => '0',
-      RST => wr_rst_i,
+      RST => rd_rst_i,
       RSTREG => '0',
       SBITERR => \gf36e1_inst.sngfifo36e1_n_6\,
       WRCLK => wr_clk,
@@ -1944,8 +1939,8 @@ entity FIFO_Array_builtin_prim_v6_26 is
     ful_2 : out STD_LOGIC;
     DO : out STD_LOGIC_VECTOR ( 3 downto 0 );
     e_2 : out STD_LOGIC;
-    rd_clk : in STD_LOGIC;
-    wr_rst_i : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
+    rd_rst_i : in STD_LOGIC;
     e_3 : in STD_LOGIC;
     \gf36e1_inst.sngfifo36e1_0\ : in STD_LOGIC_VECTOR ( 3 downto 0 );
     ful_1 : in STD_LOGIC
@@ -1999,7 +1994,7 @@ begin
 \gf36e1_inst.sngfifo36e1\: unisim.vcomponents.FIFO36E1
     generic map(
       ALMOST_EMPTY_OFFSET => X"000A",
-      ALMOST_FULL_OFFSET => X"1FF3",
+      ALMOST_FULL_OFFSET => X"000D",
       DATA_WIDTH => 4,
       DO_REG => 1,
       EN_ECC_READ => false,
@@ -2032,7 +2027,7 @@ begin
       FULL => ful_2,
       INJECTDBITERR => '0',
       INJECTSBITERR => '0',
-      RDCLK => rd_clk,
+      RDCLK => wr_clk,
       RDCOUNT(12) => \gf36e1_inst.sngfifo36e1_n_8\,
       RDCOUNT(11) => \gf36e1_inst.sngfifo36e1_n_9\,
       RDCOUNT(10) => \gf36e1_inst.sngfifo36e1_n_10\,
@@ -2049,10 +2044,10 @@ begin
       RDEN => \^e_2\,
       RDERR => \gf36e1_inst.sngfifo36e1_n_5\,
       REGCE => '0',
-      RST => wr_rst_i,
+      RST => rd_rst_i,
       RSTREG => '0',
       SBITERR => \gf36e1_inst.sngfifo36e1_n_6\,
-      WRCLK => rd_clk,
+      WRCLK => wr_clk,
       WRCOUNT(12) => \gf36e1_inst.sngfifo36e1_n_21\,
       WRCOUNT(11) => \gf36e1_inst.sngfifo36e1_n_22\,
       WRCOUNT(10) => \gf36e1_inst.sngfifo36e1_n_23\,
@@ -2088,8 +2083,8 @@ entity FIFO_Array_builtin_prim_v6_27 is
     ful_1 : out STD_LOGIC;
     DO : out STD_LOGIC_VECTOR ( 3 downto 0 );
     e_1 : out STD_LOGIC;
-    rd_clk : in STD_LOGIC;
-    wr_rst_i : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
+    rd_rst_i : in STD_LOGIC;
     e_2 : in STD_LOGIC;
     \dout[11]\ : in STD_LOGIC_VECTOR ( 3 downto 0 );
     ful_0 : in STD_LOGIC
@@ -2143,7 +2138,7 @@ begin
 \gf36e1_inst.sngfifo36e1\: unisim.vcomponents.FIFO36E1
     generic map(
       ALMOST_EMPTY_OFFSET => X"000A",
-      ALMOST_FULL_OFFSET => X"1FF3",
+      ALMOST_FULL_OFFSET => X"000D",
       DATA_WIDTH => 4,
       DO_REG => 1,
       EN_ECC_READ => false,
@@ -2176,7 +2171,7 @@ begin
       FULL => ful_1,
       INJECTDBITERR => '0',
       INJECTSBITERR => '0',
-      RDCLK => rd_clk,
+      RDCLK => wr_clk,
       RDCOUNT(12) => \gf36e1_inst.sngfifo36e1_n_8\,
       RDCOUNT(11) => \gf36e1_inst.sngfifo36e1_n_9\,
       RDCOUNT(10) => \gf36e1_inst.sngfifo36e1_n_10\,
@@ -2193,10 +2188,10 @@ begin
       RDEN => \^e_1\,
       RDERR => \gf36e1_inst.sngfifo36e1_n_5\,
       REGCE => '0',
-      RST => wr_rst_i,
+      RST => rd_rst_i,
       RSTREG => '0',
       SBITERR => \gf36e1_inst.sngfifo36e1_n_6\,
-      WRCLK => rd_clk,
+      WRCLK => wr_clk,
       WRCOUNT(12) => \gf36e1_inst.sngfifo36e1_n_21\,
       WRCOUNT(11) => \gf36e1_inst.sngfifo36e1_n_22\,
       WRCOUNT(10) => \gf36e1_inst.sngfifo36e1_n_23\,
@@ -2233,9 +2228,8 @@ entity FIFO_Array_builtin_prim_v6_29 is
     ful : out STD_LOGIC_VECTOR ( 0 to 0 );
     DO : out STD_LOGIC_VECTOR ( 3 downto 0 );
     e_3 : out STD_LOGIC;
-    rd_clk : in STD_LOGIC;
-    wr_rst_i : in STD_LOGIC;
     wr_clk : in STD_LOGIC;
+    rd_rst_i : in STD_LOGIC;
     wr_tmp : in STD_LOGIC;
     din : in STD_LOGIC_VECTOR ( 3 downto 0 );
     ful_2 : in STD_LOGIC
@@ -2288,7 +2282,7 @@ begin
 \gf36e1_inst.sngfifo36e1\: unisim.vcomponents.FIFO36E1
     generic map(
       ALMOST_EMPTY_OFFSET => X"000A",
-      ALMOST_FULL_OFFSET => X"1FF3",
+      ALMOST_FULL_OFFSET => X"000D",
       DATA_WIDTH => 4,
       DO_REG => 1,
       EN_ECC_READ => false,
@@ -2321,7 +2315,7 @@ begin
       FULL => ful(0),
       INJECTDBITERR => '0',
       INJECTSBITERR => '0',
-      RDCLK => rd_clk,
+      RDCLK => wr_clk,
       RDCOUNT(12) => \gf36e1_inst.sngfifo36e1_n_8\,
       RDCOUNT(11) => \gf36e1_inst.sngfifo36e1_n_9\,
       RDCOUNT(10) => \gf36e1_inst.sngfifo36e1_n_10\,
@@ -2338,7 +2332,7 @@ begin
       RDEN => \^e_3\,
       RDERR => \gf36e1_inst.sngfifo36e1_n_5\,
       REGCE => '0',
-      RST => wr_rst_i,
+      RST => rd_rst_i,
       RSTREG => '0',
       SBITERR => \gf36e1_inst.sngfifo36e1_n_6\,
       WRCLK => wr_clk,
@@ -2377,8 +2371,8 @@ entity FIFO_Array_builtin_prim_v6_30 is
     ful_2 : out STD_LOGIC;
     DO : out STD_LOGIC_VECTOR ( 3 downto 0 );
     e_2 : out STD_LOGIC;
-    rd_clk : in STD_LOGIC;
-    wr_rst_i : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
+    rd_rst_i : in STD_LOGIC;
     e_3 : in STD_LOGIC;
     \gf36e1_inst.sngfifo36e1_0\ : in STD_LOGIC_VECTOR ( 3 downto 0 );
     ful_1 : in STD_LOGIC
@@ -2432,7 +2426,7 @@ begin
 \gf36e1_inst.sngfifo36e1\: unisim.vcomponents.FIFO36E1
     generic map(
       ALMOST_EMPTY_OFFSET => X"000A",
-      ALMOST_FULL_OFFSET => X"1FF3",
+      ALMOST_FULL_OFFSET => X"000D",
       DATA_WIDTH => 4,
       DO_REG => 1,
       EN_ECC_READ => false,
@@ -2465,7 +2459,7 @@ begin
       FULL => ful_2,
       INJECTDBITERR => '0',
       INJECTSBITERR => '0',
-      RDCLK => rd_clk,
+      RDCLK => wr_clk,
       RDCOUNT(12) => \gf36e1_inst.sngfifo36e1_n_8\,
       RDCOUNT(11) => \gf36e1_inst.sngfifo36e1_n_9\,
       RDCOUNT(10) => \gf36e1_inst.sngfifo36e1_n_10\,
@@ -2482,10 +2476,10 @@ begin
       RDEN => \^e_2\,
       RDERR => \gf36e1_inst.sngfifo36e1_n_5\,
       REGCE => '0',
-      RST => wr_rst_i,
+      RST => rd_rst_i,
       RSTREG => '0',
       SBITERR => \gf36e1_inst.sngfifo36e1_n_6\,
-      WRCLK => rd_clk,
+      WRCLK => wr_clk,
       WRCOUNT(12) => \gf36e1_inst.sngfifo36e1_n_21\,
       WRCOUNT(11) => \gf36e1_inst.sngfifo36e1_n_22\,
       WRCOUNT(10) => \gf36e1_inst.sngfifo36e1_n_23\,
@@ -2521,8 +2515,8 @@ entity FIFO_Array_builtin_prim_v6_31 is
     ful_1 : out STD_LOGIC;
     DO : out STD_LOGIC_VECTOR ( 3 downto 0 );
     e_1 : out STD_LOGIC;
-    rd_clk : in STD_LOGIC;
-    wr_rst_i : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
+    rd_rst_i : in STD_LOGIC;
     e_2 : in STD_LOGIC;
     \dout[7]\ : in STD_LOGIC_VECTOR ( 3 downto 0 );
     ful_0 : in STD_LOGIC
@@ -2576,7 +2570,7 @@ begin
 \gf36e1_inst.sngfifo36e1\: unisim.vcomponents.FIFO36E1
     generic map(
       ALMOST_EMPTY_OFFSET => X"000A",
-      ALMOST_FULL_OFFSET => X"1FF3",
+      ALMOST_FULL_OFFSET => X"000D",
       DATA_WIDTH => 4,
       DO_REG => 1,
       EN_ECC_READ => false,
@@ -2609,7 +2603,7 @@ begin
       FULL => ful_1,
       INJECTDBITERR => '0',
       INJECTSBITERR => '0',
-      RDCLK => rd_clk,
+      RDCLK => wr_clk,
       RDCOUNT(12) => \gf36e1_inst.sngfifo36e1_n_8\,
       RDCOUNT(11) => \gf36e1_inst.sngfifo36e1_n_9\,
       RDCOUNT(10) => \gf36e1_inst.sngfifo36e1_n_10\,
@@ -2626,10 +2620,10 @@ begin
       RDEN => \^e_1\,
       RDERR => \gf36e1_inst.sngfifo36e1_n_5\,
       REGCE => '0',
-      RST => wr_rst_i,
+      RST => rd_rst_i,
       RSTREG => '0',
       SBITERR => \gf36e1_inst.sngfifo36e1_n_6\,
-      WRCLK => rd_clk,
+      WRCLK => wr_clk,
       WRCOUNT(12) => \gf36e1_inst.sngfifo36e1_n_21\,
       WRCOUNT(11) => \gf36e1_inst.sngfifo36e1_n_22\,
       WRCOUNT(10) => \gf36e1_inst.sngfifo36e1_n_23\,
@@ -2666,9 +2660,8 @@ entity FIFO_Array_builtin_prim_v6_33 is
     ful : out STD_LOGIC_VECTOR ( 0 to 0 );
     DO : out STD_LOGIC_VECTOR ( 3 downto 0 );
     e_3 : out STD_LOGIC;
-    rd_clk : in STD_LOGIC;
-    wr_rst_i : in STD_LOGIC;
     wr_clk : in STD_LOGIC;
+    rd_rst_i : in STD_LOGIC;
     wr_tmp : in STD_LOGIC;
     din : in STD_LOGIC_VECTOR ( 3 downto 0 );
     ful_2 : in STD_LOGIC
@@ -2721,7 +2714,7 @@ begin
 \gf36e1_inst.sngfifo36e1\: unisim.vcomponents.FIFO36E1
     generic map(
       ALMOST_EMPTY_OFFSET => X"000A",
-      ALMOST_FULL_OFFSET => X"1FF3",
+      ALMOST_FULL_OFFSET => X"000D",
       DATA_WIDTH => 4,
       DO_REG => 1,
       EN_ECC_READ => false,
@@ -2754,7 +2747,7 @@ begin
       FULL => ful(0),
       INJECTDBITERR => '0',
       INJECTSBITERR => '0',
-      RDCLK => rd_clk,
+      RDCLK => wr_clk,
       RDCOUNT(12) => \gf36e1_inst.sngfifo36e1_n_8\,
       RDCOUNT(11) => \gf36e1_inst.sngfifo36e1_n_9\,
       RDCOUNT(10) => \gf36e1_inst.sngfifo36e1_n_10\,
@@ -2771,7 +2764,7 @@ begin
       RDEN => \^e_3\,
       RDERR => \gf36e1_inst.sngfifo36e1_n_5\,
       REGCE => '0',
-      RST => wr_rst_i,
+      RST => rd_rst_i,
       RSTREG => '0',
       SBITERR => \gf36e1_inst.sngfifo36e1_n_6\,
       WRCLK => wr_clk,
@@ -2810,8 +2803,8 @@ entity FIFO_Array_builtin_prim_v6_34 is
     ful_2 : out STD_LOGIC;
     DO : out STD_LOGIC_VECTOR ( 3 downto 0 );
     e_2 : out STD_LOGIC;
-    rd_clk : in STD_LOGIC;
-    wr_rst_i : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
+    rd_rst_i : in STD_LOGIC;
     e_3 : in STD_LOGIC;
     \gf36e1_inst.sngfifo36e1_0\ : in STD_LOGIC_VECTOR ( 3 downto 0 );
     ful_1 : in STD_LOGIC
@@ -2865,7 +2858,7 @@ begin
 \gf36e1_inst.sngfifo36e1\: unisim.vcomponents.FIFO36E1
     generic map(
       ALMOST_EMPTY_OFFSET => X"000A",
-      ALMOST_FULL_OFFSET => X"1FF3",
+      ALMOST_FULL_OFFSET => X"000D",
       DATA_WIDTH => 4,
       DO_REG => 1,
       EN_ECC_READ => false,
@@ -2898,7 +2891,7 @@ begin
       FULL => ful_2,
       INJECTDBITERR => '0',
       INJECTSBITERR => '0',
-      RDCLK => rd_clk,
+      RDCLK => wr_clk,
       RDCOUNT(12) => \gf36e1_inst.sngfifo36e1_n_8\,
       RDCOUNT(11) => \gf36e1_inst.sngfifo36e1_n_9\,
       RDCOUNT(10) => \gf36e1_inst.sngfifo36e1_n_10\,
@@ -2915,10 +2908,10 @@ begin
       RDEN => \^e_2\,
       RDERR => \gf36e1_inst.sngfifo36e1_n_5\,
       REGCE => '0',
-      RST => wr_rst_i,
+      RST => rd_rst_i,
       RSTREG => '0',
       SBITERR => \gf36e1_inst.sngfifo36e1_n_6\,
-      WRCLK => rd_clk,
+      WRCLK => wr_clk,
       WRCOUNT(12) => \gf36e1_inst.sngfifo36e1_n_21\,
       WRCOUNT(11) => \gf36e1_inst.sngfifo36e1_n_22\,
       WRCOUNT(10) => \gf36e1_inst.sngfifo36e1_n_23\,
@@ -2954,8 +2947,8 @@ entity FIFO_Array_builtin_prim_v6_35 is
     ful_1 : out STD_LOGIC;
     DO : out STD_LOGIC_VECTOR ( 3 downto 0 );
     e_1 : out STD_LOGIC;
-    rd_clk : in STD_LOGIC;
-    wr_rst_i : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
+    rd_rst_i : in STD_LOGIC;
     e_2 : in STD_LOGIC;
     \dout[3]\ : in STD_LOGIC_VECTOR ( 3 downto 0 );
     ful_0 : in STD_LOGIC
@@ -3009,7 +3002,7 @@ begin
 \gf36e1_inst.sngfifo36e1\: unisim.vcomponents.FIFO36E1
     generic map(
       ALMOST_EMPTY_OFFSET => X"000A",
-      ALMOST_FULL_OFFSET => X"1FF3",
+      ALMOST_FULL_OFFSET => X"000D",
       DATA_WIDTH => 4,
       DO_REG => 1,
       EN_ECC_READ => false,
@@ -3042,7 +3035,7 @@ begin
       FULL => ful_1,
       INJECTDBITERR => '0',
       INJECTSBITERR => '0',
-      RDCLK => rd_clk,
+      RDCLK => wr_clk,
       RDCOUNT(12) => \gf36e1_inst.sngfifo36e1_n_8\,
       RDCOUNT(11) => \gf36e1_inst.sngfifo36e1_n_9\,
       RDCOUNT(10) => \gf36e1_inst.sngfifo36e1_n_10\,
@@ -3059,10 +3052,10 @@ begin
       RDEN => \^e_1\,
       RDERR => \gf36e1_inst.sngfifo36e1_n_5\,
       REGCE => '0',
-      RST => wr_rst_i,
+      RST => rd_rst_i,
       RSTREG => '0',
       SBITERR => \gf36e1_inst.sngfifo36e1_n_6\,
-      WRCLK => rd_clk,
+      WRCLK => wr_clk,
       WRCOUNT(12) => \gf36e1_inst.sngfifo36e1_n_21\,
       WRCOUNT(11) => \gf36e1_inst.sngfifo36e1_n_22\,
       WRCOUNT(10) => \gf36e1_inst.sngfifo36e1_n_23\,
@@ -3098,8 +3091,8 @@ entity FIFO_Array_builtin_prim_v6_7 is
     ful_2 : out STD_LOGIC;
     DO : out STD_LOGIC_VECTOR ( 3 downto 0 );
     e_2 : out STD_LOGIC;
-    rd_clk : in STD_LOGIC;
-    wr_rst_i : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
+    rd_rst_i : in STD_LOGIC;
     e_3 : in STD_LOGIC;
     \gf36e1_inst.sngfifo36e1_0\ : in STD_LOGIC_VECTOR ( 3 downto 0 );
     ful_1 : in STD_LOGIC
@@ -3153,7 +3146,7 @@ begin
 \gf36e1_inst.sngfifo36e1\: unisim.vcomponents.FIFO36E1
     generic map(
       ALMOST_EMPTY_OFFSET => X"000A",
-      ALMOST_FULL_OFFSET => X"1FF3",
+      ALMOST_FULL_OFFSET => X"000D",
       DATA_WIDTH => 4,
       DO_REG => 1,
       EN_ECC_READ => false,
@@ -3186,7 +3179,7 @@ begin
       FULL => ful_2,
       INJECTDBITERR => '0',
       INJECTSBITERR => '0',
-      RDCLK => rd_clk,
+      RDCLK => wr_clk,
       RDCOUNT(12) => \gf36e1_inst.sngfifo36e1_n_8\,
       RDCOUNT(11) => \gf36e1_inst.sngfifo36e1_n_9\,
       RDCOUNT(10) => \gf36e1_inst.sngfifo36e1_n_10\,
@@ -3203,10 +3196,10 @@ begin
       RDEN => \^e_2\,
       RDERR => \gf36e1_inst.sngfifo36e1_n_5\,
       REGCE => '0',
-      RST => wr_rst_i,
+      RST => rd_rst_i,
       RSTREG => '0',
       SBITERR => \gf36e1_inst.sngfifo36e1_n_6\,
-      WRCLK => rd_clk,
+      WRCLK => wr_clk,
       WRCOUNT(12) => \gf36e1_inst.sngfifo36e1_n_21\,
       WRCOUNT(11) => \gf36e1_inst.sngfifo36e1_n_22\,
       WRCOUNT(10) => \gf36e1_inst.sngfifo36e1_n_23\,
@@ -3242,8 +3235,8 @@ entity FIFO_Array_builtin_prim_v6_8 is
     ful_1 : out STD_LOGIC;
     DO : out STD_LOGIC_VECTOR ( 3 downto 0 );
     e_1 : out STD_LOGIC;
-    rd_clk : in STD_LOGIC;
-    wr_rst_i : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
+    rd_rst_i : in STD_LOGIC;
     e_2 : in STD_LOGIC;
     \dout[31]\ : in STD_LOGIC_VECTOR ( 3 downto 0 );
     ful_0 : in STD_LOGIC
@@ -3297,7 +3290,7 @@ begin
 \gf36e1_inst.sngfifo36e1\: unisim.vcomponents.FIFO36E1
     generic map(
       ALMOST_EMPTY_OFFSET => X"000A",
-      ALMOST_FULL_OFFSET => X"1FF3",
+      ALMOST_FULL_OFFSET => X"000D",
       DATA_WIDTH => 4,
       DO_REG => 1,
       EN_ECC_READ => false,
@@ -3330,7 +3323,7 @@ begin
       FULL => ful_1,
       INJECTDBITERR => '0',
       INJECTSBITERR => '0',
-      RDCLK => rd_clk,
+      RDCLK => wr_clk,
       RDCOUNT(12) => \gf36e1_inst.sngfifo36e1_n_8\,
       RDCOUNT(11) => \gf36e1_inst.sngfifo36e1_n_9\,
       RDCOUNT(10) => \gf36e1_inst.sngfifo36e1_n_10\,
@@ -3347,10 +3340,10 @@ begin
       RDEN => \^e_1\,
       RDERR => \gf36e1_inst.sngfifo36e1_n_5\,
       REGCE => '0',
-      RST => wr_rst_i,
+      RST => rd_rst_i,
       RSTREG => '0',
       SBITERR => \gf36e1_inst.sngfifo36e1_n_6\,
-      WRCLK => rd_clk,
+      WRCLK => wr_clk,
       WRCOUNT(12) => \gf36e1_inst.sngfifo36e1_n_21\,
       WRCOUNT(11) => \gf36e1_inst.sngfifo36e1_n_22\,
       WRCOUNT(10) => \gf36e1_inst.sngfifo36e1_n_23\,
@@ -3384,12 +3377,11 @@ use UNISIM.VCOMPONENTS.ALL;
 entity FIFO_Array_builtin_prim_v6_9 is
   port (
     pf : out STD_LOGIC_VECTOR ( 0 to 0 );
-    rd_clk_0 : out STD_LOGIC_VECTOR ( 0 to 0 );
+    wr_clk_0 : out STD_LOGIC_VECTOR ( 0 to 0 );
     DO : out STD_LOGIC_VECTOR ( 3 downto 0 );
     e_3 : out STD_LOGIC;
-    rd_clk : in STD_LOGIC;
-    wr_rst_i : in STD_LOGIC;
     wr_clk : in STD_LOGIC;
+    rd_rst_i : in STD_LOGIC;
     wr_tmp : in STD_LOGIC;
     din : in STD_LOGIC_VECTOR ( 3 downto 0 );
     ful_2 : in STD_LOGIC
@@ -3442,7 +3434,7 @@ begin
 \gf36e1_inst.sngfifo36e1\: unisim.vcomponents.FIFO36E1
     generic map(
       ALMOST_EMPTY_OFFSET => X"000A",
-      ALMOST_FULL_OFFSET => X"1FF3",
+      ALMOST_FULL_OFFSET => X"000D",
       DATA_WIDTH => 4,
       DO_REG => 1,
       EN_ECC_READ => false,
@@ -3472,10 +3464,10 @@ begin
       DOP(7 downto 0) => \NLW_gf36e1_inst.sngfifo36e1_DOP_UNCONNECTED\(7 downto 0),
       ECCPARITY(7 downto 0) => \NLW_gf36e1_inst.sngfifo36e1_ECCPARITY_UNCONNECTED\(7 downto 0),
       EMPTY => emp_3,
-      FULL => rd_clk_0(0),
+      FULL => wr_clk_0(0),
       INJECTDBITERR => '0',
       INJECTSBITERR => '0',
-      RDCLK => rd_clk,
+      RDCLK => wr_clk,
       RDCOUNT(12) => \gf36e1_inst.sngfifo36e1_n_8\,
       RDCOUNT(11) => \gf36e1_inst.sngfifo36e1_n_9\,
       RDCOUNT(10) => \gf36e1_inst.sngfifo36e1_n_10\,
@@ -3492,7 +3484,7 @@ begin
       RDEN => \^e_3\,
       RDERR => \gf36e1_inst.sngfifo36e1_n_5\,
       REGCE => '0',
-      RST => wr_rst_i,
+      RST => rd_rst_i,
       RSTREG => '0',
       SBITERR => \gf36e1_inst.sngfifo36e1_n_6\,
       WRCLK => wr_clk,
@@ -3534,7 +3526,8 @@ entity \FIFO_Array_builtin_prim_v6__parameterized0\ is
     dout : out STD_LOGIC_VECTOR ( 3 downto 0 );
     rd_clk : in STD_LOGIC;
     \dout[31]\ : in STD_LOGIC;
-    wr_rst_i : in STD_LOGIC;
+    rd_rst_i : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
     e_1 : in STD_LOGIC;
     DO : in STD_LOGIC_VECTOR ( 3 downto 0 )
   );
@@ -3633,10 +3626,10 @@ begin
       RDEN => \dout[31]\,
       RDERR => \gf36e1_inst.sngfifo36e1_n_5\,
       REGCE => '0',
-      RST => wr_rst_i,
+      RST => rd_rst_i,
       RSTREG => '0',
       SBITERR => sbiterr_col(8),
-      WRCLK => rd_clk,
+      WRCLK => wr_clk,
       WRCOUNT(12) => \gf36e1_inst.sngfifo36e1_n_21\,
       WRCOUNT(11) => \gf36e1_inst.sngfifo36e1_n_22\,
       WRCOUNT(10) => \gf36e1_inst.sngfifo36e1_n_23\,
@@ -3666,7 +3659,8 @@ entity \FIFO_Array_builtin_prim_v6__parameterized0_12\ is
     dout : out STD_LOGIC_VECTOR ( 3 downto 0 );
     rd_clk : in STD_LOGIC;
     \dout[27]\ : in STD_LOGIC;
-    wr_rst_i : in STD_LOGIC;
+    rd_rst_i : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
     e_1 : in STD_LOGIC;
     DO : in STD_LOGIC_VECTOR ( 3 downto 0 )
   );
@@ -3765,10 +3759,10 @@ begin
       RDEN => \dout[27]\,
       RDERR => \gf36e1_inst.sngfifo36e1_n_5\,
       REGCE => '0',
-      RST => wr_rst_i,
+      RST => rd_rst_i,
       RSTREG => '0',
       SBITERR => sbiterr_col(7),
-      WRCLK => rd_clk,
+      WRCLK => wr_clk,
       WRCOUNT(12) => \gf36e1_inst.sngfifo36e1_n_21\,
       WRCOUNT(11) => \gf36e1_inst.sngfifo36e1_n_22\,
       WRCOUNT(10) => \gf36e1_inst.sngfifo36e1_n_23\,
@@ -3798,7 +3792,8 @@ entity \FIFO_Array_builtin_prim_v6__parameterized0_16\ is
     rd_en_0 : out STD_LOGIC;
     rd_clk_0 : out STD_LOGIC;
     rd_clk : in STD_LOGIC;
-    wr_rst_i : in STD_LOGIC;
+    rd_rst_i : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
     e_1 : in STD_LOGIC;
     DO : in STD_LOGIC_VECTOR ( 3 downto 0 );
     rd_en : in STD_LOGIC;
@@ -3915,10 +3910,10 @@ empty_INST_0_i_1: unisim.vcomponents.LUT4
       RDEN => \^rd_en_0\,
       RDERR => \gf36e1_inst.sngfifo36e1_n_5\,
       REGCE => '0',
-      RST => wr_rst_i,
+      RST => rd_rst_i,
       RSTREG => '0',
       SBITERR => sbiterr_col(6),
-      WRCLK => rd_clk,
+      WRCLK => wr_clk,
       WRCOUNT(12) => \gf36e1_inst.sngfifo36e1_n_21\,
       WRCOUNT(11) => \gf36e1_inst.sngfifo36e1_n_22\,
       WRCOUNT(10) => \gf36e1_inst.sngfifo36e1_n_23\,
@@ -3961,7 +3956,8 @@ entity \FIFO_Array_builtin_prim_v6__parameterized0_20\ is
     dout : out STD_LOGIC_VECTOR ( 3 downto 0 );
     rd_clk : in STD_LOGIC;
     \dout[19]\ : in STD_LOGIC;
-    wr_rst_i : in STD_LOGIC;
+    rd_rst_i : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
     e_1 : in STD_LOGIC;
     DO : in STD_LOGIC_VECTOR ( 3 downto 0 )
   );
@@ -4060,10 +4056,10 @@ begin
       RDEN => \dout[19]\,
       RDERR => \gf36e1_inst.sngfifo36e1_n_5\,
       REGCE => '0',
-      RST => wr_rst_i,
+      RST => rd_rst_i,
       RSTREG => '0',
       SBITERR => sbiterr_col(5),
-      WRCLK => rd_clk,
+      WRCLK => wr_clk,
       WRCOUNT(12) => \gf36e1_inst.sngfifo36e1_n_21\,
       WRCOUNT(11) => \gf36e1_inst.sngfifo36e1_n_22\,
       WRCOUNT(10) => \gf36e1_inst.sngfifo36e1_n_23\,
@@ -4093,7 +4089,8 @@ entity \FIFO_Array_builtin_prim_v6__parameterized0_24\ is
     dout : out STD_LOGIC_VECTOR ( 3 downto 0 );
     rd_clk : in STD_LOGIC;
     \dout[15]\ : in STD_LOGIC;
-    wr_rst_i : in STD_LOGIC;
+    rd_rst_i : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
     e_1 : in STD_LOGIC;
     DO : in STD_LOGIC_VECTOR ( 3 downto 0 )
   );
@@ -4192,10 +4189,10 @@ begin
       RDEN => \dout[15]\,
       RDERR => \gf36e1_inst.sngfifo36e1_n_5\,
       REGCE => '0',
-      RST => wr_rst_i,
+      RST => rd_rst_i,
       RSTREG => '0',
       SBITERR => sbiterr_col(4),
-      WRCLK => rd_clk,
+      WRCLK => wr_clk,
       WRCOUNT(12) => \gf36e1_inst.sngfifo36e1_n_21\,
       WRCOUNT(11) => \gf36e1_inst.sngfifo36e1_n_22\,
       WRCOUNT(10) => \gf36e1_inst.sngfifo36e1_n_23\,
@@ -4226,7 +4223,8 @@ entity \FIFO_Array_builtin_prim_v6__parameterized0_28\ is
     empty : out STD_LOGIC;
     rd_clk : in STD_LOGIC;
     \dout[11]\ : in STD_LOGIC;
-    wr_rst_i : in STD_LOGIC;
+    rd_rst_i : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
     e_1 : in STD_LOGIC;
     DO : in STD_LOGIC_VECTOR ( 3 downto 0 );
     empty_0 : in STD_LOGIC_VECTOR ( 2 downto 0 );
@@ -4341,10 +4339,10 @@ empty_INST_0: unisim.vcomponents.LUT5
       RDEN => \dout[11]\,
       RDERR => \gf36e1_inst.sngfifo36e1_n_5\,
       REGCE => '0',
-      RST => wr_rst_i,
+      RST => rd_rst_i,
       RSTREG => '0',
       SBITERR => sbiterr_col(3),
-      WRCLK => rd_clk,
+      WRCLK => wr_clk,
       WRCOUNT(12) => \gf36e1_inst.sngfifo36e1_n_21\,
       WRCOUNT(11) => \gf36e1_inst.sngfifo36e1_n_22\,
       WRCOUNT(10) => \gf36e1_inst.sngfifo36e1_n_23\,
@@ -4374,7 +4372,8 @@ entity \FIFO_Array_builtin_prim_v6__parameterized0_32\ is
     dout : out STD_LOGIC_VECTOR ( 3 downto 0 );
     rd_clk : in STD_LOGIC;
     \dout[7]\ : in STD_LOGIC;
-    wr_rst_i : in STD_LOGIC;
+    rd_rst_i : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
     e_1 : in STD_LOGIC;
     DO : in STD_LOGIC_VECTOR ( 3 downto 0 )
   );
@@ -4473,10 +4472,10 @@ begin
       RDEN => \dout[7]\,
       RDERR => \gf36e1_inst.sngfifo36e1_n_5\,
       REGCE => '0',
-      RST => wr_rst_i,
+      RST => rd_rst_i,
       RSTREG => '0',
       SBITERR => sbiterr_col(2),
-      WRCLK => rd_clk,
+      WRCLK => wr_clk,
       WRCOUNT(12) => \gf36e1_inst.sngfifo36e1_n_21\,
       WRCOUNT(11) => \gf36e1_inst.sngfifo36e1_n_22\,
       WRCOUNT(10) => \gf36e1_inst.sngfifo36e1_n_23\,
@@ -4506,7 +4505,8 @@ entity \FIFO_Array_builtin_prim_v6__parameterized0_36\ is
     dout : out STD_LOGIC_VECTOR ( 3 downto 0 );
     rd_clk : in STD_LOGIC;
     dout_3_sp_1 : in STD_LOGIC;
-    wr_rst_i : in STD_LOGIC;
+    rd_rst_i : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
     e_1 : in STD_LOGIC;
     DO : in STD_LOGIC_VECTOR ( 3 downto 0 )
   );
@@ -4607,10 +4607,10 @@ begin
       RDEN => dout_3_sn_1,
       RDERR => \gf36e1_inst.sngfifo36e1_n_5\,
       REGCE => '0',
-      RST => wr_rst_i,
+      RST => rd_rst_i,
       RSTREG => '0',
       SBITERR => sbiterr_col(1),
-      WRCLK => rd_clk,
+      WRCLK => wr_clk,
       WRCOUNT(12) => \gf36e1_inst.sngfifo36e1_n_21\,
       WRCOUNT(11) => \gf36e1_inst.sngfifo36e1_n_22\,
       WRCOUNT(10) => \gf36e1_inst.sngfifo36e1_n_23\,
@@ -4634,10 +4634,10 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity FIFO_Array_reset_builtin is
   port (
-    wr_rst_i : out STD_LOGIC;
+    rd_rst_i : out STD_LOGIC;
+    rd_clk : in STD_LOGIC;
     wr_clk : in STD_LOGIC;
-    rst : in STD_LOGIC;
-    rd_clk : in STD_LOGIC
+    rst : in STD_LOGIC
   );
   attribute ORIG_REF_NAME : string;
   attribute ORIG_REF_NAME of FIFO_Array_reset_builtin : entity is "reset_builtin";
@@ -4652,16 +4652,16 @@ architecture STRUCTURE of FIFO_Array_reset_builtin is
   signal power_on_wr_rst : STD_LOGIC_VECTOR ( 5 downto 0 );
   attribute async_reg of power_on_wr_rst : signal is "true";
   attribute msgon of power_on_wr_rst : signal is "true";
+  signal rd_rst_reg : STD_LOGIC;
   signal rd_rst_reg1 : STD_LOGIC;
   attribute async_reg of rd_rst_reg1 : signal is "true";
   attribute msgon of rd_rst_reg1 : signal is "true";
   signal rd_rst_reg2 : STD_LOGIC;
   attribute async_reg of rd_rst_reg2 : signal is "true";
   attribute msgon of rd_rst_reg2 : signal is "true";
-  signal \rsync.ric.wr_rst_fb_reg[1]_srl4_n_0\ : STD_LOGIC;
-  signal \rsync.ric.wr_rst_fb_reg_n_0_[0]\ : STD_LOGIC;
-  signal \rsync.ric.wr_rst_reg_i_1_n_0\ : STD_LOGIC;
-  signal wr_rst_reg : STD_LOGIC;
+  signal \rsync.ric.rd_rst_fb_reg[1]_srl4_n_0\ : STD_LOGIC;
+  signal \rsync.ric.rd_rst_fb_reg_n_0_[0]\ : STD_LOGIC;
+  signal \rsync.ric.rd_rst_reg_i_1_n_0\ : STD_LOGIC;
   signal wr_rst_reg1 : STD_LOGIC;
   attribute async_reg of wr_rst_reg1 : signal is "true";
   attribute msgon of wr_rst_reg1 : signal is "true";
@@ -4706,16 +4706,16 @@ architecture STRUCTURE of FIFO_Array_reset_builtin is
   attribute ASYNC_REG_boolean of \rsync.ric.power_on_wr_rst_reg[5]\ : label is std.standard.true;
   attribute KEEP of \rsync.ric.power_on_wr_rst_reg[5]\ : label is "yes";
   attribute msgon of \rsync.ric.power_on_wr_rst_reg[5]\ : label is "true";
+  attribute srl_bus_name : string;
+  attribute srl_bus_name of \rsync.ric.rd_rst_fb_reg[1]_srl4\ : label is "U0/\inst_fifo_gen/gconvfifo.rf/gbi.bi/g7ser_birst.rstbt/rsync.ric.rd_rst_fb_reg ";
+  attribute srl_name : string;
+  attribute srl_name of \rsync.ric.rd_rst_fb_reg[1]_srl4\ : label is "U0/\inst_fifo_gen/gconvfifo.rf/gbi.bi/g7ser_birst.rstbt/rsync.ric.rd_rst_fb_reg[1]_srl4 ";
   attribute ASYNC_REG_boolean of \rsync.ric.rd_rst_reg1_reg\ : label is std.standard.true;
   attribute KEEP of \rsync.ric.rd_rst_reg1_reg\ : label is "yes";
   attribute msgon of \rsync.ric.rd_rst_reg1_reg\ : label is "true";
   attribute ASYNC_REG_boolean of \rsync.ric.rd_rst_reg2_reg\ : label is std.standard.true;
   attribute KEEP of \rsync.ric.rd_rst_reg2_reg\ : label is "yes";
   attribute msgon of \rsync.ric.rd_rst_reg2_reg\ : label is "true";
-  attribute srl_bus_name : string;
-  attribute srl_bus_name of \rsync.ric.wr_rst_fb_reg[1]_srl4\ : label is "U0/\inst_fifo_gen/gconvfifo.rf/gbi.bi/g7ser_birst.rstbt/rsync.ric.wr_rst_fb_reg ";
-  attribute srl_name : string;
-  attribute srl_name of \rsync.ric.wr_rst_fb_reg[1]_srl4\ : label is "U0/\inst_fifo_gen/gconvfifo.rf/gbi.bi/g7ser_birst.rstbt/rsync.ric.wr_rst_fb_reg[1]_srl4 ";
   attribute ASYNC_REG_boolean of \rsync.ric.wr_rst_reg1_reg\ : label is std.standard.true;
   attribute KEEP of \rsync.ric.wr_rst_reg1_reg\ : label is "yes";
   attribute msgon of \rsync.ric.wr_rst_reg1_reg\ : label is "true";
@@ -4728,9 +4728,9 @@ begin
       INIT => X"E"
     )
         port map (
-      I0 => wr_rst_reg,
-      I1 => power_on_wr_rst(0),
-      O => wr_rst_i
+      I0 => rd_rst_reg,
+      I1 => power_on_rd_rst(0),
+      O => rd_rst_i
     );
 \rsync.ric.power_on_rd_rst_reg[0]\: unisim.vcomponents.FDRE
     generic map(
@@ -4864,6 +4864,31 @@ begin
       Q => power_on_wr_rst(5),
       R => '0'
     );
+\rsync.ric.rd_rst_fb_reg[0]\: unisim.vcomponents.FDRE
+    generic map(
+      INIT => '0'
+    )
+        port map (
+      C => rd_clk,
+      CE => '1',
+      D => \rsync.ric.rd_rst_fb_reg[1]_srl4_n_0\,
+      Q => \rsync.ric.rd_rst_fb_reg_n_0_[0]\,
+      R => '0'
+    );
+\rsync.ric.rd_rst_fb_reg[1]_srl4\: unisim.vcomponents.SRL16E
+    generic map(
+      INIT => X"0000"
+    )
+        port map (
+      A0 => '1',
+      A1 => '1',
+      A2 => '0',
+      A3 => '0',
+      CE => '1',
+      CLK => rd_clk,
+      D => rd_rst_reg,
+      Q => \rsync.ric.rd_rst_fb_reg[1]_srl4_n_0\
+    );
 \rsync.ric.rd_rst_reg1_reg\: unisim.vcomponents.FDPE
     generic map(
       INIT => '0'
@@ -4886,30 +4911,25 @@ begin
       PRE => rst,
       Q => rd_rst_reg2
     );
-\rsync.ric.wr_rst_fb_reg[0]\: unisim.vcomponents.FDRE
+\rsync.ric.rd_rst_reg_i_1\: unisim.vcomponents.LUT2
+    generic map(
+      INIT => X"2"
+    )
+        port map (
+      I0 => rd_rst_reg,
+      I1 => \rsync.ric.rd_rst_fb_reg_n_0_[0]\,
+      O => \rsync.ric.rd_rst_reg_i_1_n_0\
+    );
+\rsync.ric.rd_rst_reg_reg\: unisim.vcomponents.FDPE
     generic map(
       INIT => '0'
     )
         port map (
-      C => wr_clk,
+      C => rd_clk,
       CE => '1',
-      D => \rsync.ric.wr_rst_fb_reg[1]_srl4_n_0\,
-      Q => \rsync.ric.wr_rst_fb_reg_n_0_[0]\,
-      R => '0'
-    );
-\rsync.ric.wr_rst_fb_reg[1]_srl4\: unisim.vcomponents.SRL16E
-    generic map(
-      INIT => X"0000"
-    )
-        port map (
-      A0 => '1',
-      A1 => '1',
-      A2 => '0',
-      A3 => '0',
-      CE => '1',
-      CLK => wr_clk,
-      D => wr_rst_reg,
-      Q => \rsync.ric.wr_rst_fb_reg[1]_srl4_n_0\
+      D => \rsync.ric.rd_rst_reg_i_1_n_0\,
+      PRE => rd_rst_reg2,
+      Q => rd_rst_reg
     );
 \rsync.ric.wr_rst_reg1_reg\: unisim.vcomponents.FDPE
     generic map(
@@ -4933,26 +4953,6 @@ begin
       PRE => rst,
       Q => wr_rst_reg2
     );
-\rsync.ric.wr_rst_reg_i_1\: unisim.vcomponents.LUT2
-    generic map(
-      INIT => X"2"
-    )
-        port map (
-      I0 => wr_rst_reg,
-      I1 => \rsync.ric.wr_rst_fb_reg_n_0_[0]\,
-      O => \rsync.ric.wr_rst_reg_i_1_n_0\
-    );
-\rsync.ric.wr_rst_reg_reg\: unisim.vcomponents.FDPE
-    generic map(
-      INIT => '0'
-    )
-        port map (
-      C => wr_clk,
-      CE => '1',
-      D => \rsync.ric.wr_rst_reg_i_1_n_0\,
-      PRE => wr_rst_reg2,
-      Q => wr_rst_reg
-    );
 end STRUCTURE;
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
@@ -4965,11 +4965,11 @@ entity FIFO_Array_builtin_extdepth_v6 is
     pe : out STD_LOGIC_VECTOR ( 0 to 0 );
     emp : out STD_LOGIC_VECTOR ( 0 to 0 );
     dout : out STD_LOGIC_VECTOR ( 3 downto 0 );
-    rd_clk : in STD_LOGIC;
-    wr_rst_i : in STD_LOGIC;
     wr_clk : in STD_LOGIC;
+    rd_rst_i : in STD_LOGIC;
     wr_tmp : in STD_LOGIC;
     din : in STD_LOGIC_VECTOR ( 3 downto 0 );
+    rd_clk : in STD_LOGIC;
     dout_3_sp_1 : in STD_LOGIC
   );
   attribute ORIG_REF_NAME : string;
@@ -5011,9 +5011,8 @@ begin
       ful(0) => ful(0),
       ful_2 => ful_2,
       pf(0) => pf(0),
-      rd_clk => rd_clk,
+      rd_rst_i => rd_rst_i,
       wr_clk => wr_clk,
-      wr_rst_i => wr_rst_i,
       wr_tmp => wr_tmp
     );
 \gchain.gp1[2].gbldc.inst_prim\: entity work.FIFO_Array_builtin_prim_v6_34
@@ -5024,8 +5023,8 @@ begin
       ful_1 => ful_1,
       ful_2 => ful_2,
       \gf36e1_inst.sngfifo36e1_0\(3 downto 0) => \d[1]_0\(3 downto 0),
-      rd_clk => rd_clk,
-      wr_rst_i => wr_rst_i
+      rd_rst_i => rd_rst_i,
+      wr_clk => wr_clk
     );
 \gchain.gp1[3].gbldc.inst_prim\: entity work.FIFO_Array_builtin_prim_v6_35
      port map (
@@ -5035,8 +5034,8 @@ begin
       e_2 => e_2,
       ful_0 => ful_0,
       ful_1 => ful_1,
-      rd_clk => rd_clk,
-      wr_rst_i => wr_rst_i
+      rd_rst_i => rd_rst_i,
+      wr_clk => wr_clk
     );
 \gchain.gp1[4].gbldl.inst_prim\: entity work.\FIFO_Array_builtin_prim_v6__parameterized0_36\
      port map (
@@ -5048,7 +5047,8 @@ begin
       ful_0 => ful_0,
       pe(0) => pe(0),
       rd_clk => rd_clk,
-      wr_rst_i => wr_rst_i
+      rd_rst_i => rd_rst_i,
+      wr_clk => wr_clk
     );
 i_0: unisim.vcomponents.LUT1
     generic map(
@@ -5094,11 +5094,11 @@ entity FIFO_Array_builtin_extdepth_v6_0 is
     pe : out STD_LOGIC_VECTOR ( 0 to 0 );
     emp : out STD_LOGIC_VECTOR ( 0 to 0 );
     dout : out STD_LOGIC_VECTOR ( 3 downto 0 );
-    rd_clk : in STD_LOGIC;
-    wr_rst_i : in STD_LOGIC;
     wr_clk : in STD_LOGIC;
+    rd_rst_i : in STD_LOGIC;
     wr_tmp : in STD_LOGIC;
     din : in STD_LOGIC_VECTOR ( 3 downto 0 );
+    rd_clk : in STD_LOGIC;
     \dout[7]\ : in STD_LOGIC
   );
   attribute ORIG_REF_NAME : string;
@@ -5138,9 +5138,8 @@ begin
       ful(0) => ful(0),
       ful_2 => ful_2,
       pf(0) => pf(0),
-      rd_clk => rd_clk,
+      rd_rst_i => rd_rst_i,
       wr_clk => wr_clk,
-      wr_rst_i => wr_rst_i,
       wr_tmp => wr_tmp
     );
 \gchain.gp1[2].gbldc.inst_prim\: entity work.FIFO_Array_builtin_prim_v6_30
@@ -5151,8 +5150,8 @@ begin
       ful_1 => ful_1,
       ful_2 => ful_2,
       \gf36e1_inst.sngfifo36e1_0\(3 downto 0) => \d[1]_3\(3 downto 0),
-      rd_clk => rd_clk,
-      wr_rst_i => wr_rst_i
+      rd_rst_i => rd_rst_i,
+      wr_clk => wr_clk
     );
 \gchain.gp1[3].gbldc.inst_prim\: entity work.FIFO_Array_builtin_prim_v6_31
      port map (
@@ -5162,8 +5161,8 @@ begin
       e_2 => e_2,
       ful_0 => ful_0,
       ful_1 => ful_1,
-      rd_clk => rd_clk,
-      wr_rst_i => wr_rst_i
+      rd_rst_i => rd_rst_i,
+      wr_clk => wr_clk
     );
 \gchain.gp1[4].gbldl.inst_prim\: entity work.\FIFO_Array_builtin_prim_v6__parameterized0_32\
      port map (
@@ -5175,7 +5174,8 @@ begin
       ful_0 => ful_0,
       pe(0) => pe(0),
       rd_clk => rd_clk,
-      wr_rst_i => wr_rst_i
+      rd_rst_i => rd_rst_i,
+      wr_clk => wr_clk
     );
 i_0: unisim.vcomponents.LUT1
     generic map(
@@ -5223,11 +5223,11 @@ entity FIFO_Array_builtin_extdepth_v6_1 is
     dout : out STD_LOGIC_VECTOR ( 3 downto 0 );
     full : out STD_LOGIC;
     empty : out STD_LOGIC;
-    rd_clk : in STD_LOGIC;
-    wr_rst_i : in STD_LOGIC;
     wr_clk : in STD_LOGIC;
+    rd_rst_i : in STD_LOGIC;
     wr_tmp : in STD_LOGIC;
     din : in STD_LOGIC_VECTOR ( 3 downto 0 );
+    rd_clk : in STD_LOGIC;
     \dout[11]\ : in STD_LOGIC;
     full_0 : in STD_LOGIC_VECTOR ( 2 downto 0 );
     full_1 : in STD_LOGIC;
@@ -5274,9 +5274,8 @@ begin
       full_0(2 downto 0) => full_0(2 downto 0),
       full_1 => full_1,
       pf(0) => pf(0),
-      rd_clk => rd_clk,
+      rd_rst_i => rd_rst_i,
       wr_clk => wr_clk,
-      wr_rst_i => wr_rst_i,
       wr_tmp => wr_tmp
     );
 \gchain.gp1[2].gbldc.inst_prim\: entity work.FIFO_Array_builtin_prim_v6_26
@@ -5287,8 +5286,8 @@ begin
       ful_1 => ful_1,
       ful_2 => ful_2,
       \gf36e1_inst.sngfifo36e1_0\(3 downto 0) => \d[1]_6\(3 downto 0),
-      rd_clk => rd_clk,
-      wr_rst_i => wr_rst_i
+      rd_rst_i => rd_rst_i,
+      wr_clk => wr_clk
     );
 \gchain.gp1[3].gbldc.inst_prim\: entity work.FIFO_Array_builtin_prim_v6_27
      port map (
@@ -5298,8 +5297,8 @@ begin
       e_2 => e_2,
       ful_0 => ful_0,
       ful_1 => ful_1,
-      rd_clk => rd_clk,
-      wr_rst_i => wr_rst_i
+      rd_rst_i => rd_rst_i,
+      wr_clk => wr_clk
     );
 \gchain.gp1[4].gbldl.inst_prim\: entity work.\FIFO_Array_builtin_prim_v6__parameterized0_28\
      port map (
@@ -5314,7 +5313,8 @@ begin
       ful_0 => ful_0,
       pe(0) => pe(0),
       rd_clk => rd_clk,
-      wr_rst_i => wr_rst_i
+      rd_rst_i => rd_rst_i,
+      wr_clk => wr_clk
     );
 i_0: unisim.vcomponents.LUT1
     generic map(
@@ -5356,15 +5356,15 @@ use UNISIM.VCOMPONENTS.ALL;
 entity FIFO_Array_builtin_extdepth_v6_2 is
   port (
     pf : out STD_LOGIC_VECTOR ( 0 to 0 );
-    rd_clk_0 : out STD_LOGIC_VECTOR ( 0 to 0 );
+    wr_clk_0 : out STD_LOGIC_VECTOR ( 0 to 0 );
     pe : out STD_LOGIC_VECTOR ( 0 to 0 );
-    rd_clk_1 : out STD_LOGIC_VECTOR ( 0 to 0 );
+    rd_clk_0 : out STD_LOGIC_VECTOR ( 0 to 0 );
     dout : out STD_LOGIC_VECTOR ( 3 downto 0 );
-    rd_clk : in STD_LOGIC;
-    wr_rst_i : in STD_LOGIC;
     wr_clk : in STD_LOGIC;
+    rd_rst_i : in STD_LOGIC;
     wr_tmp : in STD_LOGIC;
     din : in STD_LOGIC_VECTOR ( 3 downto 0 );
+    rd_clk : in STD_LOGIC;
     \dout[15]\ : in STD_LOGIC
   );
   attribute ORIG_REF_NAME : string;
@@ -5403,10 +5403,9 @@ begin
       e_3 => e_3,
       ful_2 => ful_2,
       pf(0) => pf(0),
-      rd_clk => rd_clk,
-      rd_clk_0(0) => rd_clk_0(0),
+      rd_rst_i => rd_rst_i,
       wr_clk => wr_clk,
-      wr_rst_i => wr_rst_i,
+      wr_clk_0(0) => wr_clk_0(0),
       wr_tmp => wr_tmp
     );
 \gchain.gp1[2].gbldc.inst_prim\: entity work.FIFO_Array_builtin_prim_v6_22
@@ -5417,8 +5416,8 @@ begin
       ful_1 => ful_1,
       ful_2 => ful_2,
       \gf36e1_inst.sngfifo36e1_0\(3 downto 0) => \d[1]_9\(3 downto 0),
-      rd_clk => rd_clk,
-      wr_rst_i => wr_rst_i
+      rd_rst_i => rd_rst_i,
+      wr_clk => wr_clk
     );
 \gchain.gp1[3].gbldc.inst_prim\: entity work.FIFO_Array_builtin_prim_v6_23
      port map (
@@ -5428,8 +5427,8 @@ begin
       e_2 => e_2,
       ful_0 => ful_0,
       ful_1 => ful_1,
-      rd_clk => rd_clk,
-      wr_rst_i => wr_rst_i
+      rd_rst_i => rd_rst_i,
+      wr_clk => wr_clk
     );
 \gchain.gp1[4].gbldl.inst_prim\: entity work.\FIFO_Array_builtin_prim_v6__parameterized0_24\
      port map (
@@ -5440,8 +5439,9 @@ begin
       ful_0 => ful_0,
       pe(0) => pe(0),
       rd_clk => rd_clk,
-      rd_clk_0(0) => rd_clk_1(0),
-      wr_rst_i => wr_rst_i
+      rd_clk_0(0) => rd_clk_0(0),
+      rd_rst_i => rd_rst_i,
+      wr_clk => wr_clk
     );
 i_0: unisim.vcomponents.LUT1
     generic map(
@@ -5487,11 +5487,11 @@ entity FIFO_Array_builtin_extdepth_v6_3 is
     pe : out STD_LOGIC_VECTOR ( 0 to 0 );
     emp : out STD_LOGIC_VECTOR ( 0 to 0 );
     dout : out STD_LOGIC_VECTOR ( 3 downto 0 );
-    rd_clk : in STD_LOGIC;
-    wr_rst_i : in STD_LOGIC;
     wr_clk : in STD_LOGIC;
+    rd_rst_i : in STD_LOGIC;
     wr_tmp : in STD_LOGIC;
     din : in STD_LOGIC_VECTOR ( 3 downto 0 );
+    rd_clk : in STD_LOGIC;
     \dout[19]\ : in STD_LOGIC
   );
   attribute ORIG_REF_NAME : string;
@@ -5531,9 +5531,8 @@ begin
       ful(0) => ful(0),
       ful_2 => ful_2,
       pf(0) => pf(0),
-      rd_clk => rd_clk,
+      rd_rst_i => rd_rst_i,
       wr_clk => wr_clk,
-      wr_rst_i => wr_rst_i,
       wr_tmp => wr_tmp
     );
 \gchain.gp1[2].gbldc.inst_prim\: entity work.FIFO_Array_builtin_prim_v6_18
@@ -5544,8 +5543,8 @@ begin
       ful_1 => ful_1,
       ful_2 => ful_2,
       \gf36e1_inst.sngfifo36e1_0\(3 downto 0) => \d[1]_12\(3 downto 0),
-      rd_clk => rd_clk,
-      wr_rst_i => wr_rst_i
+      rd_rst_i => rd_rst_i,
+      wr_clk => wr_clk
     );
 \gchain.gp1[3].gbldc.inst_prim\: entity work.FIFO_Array_builtin_prim_v6_19
      port map (
@@ -5555,8 +5554,8 @@ begin
       e_2 => e_2,
       ful_0 => ful_0,
       ful_1 => ful_1,
-      rd_clk => rd_clk,
-      wr_rst_i => wr_rst_i
+      rd_rst_i => rd_rst_i,
+      wr_clk => wr_clk
     );
 \gchain.gp1[4].gbldl.inst_prim\: entity work.\FIFO_Array_builtin_prim_v6__parameterized0_20\
      port map (
@@ -5568,7 +5567,8 @@ begin
       ful_0 => ful_0,
       pe(0) => pe(0),
       rd_clk => rd_clk,
-      wr_rst_i => wr_rst_i
+      rd_rst_i => rd_rst_i,
+      wr_clk => wr_clk
     );
 i_0: unisim.vcomponents.LUT1
     generic map(
@@ -5615,13 +5615,13 @@ entity FIFO_Array_builtin_extdepth_v6_4 is
     dout : out STD_LOGIC_VECTOR ( 3 downto 0 );
     rd_en_0 : out STD_LOGIC;
     rd_clk_0 : out STD_LOGIC;
-    rd_clk_1 : out STD_LOGIC;
+    wr_clk_0 : out STD_LOGIC;
     full : in STD_LOGIC_VECTOR ( 6 downto 0 );
-    rd_clk : in STD_LOGIC;
-    wr_rst_i : in STD_LOGIC;
     wr_clk : in STD_LOGIC;
+    rd_rst_i : in STD_LOGIC;
     din : in STD_LOGIC_VECTOR ( 3 downto 0 );
     empty : in STD_LOGIC_VECTOR ( 6 downto 0 );
+    rd_clk : in STD_LOGIC;
     rd_en : in STD_LOGIC;
     wr_en : in STD_LOGIC
   );
@@ -5662,11 +5662,10 @@ begin
       ful_2 => ful_2,
       full(6 downto 0) => full(6 downto 0),
       pf(0) => pf(0),
-      rd_clk => rd_clk,
-      rd_clk_0 => rd_clk_1,
+      rd_rst_i => rd_rst_i,
       wr_clk => wr_clk,
+      wr_clk_0 => wr_clk_0,
       wr_en => wr_en,
-      wr_rst_i => wr_rst_i,
       wr_tmp => wr_tmp
     );
 \gchain.gp1[2].gbldc.inst_prim\: entity work.FIFO_Array_builtin_prim_v6_14
@@ -5677,8 +5676,8 @@ begin
       ful_1 => ful_1,
       ful_2 => ful_2,
       \gf36e1_inst.sngfifo36e1_0\(3 downto 0) => \d[1]_15\(3 downto 0),
-      rd_clk => rd_clk,
-      wr_rst_i => wr_rst_i
+      rd_rst_i => rd_rst_i,
+      wr_clk => wr_clk
     );
 \gchain.gp1[3].gbldc.inst_prim\: entity work.FIFO_Array_builtin_prim_v6_15
      port map (
@@ -5688,8 +5687,8 @@ begin
       e_2 => e_2,
       ful_0 => ful_0,
       ful_1 => ful_1,
-      rd_clk => rd_clk,
-      wr_rst_i => wr_rst_i
+      rd_rst_i => rd_rst_i,
+      wr_clk => wr_clk
     );
 \gchain.gp1[4].gbldl.inst_prim\: entity work.\FIFO_Array_builtin_prim_v6__parameterized0_16\
      port map (
@@ -5703,7 +5702,8 @@ begin
       rd_clk_0 => rd_clk_0,
       rd_en => rd_en,
       rd_en_0 => rd_en_0,
-      wr_rst_i => wr_rst_i
+      rd_rst_i => rd_rst_i,
+      wr_clk => wr_clk
     );
 i_0: unisim.vcomponents.LUT1
     generic map(
@@ -5745,15 +5745,15 @@ use UNISIM.VCOMPONENTS.ALL;
 entity FIFO_Array_builtin_extdepth_v6_5 is
   port (
     pf : out STD_LOGIC_VECTOR ( 0 to 0 );
-    rd_clk_0 : out STD_LOGIC_VECTOR ( 0 to 0 );
+    wr_clk_0 : out STD_LOGIC_VECTOR ( 0 to 0 );
     pe : out STD_LOGIC_VECTOR ( 0 to 0 );
-    rd_clk_1 : out STD_LOGIC_VECTOR ( 0 to 0 );
+    rd_clk_0 : out STD_LOGIC_VECTOR ( 0 to 0 );
     dout : out STD_LOGIC_VECTOR ( 3 downto 0 );
-    rd_clk : in STD_LOGIC;
-    wr_rst_i : in STD_LOGIC;
     wr_clk : in STD_LOGIC;
+    rd_rst_i : in STD_LOGIC;
     wr_tmp : in STD_LOGIC;
     din : in STD_LOGIC_VECTOR ( 3 downto 0 );
+    rd_clk : in STD_LOGIC;
     \dout[27]\ : in STD_LOGIC
   );
   attribute ORIG_REF_NAME : string;
@@ -5792,10 +5792,9 @@ begin
       e_3 => e_3,
       ful_2 => ful_2,
       pf(0) => pf(0),
-      rd_clk => rd_clk,
-      rd_clk_0(0) => rd_clk_0(0),
+      rd_rst_i => rd_rst_i,
       wr_clk => wr_clk,
-      wr_rst_i => wr_rst_i,
+      wr_clk_0(0) => wr_clk_0(0),
       wr_tmp => wr_tmp
     );
 \gchain.gp1[2].gbldc.inst_prim\: entity work.FIFO_Array_builtin_prim_v6_10
@@ -5806,8 +5805,8 @@ begin
       ful_1 => ful_1,
       ful_2 => ful_2,
       \gf36e1_inst.sngfifo36e1_0\(3 downto 0) => \d[1]_18\(3 downto 0),
-      rd_clk => rd_clk,
-      wr_rst_i => wr_rst_i
+      rd_rst_i => rd_rst_i,
+      wr_clk => wr_clk
     );
 \gchain.gp1[3].gbldc.inst_prim\: entity work.FIFO_Array_builtin_prim_v6_11
      port map (
@@ -5817,8 +5816,8 @@ begin
       e_2 => e_2,
       ful_0 => ful_0,
       ful_1 => ful_1,
-      rd_clk => rd_clk,
-      wr_rst_i => wr_rst_i
+      rd_rst_i => rd_rst_i,
+      wr_clk => wr_clk
     );
 \gchain.gp1[4].gbldl.inst_prim\: entity work.\FIFO_Array_builtin_prim_v6__parameterized0_12\
      port map (
@@ -5829,8 +5828,9 @@ begin
       ful_0 => ful_0,
       pe(0) => pe(0),
       rd_clk => rd_clk,
-      rd_clk_0(0) => rd_clk_1(0),
-      wr_rst_i => wr_rst_i
+      rd_clk_0(0) => rd_clk_0(0),
+      rd_rst_i => rd_rst_i,
+      wr_clk => wr_clk
     );
 i_0: unisim.vcomponents.LUT1
     generic map(
@@ -5872,15 +5872,15 @@ use UNISIM.VCOMPONENTS.ALL;
 entity FIFO_Array_builtin_extdepth_v6_6 is
   port (
     pf : out STD_LOGIC_VECTOR ( 0 to 0 );
-    rd_clk_0 : out STD_LOGIC_VECTOR ( 0 to 0 );
+    wr_clk_0 : out STD_LOGIC_VECTOR ( 0 to 0 );
     pe : out STD_LOGIC_VECTOR ( 0 to 0 );
-    rd_clk_1 : out STD_LOGIC_VECTOR ( 0 to 0 );
+    rd_clk_0 : out STD_LOGIC_VECTOR ( 0 to 0 );
     dout : out STD_LOGIC_VECTOR ( 3 downto 0 );
-    rd_clk : in STD_LOGIC;
-    wr_rst_i : in STD_LOGIC;
     wr_clk : in STD_LOGIC;
+    rd_rst_i : in STD_LOGIC;
     wr_tmp : in STD_LOGIC;
     din : in STD_LOGIC_VECTOR ( 3 downto 0 );
+    rd_clk : in STD_LOGIC;
     \dout[31]\ : in STD_LOGIC
   );
   attribute ORIG_REF_NAME : string;
@@ -5919,10 +5919,9 @@ begin
       e_3 => e_3,
       ful_2 => ful_2,
       pf(0) => pf(0),
-      rd_clk => rd_clk,
-      rd_clk_0(0) => rd_clk_0(0),
+      rd_rst_i => rd_rst_i,
       wr_clk => wr_clk,
-      wr_rst_i => wr_rst_i,
+      wr_clk_0(0) => wr_clk_0(0),
       wr_tmp => wr_tmp
     );
 \gchain.gp1[2].gbldc.inst_prim\: entity work.FIFO_Array_builtin_prim_v6_7
@@ -5933,8 +5932,8 @@ begin
       ful_1 => ful_1,
       ful_2 => ful_2,
       \gf36e1_inst.sngfifo36e1_0\(3 downto 0) => \d[1]_21\(3 downto 0),
-      rd_clk => rd_clk,
-      wr_rst_i => wr_rst_i
+      rd_rst_i => rd_rst_i,
+      wr_clk => wr_clk
     );
 \gchain.gp1[3].gbldc.inst_prim\: entity work.FIFO_Array_builtin_prim_v6_8
      port map (
@@ -5944,8 +5943,8 @@ begin
       e_2 => e_2,
       ful_0 => ful_0,
       ful_1 => ful_1,
-      rd_clk => rd_clk,
-      wr_rst_i => wr_rst_i
+      rd_rst_i => rd_rst_i,
+      wr_clk => wr_clk
     );
 \gchain.gp1[4].gbldl.inst_prim\: entity work.\FIFO_Array_builtin_prim_v6__parameterized0\
      port map (
@@ -5956,8 +5955,9 @@ begin
       ful_0 => ful_0,
       pe(0) => pe(0),
       rd_clk => rd_clk,
-      rd_clk_0(0) => rd_clk_1(0),
-      wr_rst_i => wr_rst_i
+      rd_clk_0(0) => rd_clk_0(0),
+      rd_rst_i => rd_rst_i,
+      wr_clk => wr_clk
     );
 i_0: unisim.vcomponents.LUT1
     generic map(
@@ -6003,10 +6003,10 @@ entity FIFO_Array_builtin_top_v6 is
     prog_empty : out STD_LOGIC;
     full : out STD_LOGIC;
     empty : out STD_LOGIC;
-    rd_clk : in STD_LOGIC;
-    wr_rst_i : in STD_LOGIC;
     wr_clk : in STD_LOGIC;
+    rd_rst_i : in STD_LOGIC;
     din : in STD_LOGIC_VECTOR ( 31 downto 0 );
+    rd_clk : in STD_LOGIC;
     rd_en : in STD_LOGIC;
     wr_en : in STD_LOGIC
   );
@@ -6036,8 +6036,8 @@ begin
       pe(0) => pe(1),
       pf(0) => pf(1),
       rd_clk => rd_clk,
+      rd_rst_i => rd_rst_i,
       wr_clk => wr_clk,
-      wr_rst_i => wr_rst_i,
       wr_tmp => wr_tmp
     );
 \gextw[2].gnll_fifo.inst_extd\: entity work.FIFO_Array_builtin_extdepth_v6_0
@@ -6050,8 +6050,8 @@ begin
       pe(0) => pe(2),
       pf(0) => pf(2),
       rd_clk => rd_clk,
+      rd_rst_i => rd_rst_i,
       wr_clk => wr_clk,
-      wr_rst_i => wr_rst_i,
       wr_tmp => wr_tmp
     );
 \gextw[3].gnll_fifo.inst_extd\: entity work.FIFO_Array_builtin_extdepth_v6_1
@@ -6072,8 +6072,8 @@ begin
       pe(0) => pe(3),
       pf(0) => pf(3),
       rd_clk => rd_clk,
+      rd_rst_i => rd_rst_i,
       wr_clk => wr_clk,
-      wr_rst_i => wr_rst_i,
       wr_tmp => wr_tmp
     );
 \gextw[4].gnll_fifo.inst_extd\: entity work.FIFO_Array_builtin_extdepth_v6_2
@@ -6084,10 +6084,10 @@ begin
       pe(0) => pe(4),
       pf(0) => pf(4),
       rd_clk => rd_clk,
-      rd_clk_0(0) => ful(4),
-      rd_clk_1(0) => emp(4),
+      rd_clk_0(0) => emp(4),
+      rd_rst_i => rd_rst_i,
       wr_clk => wr_clk,
-      wr_rst_i => wr_rst_i,
+      wr_clk_0(0) => ful(4),
       wr_tmp => wr_tmp
     );
 \gextw[5].gnll_fifo.inst_extd\: entity work.FIFO_Array_builtin_extdepth_v6_3
@@ -6100,8 +6100,8 @@ begin
       pe(0) => pe(5),
       pf(0) => pf(5),
       rd_clk => rd_clk,
+      rd_rst_i => rd_rst_i,
       wr_clk => wr_clk,
-      wr_rst_i => wr_rst_i,
       wr_tmp => wr_tmp
     );
 \gextw[6].gnll_fifo.inst_extd\: entity work.FIFO_Array_builtin_extdepth_v6_4
@@ -6116,12 +6116,12 @@ begin
       pf(0) => pf(6),
       rd_clk => rd_clk,
       rd_clk_0 => \gextw[6].gnll_fifo.inst_extd_n_8\,
-      rd_clk_1 => \gextw[6].gnll_fifo.inst_extd_n_9\,
       rd_en => rd_en,
       rd_en_0 => \gextw[6].gnll_fifo.inst_extd_n_7\,
+      rd_rst_i => rd_rst_i,
       wr_clk => wr_clk,
+      wr_clk_0 => \gextw[6].gnll_fifo.inst_extd_n_9\,
       wr_en => wr_en,
-      wr_rst_i => wr_rst_i,
       wr_tmp => wr_tmp
     );
 \gextw[7].gnll_fifo.inst_extd\: entity work.FIFO_Array_builtin_extdepth_v6_5
@@ -6132,10 +6132,10 @@ begin
       pe(0) => pe(7),
       pf(0) => pf(7),
       rd_clk => rd_clk,
-      rd_clk_0(0) => ful(7),
-      rd_clk_1(0) => emp(7),
+      rd_clk_0(0) => emp(7),
+      rd_rst_i => rd_rst_i,
       wr_clk => wr_clk,
-      wr_rst_i => wr_rst_i,
+      wr_clk_0(0) => ful(7),
       wr_tmp => wr_tmp
     );
 \gextw[8].gnll_fifo.inst_extd\: entity work.FIFO_Array_builtin_extdepth_v6_6
@@ -6146,10 +6146,10 @@ begin
       pe(0) => pe(8),
       pf(0) => pf(8),
       rd_clk => rd_clk,
-      rd_clk_0(0) => ful(8),
-      rd_clk_1(0) => emp(8),
+      rd_clk_0(0) => emp(8),
+      rd_rst_i => rd_rst_i,
       wr_clk => wr_clk,
-      wr_rst_i => wr_rst_i,
+      wr_clk_0(0) => ful(8),
       wr_tmp => wr_tmp
     );
 prog_empty_INST_0: unisim.vcomponents.LUT5
@@ -6210,9 +6210,9 @@ entity FIFO_Array_fifo_generator_v13_2_5_builtin is
     prog_empty : out STD_LOGIC;
     full : out STD_LOGIC;
     empty : out STD_LOGIC;
-    wr_clk : in STD_LOGIC;
-    rd_en : in STD_LOGIC;
     rd_clk : in STD_LOGIC;
+    rd_en : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
     din : in STD_LOGIC_VECTOR ( 31 downto 0 );
     rst : in STD_LOGIC;
     wr_en : in STD_LOGIC
@@ -6222,14 +6222,14 @@ entity FIFO_Array_fifo_generator_v13_2_5_builtin is
 end FIFO_Array_fifo_generator_v13_2_5_builtin;
 
 architecture STRUCTURE of FIFO_Array_fifo_generator_v13_2_5_builtin is
-  signal wr_rst_i : STD_LOGIC;
+  signal rd_rst_i : STD_LOGIC;
 begin
 \g7ser_birst.rstbt\: entity work.FIFO_Array_reset_builtin
      port map (
       rd_clk => rd_clk,
+      rd_rst_i => rd_rst_i,
       rst => rst,
-      wr_clk => wr_clk,
-      wr_rst_i => wr_rst_i
+      wr_clk => wr_clk
     );
 \v7_bi_fifo.fblk\: entity work.FIFO_Array_builtin_top_v6
      port map (
@@ -6241,9 +6241,9 @@ begin
       prog_full => prog_full,
       rd_clk => rd_clk,
       rd_en => rd_en,
+      rd_rst_i => rd_rst_i,
       wr_clk => wr_clk,
-      wr_en => wr_en,
-      wr_rst_i => wr_rst_i
+      wr_en => wr_en
     );
 end STRUCTURE;
 library IEEE;
@@ -6257,9 +6257,9 @@ entity FIFO_Array_fifo_generator_top is
     prog_empty : out STD_LOGIC;
     full : out STD_LOGIC;
     empty : out STD_LOGIC;
-    wr_clk : in STD_LOGIC;
-    rd_en : in STD_LOGIC;
     rd_clk : in STD_LOGIC;
+    rd_en : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
     din : in STD_LOGIC_VECTOR ( 31 downto 0 );
     rst : in STD_LOGIC;
     wr_en : in STD_LOGIC
@@ -6296,9 +6296,9 @@ entity FIFO_Array_fifo_generator_v13_2_5_synth is
     prog_empty : out STD_LOGIC;
     full : out STD_LOGIC;
     empty : out STD_LOGIC;
-    wr_clk : in STD_LOGIC;
-    rd_en : in STD_LOGIC;
     rd_clk : in STD_LOGIC;
+    rd_en : in STD_LOGIC;
+    wr_clk : in STD_LOGIC;
     din : in STD_LOGIC_VECTOR ( 31 downto 0 );
     rst : in STD_LOGIC;
     wr_en : in STD_LOGIC
@@ -6833,7 +6833,7 @@ entity FIFO_Array_fifo_generator_v13_2_5 is
   attribute C_PROG_EMPTY_TYPE_WRCH : integer;
   attribute C_PROG_EMPTY_TYPE_WRCH of FIFO_Array_fifo_generator_v13_2_5 : entity is 0;
   attribute C_PROG_FULL_THRESH_ASSERT_VAL : integer;
-  attribute C_PROG_FULL_THRESH_ASSERT_VAL of FIFO_Array_fifo_generator_v13_2_5 : entity is 24593;
+  attribute C_PROG_FULL_THRESH_ASSERT_VAL of FIFO_Array_fifo_generator_v13_2_5 : entity is 32759;
   attribute C_PROG_FULL_THRESH_ASSERT_VAL_AXIS : integer;
   attribute C_PROG_FULL_THRESH_ASSERT_VAL_AXIS of FIFO_Array_fifo_generator_v13_2_5 : entity is 1023;
   attribute C_PROG_FULL_THRESH_ASSERT_VAL_RACH : integer;
@@ -6847,7 +6847,7 @@ entity FIFO_Array_fifo_generator_v13_2_5 is
   attribute C_PROG_FULL_THRESH_ASSERT_VAL_WRCH : integer;
   attribute C_PROG_FULL_THRESH_ASSERT_VAL_WRCH of FIFO_Array_fifo_generator_v13_2_5 : entity is 1023;
   attribute C_PROG_FULL_THRESH_NEGATE_VAL : integer;
-  attribute C_PROG_FULL_THRESH_NEGATE_VAL of FIFO_Array_fifo_generator_v13_2_5 : entity is 24592;
+  attribute C_PROG_FULL_THRESH_NEGATE_VAL of FIFO_Array_fifo_generator_v13_2_5 : entity is 32758;
   attribute C_PROG_FULL_TYPE : integer;
   attribute C_PROG_FULL_TYPE of FIFO_Array_fifo_generator_v13_2_5 : entity is 1;
   attribute C_PROG_FULL_TYPE_AXIS : integer;
@@ -6949,7 +6949,7 @@ entity FIFO_Array_fifo_generator_v13_2_5 is
   attribute C_WR_DEPTH_WRCH : integer;
   attribute C_WR_DEPTH_WRCH of FIFO_Array_fifo_generator_v13_2_5 : entity is 16;
   attribute C_WR_FREQ : integer;
-  attribute C_WR_FREQ of FIFO_Array_fifo_generator_v13_2_5 : entity is 40;
+  attribute C_WR_FREQ of FIFO_Array_fifo_generator_v13_2_5 : entity is 166;
   attribute C_WR_PNTR_WIDTH : integer;
   attribute C_WR_PNTR_WIDTH of FIFO_Array_fifo_generator_v13_2_5 : entity is 15;
   attribute C_WR_PNTR_WIDTH_AXIS : integer;
@@ -7956,7 +7956,7 @@ architecture STRUCTURE of FIFO_Array is
   attribute C_PROG_EMPTY_TYPE_WRCH : integer;
   attribute C_PROG_EMPTY_TYPE_WRCH of U0 : label is 0;
   attribute C_PROG_FULL_THRESH_ASSERT_VAL : integer;
-  attribute C_PROG_FULL_THRESH_ASSERT_VAL of U0 : label is 24593;
+  attribute C_PROG_FULL_THRESH_ASSERT_VAL of U0 : label is 32759;
   attribute C_PROG_FULL_THRESH_ASSERT_VAL_AXIS : integer;
   attribute C_PROG_FULL_THRESH_ASSERT_VAL_AXIS of U0 : label is 1023;
   attribute C_PROG_FULL_THRESH_ASSERT_VAL_RACH : integer;
@@ -7970,7 +7970,7 @@ architecture STRUCTURE of FIFO_Array is
   attribute C_PROG_FULL_THRESH_ASSERT_VAL_WRCH : integer;
   attribute C_PROG_FULL_THRESH_ASSERT_VAL_WRCH of U0 : label is 1023;
   attribute C_PROG_FULL_THRESH_NEGATE_VAL : integer;
-  attribute C_PROG_FULL_THRESH_NEGATE_VAL of U0 : label is 24592;
+  attribute C_PROG_FULL_THRESH_NEGATE_VAL of U0 : label is 32758;
   attribute C_PROG_FULL_TYPE : integer;
   attribute C_PROG_FULL_TYPE of U0 : label is 1;
   attribute C_PROG_FULL_TYPE_AXIS : integer;
@@ -8072,7 +8072,7 @@ architecture STRUCTURE of FIFO_Array is
   attribute C_WR_DEPTH_WRCH : integer;
   attribute C_WR_DEPTH_WRCH of U0 : label is 16;
   attribute C_WR_FREQ : integer;
-  attribute C_WR_FREQ of U0 : label is 40;
+  attribute C_WR_FREQ of U0 : label is 166;
   attribute C_WR_PNTR_WIDTH : integer;
   attribute C_WR_PNTR_WIDTH of U0 : label is 15;
   attribute C_WR_PNTR_WIDTH_AXIS : integer;
@@ -8097,7 +8097,7 @@ architecture STRUCTURE of FIFO_Array is
   attribute x_interface_parameter of rd_clk : signal is "XIL_INTERFACENAME read_clk, FREQ_HZ 100000000, PHASE 0.000, INSERT_VIP 0";
   attribute x_interface_info of rd_en : signal is "xilinx.com:interface:fifo_read:1.0 FIFO_READ RD_EN";
   attribute x_interface_info of wr_clk : signal is "xilinx.com:signal:clock:1.0 write_clk CLK";
-  attribute x_interface_parameter of wr_clk : signal is "XIL_INTERFACENAME write_clk, FREQ_HZ 40000000, PHASE 0.000, INSERT_VIP 0";
+  attribute x_interface_parameter of wr_clk : signal is "XIL_INTERFACENAME write_clk, FREQ_HZ 166000000, PHASE 0.000, INSERT_VIP 0";
   attribute x_interface_info of wr_en : signal is "xilinx.com:interface:fifo_write:1.0 FIFO_WRITE WR_EN";
   attribute x_interface_info of din : signal is "xilinx.com:interface:fifo_write:1.0 FIFO_WRITE WR_DATA";
   attribute x_interface_info of dout : signal is "xilinx.com:interface:fifo_read:1.0 FIFO_READ RD_DATA";

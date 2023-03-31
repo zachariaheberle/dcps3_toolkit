@@ -130,6 +130,8 @@ set_property -dict {PACKAGE_PIN Y21 IOSTANDARD LVCMOS33} [get_ports spi_cs1]
 
 ## Pmod header JB
 set_property -dict {PACKAGE_PIN V9 IOSTANDARD LVCMOS33} [get_ports jb1]
+set_property -dict {PACKAGE_PIN V8 IOSTANDARD LVCMOS33} [get_ports jb2]
+
 #set_property -dict { PACKAGE_PIN V9    IOSTANDARD LVCMOS33 } [get_ports { jb[0] }]; #IO_L21P_T3_DQS_34 Sch=jb_p[1]
 #set_property -dict { PACKAGE_PIN V8    IOSTANDARD LVCMOS33 } [get_ports { jb[1] }]; #IO_L21N_T3_DQS_34 Sch=jb_n[1]
 #set_property -dict { PACKAGE_PIN V7    IOSTANDARD LVCMOS33 } [get_ports { jb[2] }]; #IO_L19P_T3_34 Sch=jb_p[2]
@@ -416,4 +418,6 @@ set_property BITSTREAM.GENERAL.COMPRESS TRUE [current_design]
 #create_generated_clock -name spiInterface_i/spi_write -source [get_ports spi_sck] -divide_by 32 [get_pins spiInterface_i/spi_write_reg/Q]
 #set_property ASYNC_REG true [get_cells p1/sync1/FDRE_inst]
 #set_property ASYNC_REG true [get_cells p1/sync1/FDRE_inst1]
+
+
 

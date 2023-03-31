@@ -35,6 +35,7 @@ module main_v2(
     output DQ0,           // FPGA2MEM
     input DQ1,            // MEM2FPGA
     output jb1,
+    output jb2,
     input PLL_MISO,
     output PLL_MOSI,
     PLL_SS,
@@ -64,7 +65,7 @@ module main_v2(
 //----------------------------------------------------------------------
 // PERIPHERAL ADDRESS SPACE
 //----------------------------------------------------------------------    
-    parameter FIRMWARE_VERSION = 16'd2042;
+    parameter FIRMWARE_VERSION = 16'd2050;
     parameter FIRMWARE_VERSION_MAJOR = FIRMWARE_VERSION[15:8];
     parameter FIRMWARE_VERSION_MINOR = FIRMWARE_VERSION[ 7:0];
 
@@ -114,7 +115,22 @@ module main_v2(
     IBUFGDS IBUFGDS_Q2A (.O(Q2A_temp), .I(Q2A_P), .IB(Q2A_N)); 
     IBUFGDS IBUFGDS_Q1B (.O(Q1B_temp), .I(Q1B_P), .IB(Q1B_N));//good
     IBUFGDS IBUFGDS_Q2B (.O(Q2B_temp), .I(Q2B_P), .IB(Q2B_N));
+        
+        
+        // ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  == 
+        // Sending Values to external RP 2040
+        // ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  == 
+            
+        assign jb1 = ~((Q1A_temp ^ Q1B_temp)&Q1A_temp);
+        assign jb2 =  ((Q1A_temp ^ Q1B_temp)&Q1A_temp);
 
+
+        // ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  == 
+        // END of Sending Values to external RP 2040
+        // ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  == 
+            
+
+    
     sync_ddr sync_Q1A(.clk(clk_ref),.D(Q1A_temp),.Q(Q1A),.Q2(Q1An));
     sync_ddr sync_Q2A(.clk(clk_ref),.D(Q2A_temp),.Q(Q2A),.Q2(Q2An));
     sync_ddr sync_Q1B(.clk(clk_ref),.D(Q1B_temp),.Q(Q1B),.Q2(Q1Bn));
@@ -251,16 +267,16 @@ module main_v2(
     reg [2:0] idx = 0;
     reg [7:0] TDATA=0;
     reg [7:0] read_counter=0;
-    wire [31:0] tdata1;
-    wire [31:0] tdata2;
+    reg [31:0] tdata1;
+    reg [31:0] tdata2;
     reg read_en = 0;
     reg test_reg = 0;
     reg all_set_to_decode = 0;
 
 
     //FIFO filling status...
-    wire full_1,prog_full_1;
-    wire full_2,prog_full_2;
+    wire prog_full_2,prog_full_1;
+    wire full_2,full_1;
 
     wire [7:0] read_count_fifo1;
     wire [7:0] write_count_fifo1;
@@ -502,25 +518,60 @@ module main_v2(
     integer ptrigger_counter = 0;
     reg start_acq_ptrigger = 0;
     reg previous_beat_edge = 0;
+
+
+
+    wire m_reset_synced;
+    wire start_acq_synced;
+
+    SYNC SYNC_start_acq(
+        .O(start_acq_synced),
+        .I(start_acq),
+        .clk(sampling_logic_clock),
+        .reset(1)
+    );
+
+        SYNC SYNC_mreset(
+        .O(m_reset_synced),
+        .I(m_reset),
+        .clk(sampling_logic_clock),
+        .reset(1)
+    );
+
+    wire triggered_posEdge;
+    pTrigger pTrigger_1
+    (
+        .I(ddmtd1_beat_clock),
+        .O(triggered_posEdge),
+        .clk(~sampling_logic_clock),
+        .reset(m_reset_synced)
+    );
+
+
+
+
     always@(posedge sampling_logic_clock)
     begin
-        if (m_reset | (start_acq==0))// Instantly reset  when reset or startAcq stops
+        if (m_reset_synced | (start_acq_synced==0))// Instantly reset  when reset or startAcq stops
         begin
             ptrigger_counter <=0;
             start_acq_ptrigger <=0;
         end
         else 
         begin
-            if (~ddmtd1_beat_clock)
+            if (triggered_posEdge)
                 ptrigger_counter <= ptrigger_counter +1;
-            else
-                ptrigger_counter <=0;
+            else if (ptrigger_counter > 0)
+                ptrigger_counter <=ptrigger_counter + 1;
 
-            if ((ptrigger_counter > 500)&(~previous_beat_edge)&((ddmtd1_beat_clock))) // stable for 500 clocks
+            if ((ptrigger_counter > 500)) // stable for 500 clocks
                 start_acq_ptrigger <= start_acq;
         end
-        previous_beat_edge <= ddmtd1_beat_clock;
     end
+
+
+
+
 
 
     // //Delaying activation for two cycles
@@ -535,26 +586,63 @@ module main_v2(
 
 
     //Synchronize both Q1 & Q2 to the same clock....
-    (* ASYNC_REG = "TRUE" *) reg ddmtd1_beat_clock_synced,ddmtd2_beat_clock_synced;
-    always@(posedge sampling_logic_clock)
-    begin
-        ddmtd1_beat_clock_synced <=ddmtd1_beat_clock;
-        ddmtd2_beat_clock_synced <=ddmtd2_beat_clock;
+    //(* ASYNC_REG = "TRUE" *) 
+    // reg ddmtd1_beat_clock_synced,ddmtd2_beat_clock_synced;
+    // always@(posedge sampling_logic_clock)
+    // begin
+    //     ddmtd1_beat_clock_synced <=ddmtd1_beat_clock;
+    //     ddmtd2_beat_clock_synced <=ddmtd2_beat_clock;
+    // end
+
+
+
+
+    reg [31:0] external_counter1,external_counter2;
+
+    always @(posedge sampling_logic_clock ) begin
+        if (~start_acq_ptrigger | m_reset_synced) 
+        external_counter1<=0;
+        else
+        external_counter1 <= external_counter1 +1;
     end
 
+    always @(posedge sampling_logic_clock ) begin
+        if (~start_acq_ptrigger | m_reset_synced) 
+        external_counter2<=0;
+        else
+        external_counter2 <= external_counter2 +1;
+    end
+
+    // binary_counter bc1(
+    // .Q(external_counter1),
+    // .CLK(sampling_logic_clock),
+    // .CE(start_acq),
+    // .SCLR(~start_acq_ptrigger | m_reset)
+    // );
+
+    // binary_counter bc2(
+    // .Q(external_counter2),
+    // .CLK(sampling_logic_clock),
+    // .CE(start_acq),
+    // .SCLR(~start_acq_ptrigger | m_reset)
+    // );
+
+
+    
 
 
 
-    wire [31:0] external_counter;
-    binary_counter bc1(
-    .Q(external_counter),
-    .CLK(sampling_logic_clock),
-    .CE(start_acq),
-    .SCLR(~start_acq_ptrigger | m_reset)
+
+
+    wire ddmtd1_beat_clock_synced;
+    wire [31:0]tdata1_i;
+    wire full_1_i; //syncing
+    SYNC SYNC1(
+        .O(ddmtd1_beat_clock_synced),
+        .I(ddmtd1_beat_clock),
+        .clk(sampling_logic_clock),
+        .reset(m_reset)
     );
-
-
-
     DDMTD_Sampler
     #(.DATA_WIDTH(32))
     DDMTD1(
@@ -562,23 +650,56 @@ module main_v2(
         .WR_CLK(sampling_logic_clock),
         .BEAT_CLK(ddmtd1_beat_clock_synced),
         .en_SAMPLING_LOGIC(start_acq_ptrigger), //Active High
-        .EXTERNAL_COUNTER(external_counter),
+        .EXTERNAL_COUNTER(external_counter1),
         .RST(m_reset),
         //Inputs for readout
         .RD_CLK(rd_clk_buff),
-        .R_TDATA(tdata1),  
+        .R_TDATA(tdata1_i),  
         .READ_EN(read_en_buff),
         //  .PROG_FULL(prog_full_1),
         //  .PROG_EMPTY(TREADY),
         // .EMPTY(),
-        .FULL(full_1),
+        .FULL(full_1_i),
         .R_LOGIC_EN(1),
         .WRITE_COUNT(write_count_fifo1),
         .READ_COUNT(read_count_fifo1)
     );
 
+    //tdata temperory
+    always @(posedge clk)
+    begin
+        tdata1 <= tdata1_i;
+
+    end
 
 
+    wire full_1_ii;
+    SYNC SYNC_full_1(
+        .O(full_1_ii),
+        .I(full_1_i),
+        .clk(sampling_logic_clock),
+        .reset(0)
+    );
+    SYNC SYNC_full_11(
+        .O(full_1),
+        .I(full_1_ii),
+        .clk(clk),
+        .reset(0)
+    );
+
+
+
+
+
+    wire ddmtd2_beat_clock_synced;
+    wire [31:0]tdata1_i;
+    wire full_2_i;
+    SYNC SYNC2(
+        .O(ddmtd2_beat_clock_synced),
+        .I(ddmtd2_beat_clock),
+        .clk(sampling_logic_clock),
+        .reset(m_reset)
+    );
     DDMTD_Sampler
     #(.DATA_WIDTH(32))
     DDMTD2(
@@ -586,19 +707,40 @@ module main_v2(
         .WR_CLK(sampling_logic_clock),
         .BEAT_CLK(ddmtd2_beat_clock_synced),
         .en_SAMPLING_LOGIC(start_acq_ptrigger), //Active High
-        .EXTERNAL_COUNTER(external_counter),
+        .EXTERNAL_COUNTER(external_counter2),
         .RST(m_reset),
         //Inputs for readout
         .RD_CLK(rd_clk_buff),
-        .R_TDATA(tdata2),  
+        .R_TDATA(tdata2_i),  
         .READ_EN(read_en_buff),
         //  .PROG_FULL(prog_full_1),
         //  .PROG_EMPTY(TREADY),
         // .EMPTY(),
-        .FULL(full_2),
+        .FULL(full_2_i),
         .R_LOGIC_EN(1)
         // .WRITE_COUNT(write_count_fifo2),
         // .READ_COUNT(read_count_fifo2)
+    );
+
+    //tdata temperory
+    always @(posedge clk)
+    begin
+        tdata2 <= tdata2_i;
+    end
+
+    
+    wire full_2_ii;
+    SYNC SYNC_full_2(
+        .O(full_2_ii),
+        .I(full_2_i),
+        .clk(sampling_logic_clock),
+        .reset(0)
+    );
+    SYNC SYNC_full_22(
+        .O(full_2),
+        .I(full_22_ii),
+        .clk(clk),
+        .reset(0)
     );
 
 
@@ -695,6 +837,9 @@ module main_v2(
     assign set_vadj[0] = 1'b0;
     assign set_vadj[1] = 1'b1;
     assign vadj_en     = 1'b1;
+
+
+
 
 // ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  == 
 // END OF MODULE

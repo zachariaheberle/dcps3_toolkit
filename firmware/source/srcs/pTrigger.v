@@ -1,37 +1,14 @@
-`timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 07/09/2019 11:11:17 AM
-// Design Name: 
-// Module Name: SYNC
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-//////////////////////////////////////////////////////////////////////////////////
-
-
-module SYNC(
+module pTrigger(
 output O,
 input I,
 input clk,
 input reset
-    );
+);
+
+
+ wire FF1;
     
-    
-      //(* ASYNC_REG = "TRUE" *)
-       wire FF1;
-    
-             FDRE
+     FDRE
         #(
             .INIT(1'b0)//Initialvalueofregister(1'b0or1'b1)
          )
@@ -42,9 +19,10 @@ input reset
         .R(reset),//1- bit Synchronous reset input
         .D(I)//1 -bit Data input
         );
-        
-        
-                     FDRE
+
+
+    wire FF2;
+    FDRE
         #(
             .INIT(1'b0)//Initialvalueofregister(1'b0or1'b1)
          )
@@ -55,8 +33,9 @@ input reset
         .R(reset),//1- bit Synchronous reset input
         .D(FF1)//1 -bit Data input
         );
-        
-        
-        
-        
+
+    assign O = (FF2 ^ (FF1))&(~FF2);
+
+
+
 endmodule
