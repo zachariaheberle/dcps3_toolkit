@@ -15,7 +15,7 @@ scp $1 $HOST:$DST
 ssh -T $HOST << EOF
   cd ~/$SRC;
   echo "We are in dir::\$PWD"
-  # gcc -O program_fpga_Nex.c  -l bcm2835 -o NexFlash.exe
+  gcc -O ./src/program_fpga_Nex.c  -l bcm2835 -o ./bin/NexFlash.exe
   sudo ./bin/NexFlash.exe < HEX_Files/$FileName
   sleep 1;
 EOF
