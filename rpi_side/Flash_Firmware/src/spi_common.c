@@ -157,8 +157,8 @@ int write_toFiles(FILE* fp1,FILE* fp2,  void* virtual_address, int byte_count)
         val1_bit = (val1>>31 & 0x1);
         val2_val = (val2&0x7fffffff);
         val2_bit = (val2>>31 & 0x1);
-        printf("%10u,%10u \t",(val1>>31 & 0x1),(val1 & 0x7fffffff));
-        printf("%10u,%10u \n",(val2>>31 & 0x1),(val2 & 0x7fffffff));
+        // printf("%10u,%10u \t",(val1>>31 & 0x1),(val1 & 0x7fffffff));
+        // printf("%10u,%10u \n",(val2>>31 & 0x1),(val2 & 0x7fffffff));
         // printf("%10u,%10u \t", (val1>>31 & 0x1),(val1 & 0x7fffffff));
 
 
