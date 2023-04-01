@@ -1,10 +1,10 @@
 // Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
 // Tool Version: Vivado v.2019.2 (lin64) Build 2708876 Wed Nov  6 21:39:14 MST 2019
-// Date        : Fri Mar 31 03:35:20 2023
+// Date        : Sat Apr  1 13:18:00 2023
 // Host        : ubuntu running 64-bit Ubuntu 18.04.6 LTS
-// Command     : write_verilog -force -mode funcsim
-//               /home/rsaradhy/work/nexys_ddmtd_github/firmware/source/ip/FIFO_Array/FIFO_Array_sim_netlist.v
+// Command     : write_verilog -force -mode funcsim -rename_top FIFO_Array -prefix
+//               FIFO_Array_ FIFO_Array_sim_netlist.v
 // Design      : FIFO_Array
 // Purpose     : This verilog netlist is a functional simulation representation of the design and should not be modified
 //               or synthesized. This netlist cannot be used for SDF annotated simulation.
@@ -306,14 +306,14 @@ module FIFO_Array
   (* C_PROG_EMPTY_TYPE_WACH = "0" *) 
   (* C_PROG_EMPTY_TYPE_WDCH = "0" *) 
   (* C_PROG_EMPTY_TYPE_WRCH = "0" *) 
-  (* C_PROG_FULL_THRESH_ASSERT_VAL = "32759" *) 
+  (* C_PROG_FULL_THRESH_ASSERT_VAL = "25000" *) 
   (* C_PROG_FULL_THRESH_ASSERT_VAL_AXIS = "1023" *) 
   (* C_PROG_FULL_THRESH_ASSERT_VAL_RACH = "1023" *) 
   (* C_PROG_FULL_THRESH_ASSERT_VAL_RDCH = "1023" *) 
   (* C_PROG_FULL_THRESH_ASSERT_VAL_WACH = "1023" *) 
   (* C_PROG_FULL_THRESH_ASSERT_VAL_WDCH = "1023" *) 
   (* C_PROG_FULL_THRESH_ASSERT_VAL_WRCH = "1023" *) 
-  (* C_PROG_FULL_THRESH_NEGATE_VAL = "32758" *) 
+  (* C_PROG_FULL_THRESH_NEGATE_VAL = "24999" *) 
   (* C_PROG_FULL_TYPE = "1" *) 
   (* C_PROG_FULL_TYPE_AXIS = "0" *) 
   (* C_PROG_FULL_TYPE_RACH = "0" *) 
@@ -607,7 +607,6 @@ module FIFO_Array
         .wr_rst_busy(NLW_U0_wr_rst_busy_UNCONNECTED));
 endmodule
 
-(* ORIG_REF_NAME = "builtin_extdepth_v6" *) 
 module FIFO_Array_builtin_extdepth_v6
    (pf,
     ful,
@@ -1536,7 +1535,6 @@ module FIFO_Array_builtin_extdepth_v6_6
         .O(dbr_as_reg));
 endmodule
 
-(* ORIG_REF_NAME = "builtin_prim_v6" *) 
 module FIFO_Array_builtin_prim_v6
    (pf,
     wr_clk_0,
@@ -1605,7 +1603,7 @@ module FIFO_Array_builtin_prim_v6
   (* box_type = "PRIMITIVE" *) 
   FIFO36E1 #(
     .ALMOST_EMPTY_OFFSET(13'h000A),
-    .ALMOST_FULL_OFFSET(13'h000D),
+    .ALMOST_FULL_OFFSET(13'h1E5C),
     .DATA_WIDTH(4),
     .DO_REG(1),
     .EN_ECC_READ("FALSE"),
@@ -1722,7 +1720,7 @@ module FIFO_Array_builtin_prim_v6_10
   (* box_type = "PRIMITIVE" *) 
   FIFO36E1 #(
     .ALMOST_EMPTY_OFFSET(13'h000A),
-    .ALMOST_FULL_OFFSET(13'h000D),
+    .ALMOST_FULL_OFFSET(13'h1E5C),
     .DATA_WIDTH(4),
     .DO_REG(1),
     .EN_ECC_READ("FALSE"),
@@ -1839,7 +1837,7 @@ module FIFO_Array_builtin_prim_v6_11
   (* box_type = "PRIMITIVE" *) 
   FIFO36E1 #(
     .ALMOST_EMPTY_OFFSET(13'h000A),
-    .ALMOST_FULL_OFFSET(13'h000D),
+    .ALMOST_FULL_OFFSET(13'h1E5C),
     .DATA_WIDTH(4),
     .DO_REG(1),
     .EN_ECC_READ("FALSE"),
@@ -1973,7 +1971,7 @@ module FIFO_Array_builtin_prim_v6_13
   (* box_type = "PRIMITIVE" *) 
   FIFO36E1 #(
     .ALMOST_EMPTY_OFFSET(13'h000A),
-    .ALMOST_FULL_OFFSET(13'h000D),
+    .ALMOST_FULL_OFFSET(13'h1E5C),
     .DATA_WIDTH(4),
     .DO_REG(1),
     .EN_ECC_READ("FALSE"),
@@ -2100,7 +2098,7 @@ module FIFO_Array_builtin_prim_v6_14
   (* box_type = "PRIMITIVE" *) 
   FIFO36E1 #(
     .ALMOST_EMPTY_OFFSET(13'h000A),
-    .ALMOST_FULL_OFFSET(13'h000D),
+    .ALMOST_FULL_OFFSET(13'h1E5C),
     .DATA_WIDTH(4),
     .DO_REG(1),
     .EN_ECC_READ("FALSE"),
@@ -2217,7 +2215,7 @@ module FIFO_Array_builtin_prim_v6_15
   (* box_type = "PRIMITIVE" *) 
   FIFO36E1 #(
     .ALMOST_EMPTY_OFFSET(13'h000A),
-    .ALMOST_FULL_OFFSET(13'h000D),
+    .ALMOST_FULL_OFFSET(13'h1E5C),
     .DATA_WIDTH(4),
     .DO_REG(1),
     .EN_ECC_READ("FALSE"),
@@ -2336,7 +2334,7 @@ module FIFO_Array_builtin_prim_v6_17
   (* box_type = "PRIMITIVE" *) 
   FIFO36E1 #(
     .ALMOST_EMPTY_OFFSET(13'h000A),
-    .ALMOST_FULL_OFFSET(13'h000D),
+    .ALMOST_FULL_OFFSET(13'h1E5C),
     .DATA_WIDTH(4),
     .DO_REG(1),
     .EN_ECC_READ("FALSE"),
@@ -2453,7 +2451,7 @@ module FIFO_Array_builtin_prim_v6_18
   (* box_type = "PRIMITIVE" *) 
   FIFO36E1 #(
     .ALMOST_EMPTY_OFFSET(13'h000A),
-    .ALMOST_FULL_OFFSET(13'h000D),
+    .ALMOST_FULL_OFFSET(13'h1E5C),
     .DATA_WIDTH(4),
     .DO_REG(1),
     .EN_ECC_READ("FALSE"),
@@ -2570,7 +2568,7 @@ module FIFO_Array_builtin_prim_v6_19
   (* box_type = "PRIMITIVE" *) 
   FIFO36E1 #(
     .ALMOST_EMPTY_OFFSET(13'h000A),
-    .ALMOST_FULL_OFFSET(13'h000D),
+    .ALMOST_FULL_OFFSET(13'h1E5C),
     .DATA_WIDTH(4),
     .DO_REG(1),
     .EN_ECC_READ("FALSE"),
@@ -2689,7 +2687,7 @@ module FIFO_Array_builtin_prim_v6_21
   (* box_type = "PRIMITIVE" *) 
   FIFO36E1 #(
     .ALMOST_EMPTY_OFFSET(13'h000A),
-    .ALMOST_FULL_OFFSET(13'h000D),
+    .ALMOST_FULL_OFFSET(13'h1E5C),
     .DATA_WIDTH(4),
     .DO_REG(1),
     .EN_ECC_READ("FALSE"),
@@ -2806,7 +2804,7 @@ module FIFO_Array_builtin_prim_v6_22
   (* box_type = "PRIMITIVE" *) 
   FIFO36E1 #(
     .ALMOST_EMPTY_OFFSET(13'h000A),
-    .ALMOST_FULL_OFFSET(13'h000D),
+    .ALMOST_FULL_OFFSET(13'h1E5C),
     .DATA_WIDTH(4),
     .DO_REG(1),
     .EN_ECC_READ("FALSE"),
@@ -2923,7 +2921,7 @@ module FIFO_Array_builtin_prim_v6_23
   (* box_type = "PRIMITIVE" *) 
   FIFO36E1 #(
     .ALMOST_EMPTY_OFFSET(13'h000A),
-    .ALMOST_FULL_OFFSET(13'h000D),
+    .ALMOST_FULL_OFFSET(13'h1E5C),
     .DATA_WIDTH(4),
     .DO_REG(1),
     .EN_ECC_READ("FALSE"),
@@ -3060,7 +3058,7 @@ module FIFO_Array_builtin_prim_v6_25
   (* box_type = "PRIMITIVE" *) 
   FIFO36E1 #(
     .ALMOST_EMPTY_OFFSET(13'h000A),
-    .ALMOST_FULL_OFFSET(13'h000D),
+    .ALMOST_FULL_OFFSET(13'h1E5C),
     .DATA_WIDTH(4),
     .DO_REG(1),
     .EN_ECC_READ("FALSE"),
@@ -3177,7 +3175,7 @@ module FIFO_Array_builtin_prim_v6_26
   (* box_type = "PRIMITIVE" *) 
   FIFO36E1 #(
     .ALMOST_EMPTY_OFFSET(13'h000A),
-    .ALMOST_FULL_OFFSET(13'h000D),
+    .ALMOST_FULL_OFFSET(13'h1E5C),
     .DATA_WIDTH(4),
     .DO_REG(1),
     .EN_ECC_READ("FALSE"),
@@ -3294,7 +3292,7 @@ module FIFO_Array_builtin_prim_v6_27
   (* box_type = "PRIMITIVE" *) 
   FIFO36E1 #(
     .ALMOST_EMPTY_OFFSET(13'h000A),
-    .ALMOST_FULL_OFFSET(13'h000D),
+    .ALMOST_FULL_OFFSET(13'h1E5C),
     .DATA_WIDTH(4),
     .DO_REG(1),
     .EN_ECC_READ("FALSE"),
@@ -3413,7 +3411,7 @@ module FIFO_Array_builtin_prim_v6_29
   (* box_type = "PRIMITIVE" *) 
   FIFO36E1 #(
     .ALMOST_EMPTY_OFFSET(13'h000A),
-    .ALMOST_FULL_OFFSET(13'h000D),
+    .ALMOST_FULL_OFFSET(13'h1E5C),
     .DATA_WIDTH(4),
     .DO_REG(1),
     .EN_ECC_READ("FALSE"),
@@ -3530,7 +3528,7 @@ module FIFO_Array_builtin_prim_v6_30
   (* box_type = "PRIMITIVE" *) 
   FIFO36E1 #(
     .ALMOST_EMPTY_OFFSET(13'h000A),
-    .ALMOST_FULL_OFFSET(13'h000D),
+    .ALMOST_FULL_OFFSET(13'h1E5C),
     .DATA_WIDTH(4),
     .DO_REG(1),
     .EN_ECC_READ("FALSE"),
@@ -3647,7 +3645,7 @@ module FIFO_Array_builtin_prim_v6_31
   (* box_type = "PRIMITIVE" *) 
   FIFO36E1 #(
     .ALMOST_EMPTY_OFFSET(13'h000A),
-    .ALMOST_FULL_OFFSET(13'h000D),
+    .ALMOST_FULL_OFFSET(13'h1E5C),
     .DATA_WIDTH(4),
     .DO_REG(1),
     .EN_ECC_READ("FALSE"),
@@ -3766,7 +3764,7 @@ module FIFO_Array_builtin_prim_v6_33
   (* box_type = "PRIMITIVE" *) 
   FIFO36E1 #(
     .ALMOST_EMPTY_OFFSET(13'h000A),
-    .ALMOST_FULL_OFFSET(13'h000D),
+    .ALMOST_FULL_OFFSET(13'h1E5C),
     .DATA_WIDTH(4),
     .DO_REG(1),
     .EN_ECC_READ("FALSE"),
@@ -3883,7 +3881,7 @@ module FIFO_Array_builtin_prim_v6_34
   (* box_type = "PRIMITIVE" *) 
   FIFO36E1 #(
     .ALMOST_EMPTY_OFFSET(13'h000A),
-    .ALMOST_FULL_OFFSET(13'h000D),
+    .ALMOST_FULL_OFFSET(13'h1E5C),
     .DATA_WIDTH(4),
     .DO_REG(1),
     .EN_ECC_READ("FALSE"),
@@ -4000,7 +3998,7 @@ module FIFO_Array_builtin_prim_v6_35
   (* box_type = "PRIMITIVE" *) 
   FIFO36E1 #(
     .ALMOST_EMPTY_OFFSET(13'h000A),
-    .ALMOST_FULL_OFFSET(13'h000D),
+    .ALMOST_FULL_OFFSET(13'h1E5C),
     .DATA_WIDTH(4),
     .DO_REG(1),
     .EN_ECC_READ("FALSE"),
@@ -4117,7 +4115,7 @@ module FIFO_Array_builtin_prim_v6_7
   (* box_type = "PRIMITIVE" *) 
   FIFO36E1 #(
     .ALMOST_EMPTY_OFFSET(13'h000A),
-    .ALMOST_FULL_OFFSET(13'h000D),
+    .ALMOST_FULL_OFFSET(13'h1E5C),
     .DATA_WIDTH(4),
     .DO_REG(1),
     .EN_ECC_READ("FALSE"),
@@ -4234,7 +4232,7 @@ module FIFO_Array_builtin_prim_v6_8
   (* box_type = "PRIMITIVE" *) 
   FIFO36E1 #(
     .ALMOST_EMPTY_OFFSET(13'h000A),
-    .ALMOST_FULL_OFFSET(13'h000D),
+    .ALMOST_FULL_OFFSET(13'h1E5C),
     .DATA_WIDTH(4),
     .DO_REG(1),
     .EN_ECC_READ("FALSE"),
@@ -4353,7 +4351,7 @@ module FIFO_Array_builtin_prim_v6_9
   (* box_type = "PRIMITIVE" *) 
   FIFO36E1 #(
     .ALMOST_EMPTY_OFFSET(13'h000A),
-    .ALMOST_FULL_OFFSET(13'h000D),
+    .ALMOST_FULL_OFFSET(13'h1E5C),
     .DATA_WIDTH(4),
     .DO_REG(1),
     .EN_ECC_READ("FALSE"),
@@ -5367,7 +5365,6 @@ module FIFO_Array_builtin_prim_v6__parameterized0_36
         .WRERR(\gf36e1_inst.sngfifo36e1_n_7 ));
 endmodule
 
-(* ORIG_REF_NAME = "builtin_top_v6" *) 
 module FIFO_Array_builtin_top_v6
    (dout,
     prog_full,
@@ -5556,7 +5553,6 @@ module FIFO_Array_builtin_top_v6
         .O(prog_full_INST_0_i_1_n_0));
 endmodule
 
-(* ORIG_REF_NAME = "fifo_generator_top" *) 
 module FIFO_Array_fifo_generator_top
    (dout,
     prog_full,
@@ -5652,9 +5648,9 @@ endmodule
 (* C_PROG_EMPTY_THRESH_ASSERT_VAL_WRCH = "1022" *) (* C_PROG_EMPTY_THRESH_NEGATE_VAL = "253" *) (* C_PROG_EMPTY_TYPE = "1" *) 
 (* C_PROG_EMPTY_TYPE_AXIS = "0" *) (* C_PROG_EMPTY_TYPE_RACH = "0" *) (* C_PROG_EMPTY_TYPE_RDCH = "0" *) 
 (* C_PROG_EMPTY_TYPE_WACH = "0" *) (* C_PROG_EMPTY_TYPE_WDCH = "0" *) (* C_PROG_EMPTY_TYPE_WRCH = "0" *) 
-(* C_PROG_FULL_THRESH_ASSERT_VAL = "32759" *) (* C_PROG_FULL_THRESH_ASSERT_VAL_AXIS = "1023" *) (* C_PROG_FULL_THRESH_ASSERT_VAL_RACH = "1023" *) 
+(* C_PROG_FULL_THRESH_ASSERT_VAL = "25000" *) (* C_PROG_FULL_THRESH_ASSERT_VAL_AXIS = "1023" *) (* C_PROG_FULL_THRESH_ASSERT_VAL_RACH = "1023" *) 
 (* C_PROG_FULL_THRESH_ASSERT_VAL_RDCH = "1023" *) (* C_PROG_FULL_THRESH_ASSERT_VAL_WACH = "1023" *) (* C_PROG_FULL_THRESH_ASSERT_VAL_WDCH = "1023" *) 
-(* C_PROG_FULL_THRESH_ASSERT_VAL_WRCH = "1023" *) (* C_PROG_FULL_THRESH_NEGATE_VAL = "32758" *) (* C_PROG_FULL_TYPE = "1" *) 
+(* C_PROG_FULL_THRESH_ASSERT_VAL_WRCH = "1023" *) (* C_PROG_FULL_THRESH_NEGATE_VAL = "24999" *) (* C_PROG_FULL_TYPE = "1" *) 
 (* C_PROG_FULL_TYPE_AXIS = "0" *) (* C_PROG_FULL_TYPE_RACH = "0" *) (* C_PROG_FULL_TYPE_RDCH = "0" *) 
 (* C_PROG_FULL_TYPE_WACH = "0" *) (* C_PROG_FULL_TYPE_WDCH = "0" *) (* C_PROG_FULL_TYPE_WRCH = "0" *) 
 (* C_RACH_TYPE = "0" *) (* C_RDCH_TYPE = "0" *) (* C_RD_DATA_COUNT_WIDTH = "15" *) 
@@ -5674,7 +5670,7 @@ endmodule
 (* C_WR_DEPTH_WRCH = "16" *) (* C_WR_FREQ = "166" *) (* C_WR_PNTR_WIDTH = "15" *) 
 (* C_WR_PNTR_WIDTH_AXIS = "10" *) (* C_WR_PNTR_WIDTH_RACH = "4" *) (* C_WR_PNTR_WIDTH_RDCH = "10" *) 
 (* C_WR_PNTR_WIDTH_WACH = "4" *) (* C_WR_PNTR_WIDTH_WDCH = "10" *) (* C_WR_PNTR_WIDTH_WRCH = "4" *) 
-(* C_WR_RESPONSE_LATENCY = "1" *) (* ORIG_REF_NAME = "fifo_generator_v13_2_5" *) 
+(* C_WR_RESPONSE_LATENCY = "1" *) 
 module FIFO_Array_fifo_generator_v13_2_5
    (backup,
     backup_marker,
@@ -6709,7 +6705,6 @@ module FIFO_Array_fifo_generator_v13_2_5
         .wr_en(wr_en));
 endmodule
 
-(* ORIG_REF_NAME = "fifo_generator_v13_2_5_builtin" *) 
 module FIFO_Array_fifo_generator_v13_2_5_builtin
    (dout,
     prog_full,
@@ -6766,7 +6761,6 @@ module FIFO_Array_fifo_generator_v13_2_5_builtin
         .wr_en(wr_en));
 endmodule
 
-(* ORIG_REF_NAME = "fifo_generator_v13_2_5_synth" *) 
 module FIFO_Array_fifo_generator_v13_2_5_synth
    (dout,
     prog_full,
@@ -6817,7 +6811,6 @@ module FIFO_Array_fifo_generator_v13_2_5_synth
         .wr_en(wr_en));
 endmodule
 
-(* ORIG_REF_NAME = "reset_builtin" *) 
 module FIFO_Array_reset_builtin
    (rd_rst_i,
     rd_clk,

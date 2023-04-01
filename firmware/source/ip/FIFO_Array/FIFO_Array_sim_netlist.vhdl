@@ -1,10 +1,10 @@
 -- Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2019.2 (lin64) Build 2708876 Wed Nov  6 21:39:14 MST 2019
--- Date        : Fri Mar 31 03:35:20 2023
+-- Date        : Sat Apr  1 13:18:01 2023
 -- Host        : ubuntu running 64-bit Ubuntu 18.04.6 LTS
--- Command     : write_vhdl -force -mode funcsim
---               /home/rsaradhy/work/nexys_ddmtd_github/firmware/source/ip/FIFO_Array/FIFO_Array_sim_netlist.vhdl
+-- Command     : write_vhdl -force -mode funcsim -rename_top FIFO_Array -prefix
+--               FIFO_Array_ FIFO_Array_sim_netlist.vhdl
 -- Design      : FIFO_Array
 -- Purpose     : This VHDL netlist is a functional simulation representation of the design and should not be modified or
 --               synthesized. This netlist cannot be used for SDF annotated simulation.
@@ -26,8 +26,6 @@ entity FIFO_Array_builtin_prim_v6 is
     din : in STD_LOGIC_VECTOR ( 3 downto 0 );
     ful_2 : in STD_LOGIC
   );
-  attribute ORIG_REF_NAME : string;
-  attribute ORIG_REF_NAME of FIFO_Array_builtin_prim_v6 : entity is "builtin_prim_v6";
 end FIFO_Array_builtin_prim_v6;
 
 architecture STRUCTURE of FIFO_Array_builtin_prim_v6 is
@@ -74,7 +72,7 @@ begin
 \gf36e1_inst.sngfifo36e1\: unisim.vcomponents.FIFO36E1
     generic map(
       ALMOST_EMPTY_OFFSET => X"000A",
-      ALMOST_FULL_OFFSET => X"000D",
+      ALMOST_FULL_OFFSET => X"1E5C",
       DATA_WIDTH => 4,
       DO_REG => 1,
       EN_ECC_READ => false,
@@ -218,7 +216,7 @@ begin
 \gf36e1_inst.sngfifo36e1\: unisim.vcomponents.FIFO36E1
     generic map(
       ALMOST_EMPTY_OFFSET => X"000A",
-      ALMOST_FULL_OFFSET => X"000D",
+      ALMOST_FULL_OFFSET => X"1E5C",
       DATA_WIDTH => 4,
       DO_REG => 1,
       EN_ECC_READ => false,
@@ -362,7 +360,7 @@ begin
 \gf36e1_inst.sngfifo36e1\: unisim.vcomponents.FIFO36E1
     generic map(
       ALMOST_EMPTY_OFFSET => X"000A",
-      ALMOST_FULL_OFFSET => X"000D",
+      ALMOST_FULL_OFFSET => X"1E5C",
       DATA_WIDTH => 4,
       DO_REG => 1,
       EN_ECC_READ => false,
@@ -524,7 +522,7 @@ full_INST_0_i_1: unisim.vcomponents.LUT4
 \gf36e1_inst.sngfifo36e1\: unisim.vcomponents.FIFO36E1
     generic map(
       ALMOST_EMPTY_OFFSET => X"000A",
-      ALMOST_FULL_OFFSET => X"000D",
+      ALMOST_FULL_OFFSET => X"1E5C",
       DATA_WIDTH => 4,
       DO_REG => 1,
       EN_ECC_READ => false,
@@ -681,7 +679,7 @@ begin
 \gf36e1_inst.sngfifo36e1\: unisim.vcomponents.FIFO36E1
     generic map(
       ALMOST_EMPTY_OFFSET => X"000A",
-      ALMOST_FULL_OFFSET => X"000D",
+      ALMOST_FULL_OFFSET => X"1E5C",
       DATA_WIDTH => 4,
       DO_REG => 1,
       EN_ECC_READ => false,
@@ -825,7 +823,7 @@ begin
 \gf36e1_inst.sngfifo36e1\: unisim.vcomponents.FIFO36E1
     generic map(
       ALMOST_EMPTY_OFFSET => X"000A",
-      ALMOST_FULL_OFFSET => X"000D",
+      ALMOST_FULL_OFFSET => X"1E5C",
       DATA_WIDTH => 4,
       DO_REG => 1,
       EN_ECC_READ => false,
@@ -969,7 +967,7 @@ begin
 \gf36e1_inst.sngfifo36e1\: unisim.vcomponents.FIFO36E1
     generic map(
       ALMOST_EMPTY_OFFSET => X"000A",
-      ALMOST_FULL_OFFSET => X"000D",
+      ALMOST_FULL_OFFSET => X"1E5C",
       DATA_WIDTH => 4,
       DO_REG => 1,
       EN_ECC_READ => false,
@@ -1113,7 +1111,7 @@ begin
 \gf36e1_inst.sngfifo36e1\: unisim.vcomponents.FIFO36E1
     generic map(
       ALMOST_EMPTY_OFFSET => X"000A",
-      ALMOST_FULL_OFFSET => X"000D",
+      ALMOST_FULL_OFFSET => X"1E5C",
       DATA_WIDTH => 4,
       DO_REG => 1,
       EN_ECC_READ => false,
@@ -1257,7 +1255,7 @@ begin
 \gf36e1_inst.sngfifo36e1\: unisim.vcomponents.FIFO36E1
     generic map(
       ALMOST_EMPTY_OFFSET => X"000A",
-      ALMOST_FULL_OFFSET => X"000D",
+      ALMOST_FULL_OFFSET => X"1E5C",
       DATA_WIDTH => 4,
       DO_REG => 1,
       EN_ECC_READ => false,
@@ -1401,7 +1399,7 @@ begin
 \gf36e1_inst.sngfifo36e1\: unisim.vcomponents.FIFO36E1
     generic map(
       ALMOST_EMPTY_OFFSET => X"000A",
-      ALMOST_FULL_OFFSET => X"000D",
+      ALMOST_FULL_OFFSET => X"1E5C",
       DATA_WIDTH => 4,
       DO_REG => 1,
       EN_ECC_READ => false,
@@ -1545,7 +1543,7 @@ begin
 \gf36e1_inst.sngfifo36e1\: unisim.vcomponents.FIFO36E1
     generic map(
       ALMOST_EMPTY_OFFSET => X"000A",
-      ALMOST_FULL_OFFSET => X"000D",
+      ALMOST_FULL_OFFSET => X"1E5C",
       DATA_WIDTH => 4,
       DO_REG => 1,
       EN_ECC_READ => false,
@@ -1689,7 +1687,7 @@ begin
 \gf36e1_inst.sngfifo36e1\: unisim.vcomponents.FIFO36E1
     generic map(
       ALMOST_EMPTY_OFFSET => X"000A",
-      ALMOST_FULL_OFFSET => X"000D",
+      ALMOST_FULL_OFFSET => X"1E5C",
       DATA_WIDTH => 4,
       DO_REG => 1,
       EN_ECC_READ => false,
@@ -1850,7 +1848,7 @@ full_INST_0: unisim.vcomponents.LUT5
 \gf36e1_inst.sngfifo36e1\: unisim.vcomponents.FIFO36E1
     generic map(
       ALMOST_EMPTY_OFFSET => X"000A",
-      ALMOST_FULL_OFFSET => X"000D",
+      ALMOST_FULL_OFFSET => X"1E5C",
       DATA_WIDTH => 4,
       DO_REG => 1,
       EN_ECC_READ => false,
@@ -1994,7 +1992,7 @@ begin
 \gf36e1_inst.sngfifo36e1\: unisim.vcomponents.FIFO36E1
     generic map(
       ALMOST_EMPTY_OFFSET => X"000A",
-      ALMOST_FULL_OFFSET => X"000D",
+      ALMOST_FULL_OFFSET => X"1E5C",
       DATA_WIDTH => 4,
       DO_REG => 1,
       EN_ECC_READ => false,
@@ -2138,7 +2136,7 @@ begin
 \gf36e1_inst.sngfifo36e1\: unisim.vcomponents.FIFO36E1
     generic map(
       ALMOST_EMPTY_OFFSET => X"000A",
-      ALMOST_FULL_OFFSET => X"000D",
+      ALMOST_FULL_OFFSET => X"1E5C",
       DATA_WIDTH => 4,
       DO_REG => 1,
       EN_ECC_READ => false,
@@ -2282,7 +2280,7 @@ begin
 \gf36e1_inst.sngfifo36e1\: unisim.vcomponents.FIFO36E1
     generic map(
       ALMOST_EMPTY_OFFSET => X"000A",
-      ALMOST_FULL_OFFSET => X"000D",
+      ALMOST_FULL_OFFSET => X"1E5C",
       DATA_WIDTH => 4,
       DO_REG => 1,
       EN_ECC_READ => false,
@@ -2426,7 +2424,7 @@ begin
 \gf36e1_inst.sngfifo36e1\: unisim.vcomponents.FIFO36E1
     generic map(
       ALMOST_EMPTY_OFFSET => X"000A",
-      ALMOST_FULL_OFFSET => X"000D",
+      ALMOST_FULL_OFFSET => X"1E5C",
       DATA_WIDTH => 4,
       DO_REG => 1,
       EN_ECC_READ => false,
@@ -2570,7 +2568,7 @@ begin
 \gf36e1_inst.sngfifo36e1\: unisim.vcomponents.FIFO36E1
     generic map(
       ALMOST_EMPTY_OFFSET => X"000A",
-      ALMOST_FULL_OFFSET => X"000D",
+      ALMOST_FULL_OFFSET => X"1E5C",
       DATA_WIDTH => 4,
       DO_REG => 1,
       EN_ECC_READ => false,
@@ -2714,7 +2712,7 @@ begin
 \gf36e1_inst.sngfifo36e1\: unisim.vcomponents.FIFO36E1
     generic map(
       ALMOST_EMPTY_OFFSET => X"000A",
-      ALMOST_FULL_OFFSET => X"000D",
+      ALMOST_FULL_OFFSET => X"1E5C",
       DATA_WIDTH => 4,
       DO_REG => 1,
       EN_ECC_READ => false,
@@ -2858,7 +2856,7 @@ begin
 \gf36e1_inst.sngfifo36e1\: unisim.vcomponents.FIFO36E1
     generic map(
       ALMOST_EMPTY_OFFSET => X"000A",
-      ALMOST_FULL_OFFSET => X"000D",
+      ALMOST_FULL_OFFSET => X"1E5C",
       DATA_WIDTH => 4,
       DO_REG => 1,
       EN_ECC_READ => false,
@@ -3002,7 +3000,7 @@ begin
 \gf36e1_inst.sngfifo36e1\: unisim.vcomponents.FIFO36E1
     generic map(
       ALMOST_EMPTY_OFFSET => X"000A",
-      ALMOST_FULL_OFFSET => X"000D",
+      ALMOST_FULL_OFFSET => X"1E5C",
       DATA_WIDTH => 4,
       DO_REG => 1,
       EN_ECC_READ => false,
@@ -3146,7 +3144,7 @@ begin
 \gf36e1_inst.sngfifo36e1\: unisim.vcomponents.FIFO36E1
     generic map(
       ALMOST_EMPTY_OFFSET => X"000A",
-      ALMOST_FULL_OFFSET => X"000D",
+      ALMOST_FULL_OFFSET => X"1E5C",
       DATA_WIDTH => 4,
       DO_REG => 1,
       EN_ECC_READ => false,
@@ -3290,7 +3288,7 @@ begin
 \gf36e1_inst.sngfifo36e1\: unisim.vcomponents.FIFO36E1
     generic map(
       ALMOST_EMPTY_OFFSET => X"000A",
-      ALMOST_FULL_OFFSET => X"000D",
+      ALMOST_FULL_OFFSET => X"1E5C",
       DATA_WIDTH => 4,
       DO_REG => 1,
       EN_ECC_READ => false,
@@ -3434,7 +3432,7 @@ begin
 \gf36e1_inst.sngfifo36e1\: unisim.vcomponents.FIFO36E1
     generic map(
       ALMOST_EMPTY_OFFSET => X"000A",
-      ALMOST_FULL_OFFSET => X"000D",
+      ALMOST_FULL_OFFSET => X"1E5C",
       DATA_WIDTH => 4,
       DO_REG => 1,
       EN_ECC_READ => false,
@@ -4639,8 +4637,6 @@ entity FIFO_Array_reset_builtin is
     wr_clk : in STD_LOGIC;
     rst : in STD_LOGIC
   );
-  attribute ORIG_REF_NAME : string;
-  attribute ORIG_REF_NAME of FIFO_Array_reset_builtin : entity is "reset_builtin";
 end FIFO_Array_reset_builtin;
 
 architecture STRUCTURE of FIFO_Array_reset_builtin is
@@ -4972,8 +4968,6 @@ entity FIFO_Array_builtin_extdepth_v6 is
     rd_clk : in STD_LOGIC;
     dout_3_sp_1 : in STD_LOGIC
   );
-  attribute ORIG_REF_NAME : string;
-  attribute ORIG_REF_NAME of FIFO_Array_builtin_extdepth_v6 : entity is "builtin_extdepth_v6";
 end FIFO_Array_builtin_extdepth_v6;
 
 architecture STRUCTURE of FIFO_Array_builtin_extdepth_v6 is
@@ -6010,8 +6004,6 @@ entity FIFO_Array_builtin_top_v6 is
     rd_en : in STD_LOGIC;
     wr_en : in STD_LOGIC
   );
-  attribute ORIG_REF_NAME : string;
-  attribute ORIG_REF_NAME of FIFO_Array_builtin_top_v6 : entity is "builtin_top_v6";
 end FIFO_Array_builtin_top_v6;
 
 architecture STRUCTURE of FIFO_Array_builtin_top_v6 is
@@ -6217,8 +6209,6 @@ entity FIFO_Array_fifo_generator_v13_2_5_builtin is
     rst : in STD_LOGIC;
     wr_en : in STD_LOGIC
   );
-  attribute ORIG_REF_NAME : string;
-  attribute ORIG_REF_NAME of FIFO_Array_fifo_generator_v13_2_5_builtin : entity is "fifo_generator_v13_2_5_builtin";
 end FIFO_Array_fifo_generator_v13_2_5_builtin;
 
 architecture STRUCTURE of FIFO_Array_fifo_generator_v13_2_5_builtin is
@@ -6264,8 +6254,6 @@ entity FIFO_Array_fifo_generator_top is
     rst : in STD_LOGIC;
     wr_en : in STD_LOGIC
   );
-  attribute ORIG_REF_NAME : string;
-  attribute ORIG_REF_NAME of FIFO_Array_fifo_generator_top : entity is "fifo_generator_top";
 end FIFO_Array_fifo_generator_top;
 
 architecture STRUCTURE of FIFO_Array_fifo_generator_top is
@@ -6303,8 +6291,6 @@ entity FIFO_Array_fifo_generator_v13_2_5_synth is
     rst : in STD_LOGIC;
     wr_en : in STD_LOGIC
   );
-  attribute ORIG_REF_NAME : string;
-  attribute ORIG_REF_NAME of FIFO_Array_fifo_generator_v13_2_5_synth : entity is "fifo_generator_v13_2_5_synth";
 end FIFO_Array_fifo_generator_v13_2_5_synth;
 
 architecture STRUCTURE of FIFO_Array_fifo_generator_v13_2_5_synth is
@@ -6833,7 +6819,7 @@ entity FIFO_Array_fifo_generator_v13_2_5 is
   attribute C_PROG_EMPTY_TYPE_WRCH : integer;
   attribute C_PROG_EMPTY_TYPE_WRCH of FIFO_Array_fifo_generator_v13_2_5 : entity is 0;
   attribute C_PROG_FULL_THRESH_ASSERT_VAL : integer;
-  attribute C_PROG_FULL_THRESH_ASSERT_VAL of FIFO_Array_fifo_generator_v13_2_5 : entity is 32759;
+  attribute C_PROG_FULL_THRESH_ASSERT_VAL of FIFO_Array_fifo_generator_v13_2_5 : entity is 25000;
   attribute C_PROG_FULL_THRESH_ASSERT_VAL_AXIS : integer;
   attribute C_PROG_FULL_THRESH_ASSERT_VAL_AXIS of FIFO_Array_fifo_generator_v13_2_5 : entity is 1023;
   attribute C_PROG_FULL_THRESH_ASSERT_VAL_RACH : integer;
@@ -6847,7 +6833,7 @@ entity FIFO_Array_fifo_generator_v13_2_5 is
   attribute C_PROG_FULL_THRESH_ASSERT_VAL_WRCH : integer;
   attribute C_PROG_FULL_THRESH_ASSERT_VAL_WRCH of FIFO_Array_fifo_generator_v13_2_5 : entity is 1023;
   attribute C_PROG_FULL_THRESH_NEGATE_VAL : integer;
-  attribute C_PROG_FULL_THRESH_NEGATE_VAL of FIFO_Array_fifo_generator_v13_2_5 : entity is 32758;
+  attribute C_PROG_FULL_THRESH_NEGATE_VAL of FIFO_Array_fifo_generator_v13_2_5 : entity is 24999;
   attribute C_PROG_FULL_TYPE : integer;
   attribute C_PROG_FULL_TYPE of FIFO_Array_fifo_generator_v13_2_5 : entity is 1;
   attribute C_PROG_FULL_TYPE_AXIS : integer;
@@ -6966,8 +6952,6 @@ entity FIFO_Array_fifo_generator_v13_2_5 is
   attribute C_WR_PNTR_WIDTH_WRCH of FIFO_Array_fifo_generator_v13_2_5 : entity is 4;
   attribute C_WR_RESPONSE_LATENCY : integer;
   attribute C_WR_RESPONSE_LATENCY of FIFO_Array_fifo_generator_v13_2_5 : entity is 1;
-  attribute ORIG_REF_NAME : string;
-  attribute ORIG_REF_NAME of FIFO_Array_fifo_generator_v13_2_5 : entity is "fifo_generator_v13_2_5";
 end FIFO_Array_fifo_generator_v13_2_5;
 
 architecture STRUCTURE of FIFO_Array_fifo_generator_v13_2_5 is
@@ -7956,7 +7940,7 @@ architecture STRUCTURE of FIFO_Array is
   attribute C_PROG_EMPTY_TYPE_WRCH : integer;
   attribute C_PROG_EMPTY_TYPE_WRCH of U0 : label is 0;
   attribute C_PROG_FULL_THRESH_ASSERT_VAL : integer;
-  attribute C_PROG_FULL_THRESH_ASSERT_VAL of U0 : label is 32759;
+  attribute C_PROG_FULL_THRESH_ASSERT_VAL of U0 : label is 25000;
   attribute C_PROG_FULL_THRESH_ASSERT_VAL_AXIS : integer;
   attribute C_PROG_FULL_THRESH_ASSERT_VAL_AXIS of U0 : label is 1023;
   attribute C_PROG_FULL_THRESH_ASSERT_VAL_RACH : integer;
@@ -7970,7 +7954,7 @@ architecture STRUCTURE of FIFO_Array is
   attribute C_PROG_FULL_THRESH_ASSERT_VAL_WRCH : integer;
   attribute C_PROG_FULL_THRESH_ASSERT_VAL_WRCH of U0 : label is 1023;
   attribute C_PROG_FULL_THRESH_NEGATE_VAL : integer;
-  attribute C_PROG_FULL_THRESH_NEGATE_VAL of U0 : label is 32758;
+  attribute C_PROG_FULL_THRESH_NEGATE_VAL of U0 : label is 24999;
   attribute C_PROG_FULL_TYPE : integer;
   attribute C_PROG_FULL_TYPE of U0 : label is 1;
   attribute C_PROG_FULL_TYPE_AXIS : integer;

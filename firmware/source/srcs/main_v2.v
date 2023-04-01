@@ -65,7 +65,7 @@ module main_v2(
 //----------------------------------------------------------------------
 // PERIPHERAL ADDRESS SPACE
 //----------------------------------------------------------------------    
-    parameter FIRMWARE_VERSION = 16'd2050;
+    parameter FIRMWARE_VERSION = 16'd2051;
     parameter FIRMWARE_VERSION_MAJOR = FIRMWARE_VERSION[15:8];
     parameter FIRMWARE_VERSION_MINOR = FIRMWARE_VERSION[ 7:0];
 
@@ -137,17 +137,7 @@ module main_v2(
     sync_ddr sync_Q2B(.clk(clk_ref),.D(Q2B_temp),.Q(Q2B),.Q2(Q2Bn));
 
 
-    //Connections to the sampling logic: reference --> (* ASYNC_REG = "TRUE" *) 
-    wire   sampling_logic_clock;
-    wire   ddmtd1_beat_clock;
-    wire   ddmtd2_beat_clock;
 
-    assign sampling_logic_clock = clk_ref; // Clock that is used to sample...
-    assign ddmtd1_beat_clock    = Q1A;
-    assign ddmtd2_beat_clock    = Q1B;
-    // assign sampling_logic_clock = clk_200; // Clock that is used to sample...
-    // assign ddmtd1_beat_clock    = beat_0_q1; //Fake Clock
-    // assign ddmtd2_beat_clock    = beat_1_q1; //Fake Clock
 
 
 
@@ -440,6 +430,22 @@ module main_v2(
 // ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  == 
 // Sampling Logic for the beat clocks from the DDMTD...
 // ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  == 
+    //Connections to the sampling logic: reference --> (* ASYNC_REG = "TRUE" *) 
+    wire   sampling_logic_clock;
+    wire   ddmtd1_beat_clock;
+    wire   ddmtd2_beat_clock;
+
+    assign sampling_logic_clock = clk_ref; // Clock that is used to sample...
+    assign ddmtd1_beat_clock    = Q1A;
+    assign ddmtd2_beat_clock    = Q1B;
+    // assign sampling_logic_clock = clk; // Clock that is used to sample...
+    // assign ddmtd1_beat_clock    = beat_0_q1;
+    // assign ddmtd2_beat_clock    = beat_1_q1;
+    // assign sampling_logic_clock = clk_200; // Clock that is used to sample...
+    // assign ddmtd1_beat_clock    = beat_0_q1; //Fake Clock
+    // assign ddmtd2_beat_clock    = beat_1_q1; //Fake Clock
+
+
 
     // Fake beat clocks used for debugging...
     reg beat_0_q1=0;
@@ -456,7 +462,7 @@ module main_v2(
         end
         else
             dummy_counter <= dummy_counter +1;
-        if(counter_clkbeat == 5)
+        if(counter_clkbeat > 50000)
         begin
             beat_0_q1<=~beat_0_q1;
             beat_1_q1<=~beat_1_q1;
@@ -514,10 +520,7 @@ module main_v2(
     BUF read_enBuf1 (.I(read_en),.O(read_en_buff));
 
 
-    //Adding addional logic to trigger only at the posedge of ddmtd1_beat_clock...
-    integer ptrigger_counter = 0;
-    reg start_acq_ptrigger = 0;
-    reg previous_beat_edge = 0;
+
 
 
 
@@ -528,44 +531,48 @@ module main_v2(
         .O(start_acq_synced),
         .I(start_acq),
         .clk(sampling_logic_clock),
-        .reset(1)
+        .reset(0)
     );
 
-        SYNC SYNC_mreset(
+    SYNC SYNC_mreset(
         .O(m_reset_synced),
         .I(m_reset),
         .clk(sampling_logic_clock),
-        .reset(1)
-    );
-
-    wire triggered_posEdge;
-    pTrigger pTrigger_1
-    (
-        .I(ddmtd1_beat_clock),
-        .O(triggered_posEdge),
-        .clk(~sampling_logic_clock),
-        .reset(m_reset_synced)
+        .reset(0)
     );
 
 
 
+    // wire triggered_posEdge;
+    // pTrigger pTrigger_1
+    // (
+    //     .I(ddmtd1_beat_clock),
+    //     .O(triggered_posEdge),
+    //     .clk(~sampling_logic_clock),
+    //     .reset(m_reset_synced)
+    // );
 
+
+
+    //Adding addional logic to trigger only at the posedge of ddmtd1_beat_clock...
+    integer ptrigger_counter = 0;
+    reg start_acq_ptrigger = 0;
+    reg previous_beat_edge = 0;
     always@(posedge sampling_logic_clock)
     begin
-        if (m_reset_synced | (start_acq_synced==0))// Instantly reset  when reset or startAcq stops
+        if (m_reset_synced)// Instantly reset  when reset or startAcq stops
         begin
             ptrigger_counter <=0;
-            start_acq_ptrigger <=0;
         end
         else 
         begin
-            if (triggered_posEdge)
+            if ((~ddmtd1_beat_clock)) // add up if stable
                 ptrigger_counter <= ptrigger_counter +1;
-            else if (ptrigger_counter > 0)
-                ptrigger_counter <=ptrigger_counter + 1;
+            else // if it becomes unstable, reset the counter
+                ptrigger_counter <=0;
 
             if ((ptrigger_counter > 500)) // stable for 500 clocks
-                start_acq_ptrigger <= start_acq;
+                start_acq_ptrigger <= start_acq_synced;
         end
     end
 
@@ -573,26 +580,6 @@ module main_v2(
 
 
 
-
-    // //Delaying activation for two cycles
-    // reg start_acq_ptrigger_synced = 0;
-    // always@(negedge sampling_logic_clock)
-    //     start_acq_ptrigger_synced <= start_acq_ptrigger;
-    // reg start_acq_ptrigger_synced_synced = 0;
-    // always@(posedge sampling_logic_clock)
-    //     start_acq_ptrigger_synced_synced <= start_acq_ptrigger_synced;
-
-
-
-
-    //Synchronize both Q1 & Q2 to the same clock....
-    //(* ASYNC_REG = "TRUE" *) 
-    // reg ddmtd1_beat_clock_synced,ddmtd2_beat_clock_synced;
-    // always@(posedge sampling_logic_clock)
-    // begin
-    //     ddmtd1_beat_clock_synced <=ddmtd1_beat_clock;
-    //     ddmtd2_beat_clock_synced <=ddmtd2_beat_clock;
-    // end
 
 
 
@@ -606,12 +593,12 @@ module main_v2(
         external_counter1 <= external_counter1 +1;
     end
 
-    always @(posedge sampling_logic_clock ) begin
-        if (~start_acq_ptrigger | m_reset_synced) 
-        external_counter2<=0;
-        else
-        external_counter2 <= external_counter2 +1;
-    end
+    // always @(posedge sampling_logic_clock ) begin
+    //     if (~start_acq_ptrigger | m_reset_synced) 
+    //     external_counter2<=0;
+    //     else
+    //     external_counter2 <= external_counter2 +1;
+    // end
 
     // binary_counter bc1(
     // .Q(external_counter1),
@@ -643,6 +630,8 @@ module main_v2(
         .clk(sampling_logic_clock),
         .reset(m_reset)
     );
+
+
     DDMTD_Sampler
     #(.DATA_WIDTH(32))
     DDMTD1(
@@ -650,6 +639,7 @@ module main_v2(
         .WR_CLK(sampling_logic_clock),
         .BEAT_CLK(ddmtd1_beat_clock_synced),
         .en_SAMPLING_LOGIC(start_acq_ptrigger), //Active High
+        // .en_SAMPLING_LOGIC(1), //Active High
         .EXTERNAL_COUNTER(external_counter1),
         .RST(m_reset),
         //Inputs for readout
@@ -692,7 +682,7 @@ module main_v2(
 
 
     wire ddmtd2_beat_clock_synced;
-    wire [31:0]tdata1_i;
+    wire [31:0]tdata2_i;
     wire full_2_i;
     SYNC SYNC2(
         .O(ddmtd2_beat_clock_synced),
@@ -707,7 +697,8 @@ module main_v2(
         .WR_CLK(sampling_logic_clock),
         .BEAT_CLK(ddmtd2_beat_clock_synced),
         .en_SAMPLING_LOGIC(start_acq_ptrigger), //Active High
-        .EXTERNAL_COUNTER(external_counter2),
+        // .en_SAMPLING_LOGIC(1), //Active High
+        .EXTERNAL_COUNTER(external_counter1),
         .RST(m_reset),
         //Inputs for readout
         .RD_CLK(rd_clk_buff),

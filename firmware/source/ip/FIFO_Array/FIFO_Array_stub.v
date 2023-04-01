@@ -1,10 +1,10 @@
 // Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
 // Tool Version: Vivado v.2019.2 (lin64) Build 2708876 Wed Nov  6 21:39:14 MST 2019
-// Date        : Fri Mar 31 03:35:20 2023
+// Date        : Sat Apr  1 13:18:00 2023
 // Host        : ubuntu running 64-bit Ubuntu 18.04.6 LTS
-// Command     : write_verilog -force -mode synth_stub
-//               /home/rsaradhy/work/nexys_ddmtd_github/firmware/source/ip/FIFO_Array/FIFO_Array_stub.v
+// Command     : write_verilog -force -mode synth_stub -rename_top FIFO_Array -prefix
+//               FIFO_Array_ FIFO_Array_stub.v
 // Design      : FIFO_Array
 // Purpose     : Stub declaration of top-level module interface
 // Device      : xc7a200tsbg484-1
