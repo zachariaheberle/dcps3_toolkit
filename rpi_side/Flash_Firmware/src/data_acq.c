@@ -71,20 +71,26 @@ int main(int argc, char** argv)
     if (reset_status==1) break;
   }
   printf("RESET DONE \n");
-  usleep(1000000);
+  // usleep(1000000);
 
 
   int numBytesRead =0; //Number of bytes read
   int i = 0;
   // //Debug Tools...
-  // readCounter();
-  // readFIFO_readCount();
-  // readFIFO_writeCount();
+  readCounter();
+  readFIFO_readCount();
+  readFIFO_writeCount();
   // // END Debug Tools...
 
   
+  //Clear out the FIFO
+  bcm2835_spi_transfernb(cmd_buf, data_buf, num_Bytes); 
+  bcm2835_spi_transfernb(cmd_buf, data_buf, num_Bytes); 
+  memset(data_buf, 0xff,num_Bytes );
+
+
   startAcq();
-  // usleep(10000000);
+  // usleep(1000000);
   // stopAcq();   
   
   
@@ -106,7 +112,7 @@ int main(int argc, char** argv)
   // readFIFO_readCount();
   // readFIFO_writeCount();
 
-
+  // usleep(10000000);
   while(i < 100000000)
   {
       if (N_count>=N) break;
