@@ -1,4 +1,4 @@
--- (c) Copyright 1995-2022 Xilinx, Inc. All rights reserved.
+-- (c) Copyright 1995-2023 Xilinx, Inc. All rights reserved.
 -- 
 -- This file contains confidential and proprietary information
 -- of Xilinx, Inc. and is protected under U.S. and
@@ -119,7 +119,7 @@ ARCHITECTURE binary_counter_arch OF binary_counter IS
 BEGIN
   U0 : c_counter_binary_v12_0_14
     GENERIC MAP (
-      C_IMPLEMENTATION => 1,
+      C_IMPLEMENTATION => 0,
       C_VERBOSITY => 0,
       C_XDEVICEFAMILY => "artix7",
       C_WIDTH => 32,

@@ -1,10 +1,10 @@
 // Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
 // Tool Version: Vivado v.2019.2 (lin64) Build 2708876 Wed Nov  6 21:39:14 MST 2019
-// Date        : Sun Dec  4 00:05:03 2022
+// Date        : Sat Apr  1 17:40:31 2023
 // Host        : ubuntu running 64-bit Ubuntu 18.04.6 LTS
-// Command     : write_verilog -force -mode synth_stub -rename_top binary_counter -prefix
-//               binary_counter_ binary_counter_stub.v
+// Command     : write_verilog -force -mode synth_stub
+//               /home/rsaradhy/work/nexys_ddmtd_github/firmware/source/ip/binary_counter/binary_counter_stub.v
 // Design      : binary_counter
 // Purpose     : Stub declaration of top-level module interface
 // Device      : xc7a200tsbg484-1

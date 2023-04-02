@@ -92,7 +92,23 @@ end
 
 
 
-//Test Logic
+//SYNC WRITE_EN & DATA_IN
+reg write_en_sync_pos;
+reg [31:0] data_in_sync_pos;
+always @(posedge WR_CLK ) begin
+    write_en_sync_pos <= WRITE_EN;
+    data_in_sync_pos <= DATA_IN;
+end
+
+
+reg write_en_sync_neg;
+reg [31:0] data_in_sync_neg;
+always @(negedge WR_CLK ) begin
+    write_en_sync_neg <= write_en_sync_pos;
+    data_in_sync_neg <= data_in_sync_pos;
+end
+
+
 
 
 
@@ -132,8 +148,8 @@ FIFO_Array FIFO_Array_inst (
     .rst(RST),
     .wr_clk(WR_CLK),
     .rd_clk(RD_CLK), //Done to flush out the data
-    .din(DATA_IN),
-    .wr_en(WRITE_EN),
+    .din(data_in_sync_neg),
+    .wr_en(write_en_sync_neg),
     .rd_en(READ_EN),
     .dout(R_TDATA),
     .full(FULL),

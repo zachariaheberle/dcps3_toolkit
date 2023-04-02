@@ -65,7 +65,7 @@ module main_v2(
 //----------------------------------------------------------------------
 // PERIPHERAL ADDRESS SPACE
 //----------------------------------------------------------------------    
-    parameter FIRMWARE_VERSION = 16'd2051;
+    parameter FIRMWARE_VERSION = 16'd2050;
     parameter FIRMWARE_VERSION_MAJOR = FIRMWARE_VERSION[15:8];
     parameter FIRMWARE_VERSION_MINOR = FIRMWARE_VERSION[ 7:0];
 
@@ -121,8 +121,8 @@ module main_v2(
         // Sending Values to external RP 2040
         // ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  == 
             
-        assign jb1 = ~((Q1A_temp ^ Q1B_temp)&Q1A_temp);
-        assign jb2 =  ((Q1A_temp ^ Q1B_temp)&Q1A_temp);
+        // assign jb1 = ~((Q1A_temp ^ Q1B_temp)&Q1A_temp);
+        // assign jb2 =  ((Q1A_temp ^ Q1B_temp)&Q1A_temp);
 
 
         // ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  == 
@@ -226,12 +226,9 @@ module main_v2(
     BUFG buf_spi_clk (.I(spi_sck),.O(spi_clk));
     wire spi_clk_synced; 
     wire spi_cs0_synced;
-    //Syncing spi_clk & cs to clk
+    wire spi_mosi_synced;
 
 
-
-
-    
     SPI_slave spiInterface_i(
         .i_Rst_L(spi_reset),        // FPGA Reset, active low
         .i_Clk(clk),                // FPGA Clock
@@ -257,8 +254,8 @@ module main_v2(
     reg [2:0] idx = 0;
     reg [7:0] TDATA=0;
     reg [7:0] read_counter=0;
-    reg [31:0] tdata1;
-    reg [31:0] tdata2;
+    wire [31:0] tdata1;
+    wire [31:0] tdata2;
     reg read_en = 0;
     reg test_reg = 0;
     reg all_set_to_decode = 0;
@@ -436,8 +433,16 @@ module main_v2(
     wire   ddmtd2_beat_clock;
 
     assign sampling_logic_clock = clk_ref; // Clock that is used to sample...
-    assign ddmtd1_beat_clock    = Q1A;
-    assign ddmtd2_beat_clock    = Q1B;
+
+
+    wire Q1A_buffed,Q1B_buffed;
+    BUF ddmtd1_beat_buff (.I(Q1A),.O(Q1A_buffed));
+    BUF ddmtd2_beat_buff (.I(Q1B),.O(Q1B_buffed));
+    assign ddmtd1_beat_clock    = Q1A_buffed;
+    assign ddmtd2_beat_clock    = Q1B_buffed;
+
+
+
     // assign sampling_logic_clock = clk; // Clock that is used to sample...
     // assign ddmtd1_beat_clock    = beat_0_q1;
     // assign ddmtd2_beat_clock    = beat_1_q1;
@@ -584,14 +589,22 @@ module main_v2(
 
 
 
-    reg [31:0] external_counter1,external_counter2;
+    // reg [31:0] external_counter,external_counter2;
 
-    always @(posedge sampling_logic_clock ) begin
-        if (~start_acq_ptrigger | m_reset_synced) 
-        external_counter1<=0;
-        else
-        external_counter1 <= external_counter1 +1;
-    end
+    // always @(posedge sampling_logic_clock ) begin
+    //     if (~start_acq_ptrigger) 
+    //         external_counter<=0;
+    //     else
+    //         external_counter <= external_counter +1;
+    // end
+
+    wire [31:0] external_counter;
+    binary_counter bc1(
+    .Q(external_counter),
+    .CLK(sampling_logic_clock),
+    .CE(start_acq),
+    .SCLR(~start_acq_ptrigger | m_reset)
+    );
 
     // always @(posedge sampling_logic_clock ) begin
     //     if (~start_acq_ptrigger | m_reset_synced) 
@@ -640,11 +653,11 @@ module main_v2(
         .BEAT_CLK(ddmtd1_beat_clock_synced),
         .en_SAMPLING_LOGIC(start_acq_ptrigger), //Active High
         // .en_SAMPLING_LOGIC(1), //Active High
-        .EXTERNAL_COUNTER(external_counter1),
+        .EXTERNAL_COUNTER(external_counter),
         .RST(m_reset),
         //Inputs for readout
         .RD_CLK(rd_clk_buff),
-        .R_TDATA(tdata1_i),  
+        .R_TDATA(tdata1),  
         .READ_EN(read_en_buff),
         //  .PROG_FULL(prog_full_1),
         //  .PROG_EMPTY(TREADY),
@@ -656,11 +669,11 @@ module main_v2(
     );
 
     //tdata temperory
-    always @(posedge clk)
-    begin
-        tdata1 <= tdata1_i;
+    // always @(posedge clk)
+    // begin
+    //     tdata1 <= tdata1_i;
 
-    end
+    // end
 
 
     wire full_1_ii;
@@ -698,11 +711,11 @@ module main_v2(
         .BEAT_CLK(ddmtd2_beat_clock_synced),
         .en_SAMPLING_LOGIC(start_acq_ptrigger), //Active High
         // .en_SAMPLING_LOGIC(1), //Active High
-        .EXTERNAL_COUNTER(external_counter1),
+        .EXTERNAL_COUNTER(external_counter),
         .RST(m_reset),
         //Inputs for readout
         .RD_CLK(rd_clk_buff),
-        .R_TDATA(tdata2_i),  
+        .R_TDATA(tdata2),  
         .READ_EN(read_en_buff),
         //  .PROG_FULL(prog_full_1),
         //  .PROG_EMPTY(TREADY),
@@ -714,10 +727,10 @@ module main_v2(
     );
 
     //tdata temperory
-    always @(posedge clk)
-    begin
-        tdata2 <= tdata2_i;
-    end
+    // always @(posedge clk)
+    // begin
+    //     tdata2 <= tdata2_i;
+    // end
 
     
     wire full_2_ii;
