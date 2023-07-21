@@ -165,7 +165,7 @@ int write_toFiles(FILE* fp1,FILE* fp2,  void* virtual_address, int byte_count)
           if( (val1_val!=val1_prev) | (val1_val == 0) )
           {
               // printf("%u,%u \n ", (uint)(val1>>31 & 0x1),(uint)(val1 & 0x7fffffff));
-              if(val1_val < val1_prev) cycles1= cycles1 + 1;
+              // if(val1_val < val1_prev) cycles1= cycles1 + 1; // Removing for now to avoid (bitflip?) issues
               // if(val1_prev - val1_val > (0x7fffffff>>1) ) cycles1= cycles1 + 1; // if previous value is greater by 1/2 of 0x7fffffff
               val1_disp =  (uint64_t)(val1_val) + (cycles1)*2147483648;
               fprintf(fp1,"%u,",(uint)(val1>>31 & 0x1));
