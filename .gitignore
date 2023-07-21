@@ -8,3 +8,5 @@ analysis/bcp_test/
 firmware/vivado_pid3743.str
 analysis/dcps3Test
 analysis/plots
+/.vscode
+*.pyc
