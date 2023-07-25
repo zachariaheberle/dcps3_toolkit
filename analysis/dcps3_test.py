@@ -17,17 +17,20 @@ def run_coarse_delay_consistency_test(data_save_folder):
     stage5_tune = 3
     channel = 2
 
-    subprocess.run(f"mkdir -p {data_save_folder}") #create those directories
+    subprocess.run(f"mkdir -p {data_save_folder}", shell=True) #create those directories
 
     for run in range(10):
         for channel in range (2, 4, 1):
             for coarse_control in range(0,32,1):
-                subprocess.run(f"../rpi_side/runDCPS.sh ./run_dcps_control.sh {fine_control} {coarse_control} {stage4_tune} {stage5_tune} {channel} {server}")
-                subprocess.run(f"../rpi_side/runAtNex.sh bin/data_acq.exe 0 1 {server}")
+                subprocess.run(f"../rpi_side/runDCPS.sh ./run_dcps_control.sh {fine_control} {coarse_control} {stage4_tune} {stage5_tune} {channel} {server}", shell=True)
+                subprocess.run(f"../rpi_side/runAtNex.sh bin/data_acq.exe 0 1 {server}", shell=True)
                 # Copy over the files...
                 run_name = f"chan{channel}_f{fine_control}_c{coarse_control}_s4{stage4_tune}_s5{stage5_tune}_run{run}"
-                subprocess.run(f"scp {server}:Flash_Firmware/data/ddmtd1.txt {data_save_folder+run_name}_ddmtd1.txt")
-                subprocess.run(f"scp {server}:Flash_Firmware/data/ddmtd2.txt {data_save_folder+run_name}_ddmtd2.txt")
+                subprocess.run(f"scp {server}:Flash_Firmware/data/ddmtd1.txt {data_save_folder+run_name}_ddmtd1.txt", shell=True)
+                subprocess.run(f"scp {server}:Flash_Firmware/data/ddmtd2.txt {data_save_folder+run_name}_ddmtd2.txt", shell=True)
+                #break
+            #break
+        #break
     return 0
 
 
@@ -38,17 +41,20 @@ def run_fine_delay_consistency_test(data_save_folder):
     stage5_tune = 3
     channel = 2
 
-    subprocess.run(f"mkdir -p {data_save_folder}") #create those directories
+    subprocess.run(f"mkdir -p {data_save_folder}", shell=True) #create those directories
     
     for run in range(10):
         for channel in range(2, 4, 1):
             for fine_control in range(0,67,1): 
-                subprocess.run(f"../rpi_side/runDCPS.sh ./run_dcps_control.sh {fine_control} {coarse_control} {stage4_tune} {stage5_tune} {channel} {server}")
-                subprocess.run(f"../rpi_side/runAtNex.sh bin/data_acq.exe 0 1 {server}")
+                subprocess.run(f"../rpi_side/runDCPS.sh ./run_dcps_control.sh {fine_control} {coarse_control} {stage4_tune} {stage5_tune} {channel} {server}", shell=True)
+                subprocess.run(f"../rpi_side/runAtNex.sh bin/data_acq.exe 0 1 {server}", shell=True)
                 # Copy over the files...
                 run_name = f"chan{channel}_f{fine_control}_c{coarse_control}_s4{stage4_tune}_s5{stage5_tune}_run{run}"
-                subprocess.run(f"scp {server}:Flash_Firmware/data/ddmtd1.txt {data_save_folder+run_name}_ddmtd1.txt")
-                subprocess.run(f"scp {server}:Flash_Firmware/data/ddmtd2.txt {data_save_folder+run_name}_ddmtd2.txt")
+                subprocess.run(f"scp {server}:Flash_Firmware/data/ddmtd1.txt {data_save_folder+run_name}_ddmtd1.txt", shell=True)
+                subprocess.run(f"scp {server}:Flash_Firmware/data/ddmtd2.txt {data_save_folder+run_name}_ddmtd2.txt", shell=True)
+                #break
+            #break
+        #break
     return 0
 
 
@@ -63,18 +69,18 @@ server="pi@nexys_ddmtd_dcps3" # your ip address might be different
 ## END IMPORTANT##
 ## Contact rohith.saradhy@cern.ch for password to the RPi
 
-subprocess.run(f"rsync -ra ../rpi_side/Flash_Firmware {server}:")
+subprocess.run(f"rsync -ra ../rpi_side/Flash_Firmware {server}:", shell=True)
 
-subprocess.run(f"rsync -ra ../rpi_side/Flash_Firmware {server}:")
-subprocess.run(f"../rpi_side/runAtNex.sh bin/check_firmware.exe 0 1 {server}") #flash the configuration file
+subprocess.run(f"rsync -ra ../rpi_side/Flash_Firmware {server}:", shell=True)
+subprocess.run(f"../rpi_side/runAtNex.sh bin/check_firmware.exe 0 1 {server}", shell=True) #flash the configuration file
 
 N=100000  #Setting the DDMTD N
 freq="160"#in MHz #Setting the input clock frequency
 pll_config_folder="../rpi_side/PLL_Conf/"
 fig_save_folder = f"./dcps3Test/figures/N{N}/"
 data_save_folder = f"./dcps3Test/data/N{N}/"
-subprocess.run(f"mkdir -p {fig_save_folder}") #create those directories
-subprocess.run(f"mkdir -p {data_save_folder}") #create those directories
+subprocess.run(f"mkdir -p {fig_save_folder}", shell=True) #create those directories
+subprocess.run(f"mkdir -p {data_save_folder}", shell=True) #create those directories
 run_number = 1
 run_name   = f"dcps3TestRun{run_number}"
 
@@ -86,9 +92,9 @@ pll_config = f"{pll_config_folder}160MHz_100k.h" #Selecting the configuration ac
 
 print("Using PLL Config: \n ",pll_config)
 print("\n\n")
-subprocess.run(f"scp {pll_config} {server}:Flash_Firmware/include/Si5344_REG.h") #Copy the config to the RPi as Si5344
+subprocess.run(f"scp {pll_config} {server}:Flash_Firmware/include/Si5344_REG.h", shell=True) #Copy the config to the RPi as Si5344
 ## Compile and Running configuration script
-subprocess.run(f"../rpi_side/runAtNex.sh bin/ddmtd_pll.exe 1 1 {server}") #flash the configuration file
+subprocess.run(f"../rpi_side/runAtNex.sh bin/ddmtd_pll.exe 1 1 {server}", shell=True) #flash the configuration file
 #The output should look like the following::
 # Done Compiling MEM
 # Done Compiling PLL
@@ -100,10 +106,10 @@ subprocess.run(f"../rpi_side/runAtNex.sh bin/ddmtd_pll.exe 1 1 {server}") #flash
 
 # MAKE SURE TO COMPILE THIS
 
-subprocess.run(f"../rpi_side/runAtNex.sh bin/data_acq.exe 0 1 {server}") # 0 no compile, 1 compile (second arg, ignore third arg)
+subprocess.run(f"../rpi_side/runAtNex.sh bin/data_acq.exe 1 1 {server}", shell=True) # 0 no compile, 1 compile (second arg, ignore third arg)
 # Copy over the files...
-subprocess.run(f"scp {server}:Flash_Firmware/data/ddmtd1.txt {data_save_folder+run_name}_ddmtd1.txt")
-subprocess.run(f"scp {server}:Flash_Firmware/data/ddmtd2.txt {data_save_folder+run_name}_ddmtd2.txt") 
+subprocess.run(f"scp {server}:Flash_Firmware/data/ddmtd1.txt {data_save_folder+run_name}_ddmtd1.txt", shell=True)
+subprocess.run(f"scp {server}:Flash_Firmware/data/ddmtd2.txt {data_save_folder+run_name}_ddmtd2.txt", shell=True) 
 
 run_coarse_delay_consistency_test(f"./dcps3Test/data/N{N}_coarse/")
 run_fine_delay_consistency_test(f"./dcps3Test/data/N{N}_fine/")
