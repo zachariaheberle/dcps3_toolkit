@@ -335,7 +335,7 @@ def drawTIE(TIE1,save_name="",bns=100,cutoff=0,MULT_FACT=1,fit=False,figName="",
     if (fit==False):
         pass
     else:
-        print(draw)
+        #print(draw)
         if (draw):
             
             fig,ax = plt.subplots(figsize=(8,6))
