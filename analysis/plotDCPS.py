@@ -29,6 +29,12 @@ stage5_tune = 3
 channel = 2
 run_name = f"chan{channel}_f{fine_control}_c{coarse_control}_s4{stage4_tune}_s5{stage5_tune}"
 
+def weighted_std_dev(mean, values, weights):
+    total = 0
+    for value, weight in zip(values, weights):
+        total += weight*(mean - value)**2
+    return np.sqrt(total / ((len(values)-1/len(values)) * sum(weights)))
+
 def get_data(data_save_folder, run_name, fit=True, draw=False):
     df1 = pd.read_csv(f"{data_save_folder+run_name}_ddmtd1.txt",names=['edge1','ddmtd1'])
     df2 = pd.read_csv(f"{data_save_folder+run_name}_ddmtd2.txt",names=['edge2','ddmtd2'])
@@ -39,9 +45,9 @@ def get_data(data_save_folder, run_name, fit=True, draw=False):
     data.INPUT_FREQ = 160*10**6 #In Hz 
     data.Recalc()
     if fit:
-        gauss_fit, _, _ = data.drawTIE(sep='',fit=True,draw=draw)
+        gauss_fit, _, count = data.drawTIE(sep='',fit=True,draw=draw)
         mean_val, std_dev = gauss_fit[1]*1000, abs(gauss_fit[2])*1000
-        return mean_val, std_dev
+        return mean_val, std_dev / np.sqrt(count)
     else:
         mean_val = np.mean(np.concatenate((data.TIE_rise,data.TIE_fall)))*data.MULT_FACT*1000
         return mean_val
@@ -60,12 +66,12 @@ def plot_coarse_consistency(data_save_folder):
             for coarse_control in range(32):
                 print(f"Calculating coarse control: {coarse_control} run: {run} channel: {channel}")
                 run_name = f"chan{channel}_f{fine_control}_c{coarse_control}_s4{stage4_tune}_s5{stage5_tune}_run{run}"
-                mean_val, std_dev = get_data(data_save_folder, run_name)
-                run_data.append((coarse_control, mean_val, std_dev))
+                mean_val, std_err = get_data(data_save_folder, run_name)
+                run_data.append((coarse_control, mean_val, std_err))
             run_data = np.asarray(run_data)
             x = run_data.T[0]
             y = -1*(run_data.T[1]+200)%3125
-            yerr = -1*(run_data.T[2]+200)%3125
+            yerr = run_data.T[2]
             y = y-y[0]
 
             popt,pcov = np.polyfit(x,y,1,cov=True,w=1/yerr**2)
@@ -105,6 +111,72 @@ def plot_coarse_consistency(data_save_folder):
     plt.savefig("dcps3Test/figures/dcps3_coarse_consistency_test2.png", dpi=300, facecolor="#FFFFFF")
     plt.close()
 
+
+def plot_coarse_cell_consistency(data_save_folder):
+    f = plt.figure(figsize=(10,24))
+    f.subplots_adjust(top=0.96, bottom=0.04, hspace=0.5, wspace=0.3)
+    coarse_control = 0
+    fine_control = 0
+    stage4_tune = 2
+    stage5_tune = 3
+    for channel in range(2, 4, 1):
+        channel_data = []
+        for i, coarse_control in enumerate([0, 1, 2, 4, 8, 16]):
+            run_data = []
+            for run in range(10):
+                #print(f"Calculating coarse control: {coarse_control} run: {run} channel: {channel}")
+                run_name = f"chan{channel}_f{fine_control}_c{coarse_control}_s4{stage4_tune}_s5{stage5_tune}_run{run}"
+                mean_val, std_err = get_data(data_save_folder, run_name)
+                run_data.append((run, mean_val, std_err))
+            run_data = np.asarray(run_data)
+
+            x = run_data.T[0]
+            y = -1*(run_data.T[1]+200)%3125
+            yerr = run_data.T[2]
+
+            weighted_mean = np.average(y, weights=1/yerr**2)
+            _sig = weighted_std_dev(weighted_mean, y, 1/yerr**2)
+
+            if coarse_control == 0:
+                offset = weighted_mean
+                weighted_mean = 0.0
+                y = y - offset
+            else:
+                weighted_mean -= offset
+                y = y - offset
+        
+            ax = f.add_subplot(6, 2, channel-1 + 2*i)
+            ax.grid(True, alpha=0.5)
+            if coarse_control == 16:
+                ax.axhline(y=weighted_mean, color='black',linewidth=1, linestyle='-.',label=f"Mean Delay All Runs\n{weighted_mean:4.4}+/-{_sig:4.2} [ps]")
+            else:
+                ax.axhline(y=weighted_mean, color='black',linewidth=1, linestyle='-.',label=f"Mean Delay All Runs\n{weighted_mean:4.3}+/-{_sig:4.2} [ps]")
+            ax.fill_between(x, weighted_mean+_sig, weighted_mean-_sig, color='orange', alpha=.5, label="Standard Error All Runs")
+            ax.errorbar(x, y, yerr, fmt='r.', ecolor='k', capsize=2, label="Cell Delay")
+
+            if coarse_control == 0:
+                ax.set_ylim([-0.2, 0.2])
+            elif coarse_control == 1:
+                ax.set_ylim([8.65, 9.05])
+            elif coarse_control == 2:
+                ax.set_ylim([17.1, 17.5])
+            elif coarse_control == 4:
+                ax.set_ylim([32.65, 33.05])
+            elif coarse_control == 8:
+                ax.set_ylim([59.2, 59.6])
+            else:
+                ax.set_ylim([122.34, 122.74])
+        
+            ax.set_ylabel("Delay [ps]")
+            ax.set_xlabel("Run Number")
+            ax.set_xticks(range(10))
+            ax.set_xticklabels(range(10))
+            ax.legend(loc="upper left",fontsize=8)
+            ax.set_title(f"Coarse Delay Cell Consistency Check\nChannel {channel}: {stage4_tune} {stage5_tune}\nCell {coarse_control}")
+    plt.savefig("dcps3Test/figures/dcps3_coarse_cell_consistency_test.png", dpi=300, facecolor="#FFFFFF")
+
+
+
 def plot_fine_consistency(data_save_folder):
     f = plt.figure(figsize=(10,4))
     f.subplots_adjust(wspace=0.3)
@@ -119,12 +191,12 @@ def plot_fine_consistency(data_save_folder):
             for fine_control in range(66):
                 print(f"Calculating fine control: {fine_control} run: {run} channel: {channel}")
                 run_name = f"chan{channel}_f{fine_control}_c{coarse_control}_s4{stage4_tune}_s5{stage5_tune}_run{run}"
-                mean_val, std_dev = get_data(data_save_folder, run_name)
-                run_data.append((fine_control, mean_val, std_dev))
+                mean_val, std_err = get_data(data_save_folder, run_name)
+                run_data.append((fine_control, mean_val, std_err))
             run_data = np.asarray(run_data)
             x = run_data.T[0]
             y = -1*(run_data.T[1]+200)%3125
-            yerr = -1*(run_data.T[2]+200)%3125
+            yerr = run_data.T[2]
             y = y-y[0]
 
             popt,pcov = np.polyfit(x,y,1,cov=True,w=1/yerr**2)
@@ -163,5 +235,10 @@ def plot_fine_consistency(data_save_folder):
     plt.savefig("dcps3Test/figures/dcps3_fine_consistency_test2.png", dpi=300, facecolor="#FFFFFF")
     plt.close()
 
-plot_coarse_consistency(f"./dcps3Test/data/N{N}_coarse/")
-plot_fine_consistency(f"./dcps3Test/data/N{N}_fine/")
+def plot_fine_cell_consistency(data_save_folder):
+    pass
+
+#plot_coarse_consistency(f"./dcps3Test/data/N{N}_coarse/")
+#plot_fine_consistency(f"./dcps3Test/data/N{N}_fine/")
+plot_coarse_cell_consistency(f"./dcps3Test/data/N{N}_coarse/")
+plot_fine_cell_consistency(f"./dcps3Test/data/N{N}_fine/")
