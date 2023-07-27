@@ -52,6 +52,93 @@ def get_data(data_save_folder, run_name, fit=True, draw=False):
         mean_val = np.mean(np.concatenate((data.TIE_rise,data.TIE_fall)))*data.MULT_FACT*1000
         return mean_val
 
+def adjust_offsets(y, offset_8, offset_16, offset_24):
+        new_vals = []
+        for i, val in enumerate(y):
+            if i < 8:
+                new_vals.append(val)
+            elif 8 <= i < 16:
+                new_vals.append(val - offset_8)
+            elif 16 <= i < 24:
+                new_vals.append(val - offset_16)
+            elif 24 <= i:
+                new_vals.append(val - offset_24)
+        return np.asarray(new_vals)
+
+def find_offsets(x, y, yerr):
+
+    offset_8, offset_16, offset_24 = (0, 0, 0)
+    ideal = False
+    power = 0
+    max_power = 5
+
+    def get_slope_error(x, y, yerr):
+        popt, pcov = np.polyfit(x,y,1,cov=True,w=1/yerr**2)
+        return np.sqrt(np.diag(pcov))[0]
+
+
+    def check_offset(y, offset_8, offset_16, offset_24, min_err):
+        y = adjust_offsets(y, offset_8, offset_16, offset_24)
+        slope_err = get_slope_error(x, y, yerr)
+        if slope_err < min_err:
+            return True, slope_err
+        else:
+            return False, min_err
+
+    step = 0
+    min_err = get_slope_error(x, y, yerr)
+    while ideal == False:
+        # print(f"Power: {power}, Step: {step}")
+        # print(f"Offset 8: {offset_8}, Offset 16: {offset_16}, Offset 24: {offset_24}")
+        # print(f"Min Error: {min_err}\n")
+        if step == 0:
+            if check_offset(y, offset_8 - 10**(-power), offset_16, offset_24, min_err)[0] == True:
+                min_err = check_offset(y, offset_8 - 10**(-power), offset_16, offset_24, min_err)[1]
+                offset_8 = offset_8 - 10**(-power)
+            elif check_offset(y, offset_8 + 10**(-power), offset_16, offset_24, min_err)[0] == True:
+                min_err = check_offset(y, offset_8 + 10**(-power), offset_16, offset_24, min_err)[1]
+                offset_8 = offset_8 + 10**(-power)
+            else:
+                if power < max_power:
+                    power += 1
+                else:
+                    power = 0
+                    step += 1
+        elif step == 1:
+            if check_offset(y, offset_8, offset_16 - 10**(-power), offset_24, min_err)[0] == True:
+                min_err = check_offset(y, offset_8, offset_16 - 10**(-power), offset_24, min_err)[1]
+                offset_16 = offset_16 - 10**(-power)
+            elif check_offset(y, offset_8, offset_16 + 10**(-power), offset_24, min_err)[0] == True:
+                min_err = check_offset(y, offset_8, offset_16 + 10**(-power), offset_24, min_err)[1]
+                offset_16 = offset_16 + 10**(-power)
+            else:
+                if power < max_power:
+                    power += 1
+                else:
+                    power = 0
+                    step += 1 
+        elif step == 2:
+            if check_offset(y, offset_8, offset_16, offset_24 - 10**(-power), min_err)[0] == True:
+                min_err = check_offset(y, offset_8, offset_16, offset_24 - 10**(-power), min_err)[1]
+                offset_24 = offset_24 - 10**(-power)
+            elif check_offset(y, offset_8, offset_16, offset_24 + 10**(-power), min_err)[0] == True:
+                min_err = check_offset(y, offset_8, offset_16, offset_24 + 10**(-power), min_err)[1]
+                offset_24 = offset_24 + 10**(-power)
+            else:
+                if power < max_power:
+                    power += 1
+                else:
+                    power = 0
+                    step += 1
+        else:
+            ideal = True
+            return offset_8, offset_16, offset_24 
+
+
+        
+
+
+
 def plot_coarse_consistency(data_save_folder):
     f = plt.figure(figsize=(10,4))
     f.subplots_adjust(wspace=0.3)
@@ -74,10 +161,31 @@ def plot_coarse_consistency(data_save_folder):
             yerr = run_data.T[2]
             y = y-y[0]
 
+            # ax = f.add_subplot(121)
+
+            # popt,pcov = np.polyfit(x,y,1,cov=True,w=1/yerr**2)
+            # p_e = np.sqrt(np.diag(pcov))
+
+            # ax.plot(x, popt[0]*x+popt[1],color="b",linestyle='--',label=f"Channel {channel} \n{popt[0]:4.3}+/- {p_e[0]:4.2} [ps/step]")
+            # ax.errorbar(x, y, yerr=yerr, fmt='r.', ecolor="black", capsize=2, label=f"Delay per Coarse Step")
+            # ax.set_title("Before Y adjustment")
+            # ax.legend()
+
+            offset_8, offset_16, offset_24 = find_offsets(x, y, yerr)
+            y = adjust_offsets(y, offset_8, offset_16, offset_24)
+
+            #ax = f.add_subplot(122)
+
             popt,pcov = np.polyfit(x,y,1,cov=True,w=1/yerr**2)
             p_e = np.sqrt(np.diag(pcov))
 
-            channel_data.append((run, popt[0], p_e[0]))
+            # ax.plot(x, popt[0]*x+popt[1],color="b",linestyle='--',label=f"Channel {channel} \n{popt[0]:4.3}+/- {p_e[0]:4.2} [ps/step]")
+            # ax.errorbar(x, y, yerr=yerr, fmt='r.', ecolor="black", capsize=2, label=f"Delay per Coarse Step")
+            # ax.set_title("After Y adjustment")
+            # ax.legend()
+            # plt.show()
+
+            channel_data.append((run, popt[0], p_e[0] / np.sqrt(len(y))))
     
         channel_data = np.asarray(channel_data)
         x = channel_data.T[0]
