@@ -344,9 +344,58 @@ def plot_fine_consistency(data_save_folder):
     plt.close()
 
 def plot_fine_cell_consistency(data_save_folder):
-    pass
+    f = plt.figure(figsize=(10,264))
+    f.subplots_adjust(top=0.96, bottom=0.04, hspace=0.5, wspace=0.3)
+    coarse_control = 0
+    fine_control = 0
+    stage4_tune = 2
+    stage5_tune = 3
+    for channel in range(2, 4, 1):
+        for i, fine_control in range(66):
+            run_data = []
+            for run in range(10):
+                #print(f"Calculating coarse control: {coarse_control} run: {run} channel: {channel}")
+                run_name = f"chan{channel}_fcell{fine_control}_c{coarse_control}_s4{stage4_tune}_s5{stage5_tune}_run{run}"
+                mean_val, std_err = get_data(data_save_folder, run_name)
+                run_data.append((run, mean_val, std_err))
+            run_data = np.asarray(run_data)
+
+            x = run_data.T[0]
+            y = -1*(run_data.T[1]+200)%3125
+            yerr = run_data.T[2]
+
+            weighted_mean = np.average(y, weights=1/yerr**2)
+            err = weighted_std_dev(weighted_mean, y, 1/yerr**2) / np.sqrt(len(y))
+
+            if fine_control == 0:
+                offset = weighted_mean
+                weighted_mean = 0.0
+                y = y - offset
+            else:
+                weighted_mean -= offset
+                y = y - offset
+        
+            ax = f.add_subplot(66, 2, channel-1 + 2*i)
+            ax.grid(True, alpha=0.5)
+            ax.axhline(y=weighted_mean, color='black',linewidth=1, linestyle='-.',label=f"Mean Delay All Runs\n{weighted_mean:4.3}+/-{err:4.2} [ps]")
+            ax.fill_between(x, weighted_mean+err, weighted_mean-err, color='orange', alpha=.5, label="Standard Error All Runs")
+            ax.errorbar(x, y, yerr, fmt='r.', ecolor='k', capsize=2, label="Cell Delay")
+
+            if fine_control == 0:
+                ax.set_ylim([-0.1, 0.1])
+            else:
+                #ax.set_ylim([.2, .3])
+                pass
+        
+            ax.set_ylabel("Delay [ps]")
+            ax.set_xlabel("Run Number")
+            ax.set_xticks(range(10))
+            ax.set_xticklabels(range(10))
+            ax.legend(loc="upper left",fontsize=8)
+            ax.set_title(f"Fine Delay Cell Consistency Check\nChannel {channel}: Fine Cell {fine_control}")
+    plt.savefig("dcps3Test/figures/dcps3_fine_cell_consistency_test.pdf", dpi=300, facecolor="#FFFFFF")
 
 #plot_coarse_consistency(f"./dcps3Test/data/N{N}_coarse/")
 plot_fine_consistency(f"./dcps3Test/data/N{N}_fine/")
 #plot_coarse_cell_consistency(f"./dcps3Test/data/N{N}_coarse/")
-plot_fine_cell_consistency(f"./dcps3Test/data/N{N}_fine/")
+plot_fine_cell_consistency(f"./dcps3Test/data/N{N}_fine_cell/")
