@@ -33,7 +33,7 @@ def weighted_std_dev(mean, values, weights):
     total = 0
     for value, weight in zip(values, weights):
         total += weight*(mean - value)**2
-    return np.sqrt(total / ((len(values)-1/len(values)) * sum(weights)))
+    return np.sqrt(total / (((len(values)-1)/len(values)) * sum(weights)))
 
 def get_data(data_save_folder, run_name, fit=True, draw=False):
     df1 = pd.read_csv(f"{data_save_folder+run_name}_ddmtd1.txt",names=['edge1','ddmtd1'])
@@ -85,7 +85,7 @@ def plot_coarse_consistency(data_save_folder):
         yerr = channel_data.T[2]
 
         weighted_mean = np.average(y, weights=1/yerr**2)
-        _sig = np.std(y)
+        err = weighted_std_dev(weighted_mean, y, 1/yerr**2) / np.sqrt(len(y))
 
         # popt,pcov = np.polyfit(x,y,0,cov="unscaled",w=1/yerr**2)
         # p_e = np.sqrt(np.diag(pcov))
@@ -96,11 +96,11 @@ def plot_coarse_consistency(data_save_folder):
 
         ax = f.add_subplot(int(f"12{channel-1}"))
         ax.grid(True, alpha=0.5)
-        ax.axhline(y=weighted_mean, color='black',linewidth=1, linestyle='-.',label=f"Mean Delay Slope All Runs\n{weighted_mean:4.3}+/-{_sig:4.2} [ps/step]")
-        ax.fill_between(x, weighted_mean+_sig, weighted_mean-_sig, color='orange', alpha=.5, label="\u03c3 All Runs")
+        ax.axhline(y=weighted_mean, color='black',linewidth=1, linestyle='-.',label=f"Mean Delay Slope All Runs\n{weighted_mean:4.3}+/-{err:4.2} [ps/step]")
+        ax.fill_between(x, weighted_mean+err, weighted_mean-err, color='orange', alpha=.5, label="Standard Error All Runs")
         ax.errorbar(x, y, yerr=yerr, fmt='r.', ecolor="black", capsize=2, label=f"Delay per Coarse Step")
 
-        ax.set_ylim([7.1, 7.22])
+        ax.set_ylim([7.11, 7.18])
 
         ax.set_ylabel("Delay per Coarse Step [ps/step]")
         ax.set_xlabel("Run Number")
@@ -135,7 +135,7 @@ def plot_coarse_cell_consistency(data_save_folder):
             yerr = run_data.T[2]
 
             weighted_mean = np.average(y, weights=1/yerr**2)
-            _sig = weighted_std_dev(weighted_mean, y, 1/yerr**2)
+            err = weighted_std_dev(weighted_mean, y, 1/yerr**2) / np.sqrt(len(y))
 
             if coarse_control == 0:
                 offset = weighted_mean
@@ -148,10 +148,10 @@ def plot_coarse_cell_consistency(data_save_folder):
             ax = f.add_subplot(6, 2, channel-1 + 2*i)
             ax.grid(True, alpha=0.5)
             if coarse_control == 16:
-                ax.axhline(y=weighted_mean, color='black',linewidth=1, linestyle='-.',label=f"Mean Delay All Runs\n{weighted_mean:4.4}+/-{_sig:4.2} [ps]")
+                ax.axhline(y=weighted_mean, color='black',linewidth=1, linestyle='-.',label=f"Mean Delay All Runs\n{weighted_mean:4.4}+/-{err:4.2} [ps]")
             else:
-                ax.axhline(y=weighted_mean, color='black',linewidth=1, linestyle='-.',label=f"Mean Delay All Runs\n{weighted_mean:4.3}+/-{_sig:4.2} [ps]")
-            ax.fill_between(x, weighted_mean+_sig, weighted_mean-_sig, color='orange', alpha=.5, label="Standard Error All Runs")
+                ax.axhline(y=weighted_mean, color='black',linewidth=1, linestyle='-.',label=f"Mean Delay All Runs\n{weighted_mean:4.3}+/-{err:4.2} [ps]")
+            ax.fill_between(x, weighted_mean+err, weighted_mean-err, color='orange', alpha=.5, label="Standard Error All Runs")
             ax.errorbar(x, y, yerr, fmt='r.', ecolor='k', capsize=2, label="Cell Delay")
 
             if coarse_control == 0:
@@ -202,7 +202,7 @@ def plot_fine_consistency(data_save_folder):
             popt,pcov = np.polyfit(x,y,1,cov=True,w=1/yerr**2)
             p_e = np.sqrt(np.diag(pcov))
 
-            channel_data.append((run, popt[0], p_e[0]))
+            channel_data.append((run, popt[0], p_e[0] / np.sqrt(len(y))))
     
         channel_data = np.asarray(channel_data)
         x = channel_data.T[0]
@@ -210,7 +210,7 @@ def plot_fine_consistency(data_save_folder):
         yerr = channel_data.T[2]
 
         weighted_mean = np.average(y, weights=1/yerr**2)
-        _sig = np.std(y)
+        err = weighted_std_dev(weighted_mean, y, 1/yerr**2) / np.sqrt(len(y))
 
         # popt,pcov = np.polyfit(x,y,0,cov="unscaled",w=1/yerr**2)
         # p_e = np.sqrt(np.diag(pcov))
@@ -220,11 +220,11 @@ def plot_fine_consistency(data_save_folder):
 
         ax = f.add_subplot(int(f"12{channel-1}"))
         ax.grid(True, alpha=0.5)
-        ax.axhline(y=weighted_mean, color='black',linewidth=1, linestyle='-.',label=f"Mean Delay Slope All Runs\n{weighted_mean:4.3}+/-{_sig:4.2} [ps/step]")
-        ax.fill_between(x, weighted_mean+_sig, weighted_mean-_sig, color='orange', alpha=.5, label="\u03c3 All Runs")
+        ax.axhline(y=weighted_mean, color='black',linewidth=1, linestyle='-.',label=f"Mean Delay Slope All Runs\n{weighted_mean:4.3}+/-{err:4.2} [ps/step]")
+        ax.fill_between(x, weighted_mean+err, weighted_mean-err, color='orange', alpha=.5, label="Standard Error All Runs")
         ax.errorbar(x, y, yerr=yerr, fmt='r.', ecolor="black", capsize=2, label=f"Delay per Fine Step")
 
-        ax.set_ylim([0.265, 0.280])
+        ax.set_ylim([0.269, 0.277])
         
         ax.set_ylabel("Delay per Fine Step [ps/step]")
         ax.set_xlabel("Run Number")
@@ -239,6 +239,6 @@ def plot_fine_cell_consistency(data_save_folder):
     pass
 
 #plot_coarse_consistency(f"./dcps3Test/data/N{N}_coarse/")
-#plot_fine_consistency(f"./dcps3Test/data/N{N}_fine/")
-plot_coarse_cell_consistency(f"./dcps3Test/data/N{N}_coarse/")
+plot_fine_consistency(f"./dcps3Test/data/N{N}_fine/")
+#plot_coarse_cell_consistency(f"./dcps3Test/data/N{N}_coarse/")
 plot_fine_cell_consistency(f"./dcps3Test/data/N{N}_fine/")
