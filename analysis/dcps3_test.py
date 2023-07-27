@@ -90,7 +90,7 @@ def run_fine_delay_cell_consistency_test(data_save_folder):
     dcps_file = "dcps_i2c_fine_cell_test.py"
 
     subprocess.run(f"mkdir -p {data_save_folder}", shell=True) #create those directories
-    subprocess.run(f"rsync ../rpi_side/dcps_i2c_fine_cell_test.py {server}:/home/pi/rpi_dcps/dcps_i2c_fine_cell_test.py") # Transfer dcps_i2c file
+    subprocess.run(f"rsync ../rpi_side/dcps_i2c_fine_cell_test.py {server}:/home/pi/rpi_dcps/dcps_i2c_fine_cell_test.py", shell=True) # Transfer dcps_i2c file
 
     for run in range(10):
         for channel in range(2, 4, 1):
@@ -115,7 +115,7 @@ def run_fine_delay_cell_set_consistency_test(data_save_folder):
     dcps_file = "dcps_i2c_fine_cell_set_test.py"
 
     subprocess.run(f"mkdir -p {data_save_folder}", shell=True) #create those directories
-    subprocess.run(f"rsync ../rpi_side/dcps_i2c_fine_cell_set_test.py {server}:/home/pi/rpi_dcps/dcps_i2c_fine_cell_set_test.py") # Transfer dcps_i2c file
+    subprocess.run(f"rsync ../rpi_side/dcps_i2c_fine_cell_set_test.py {server}:/home/pi/rpi_dcps/dcps_i2c_fine_cell_set_test.py", shell=True) # Transfer dcps_i2c file
 
     for run in range(10):
         for channel in range(2, 4, 1):
