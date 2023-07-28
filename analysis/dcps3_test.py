@@ -119,7 +119,7 @@ def run_fine_delay_cell_set_consistency_test(data_save_folder):
 
     for run in range(10):
         for channel in range(2, 4, 1):
-            for fine_control in range(11): # eleven sets with 6 cells in each
+            for fine_control in range(12): # eleven sets with 6 cells in each
                 subprocess.run(f"../rpi_side/runDCPS.sh ./run_dcps_control.sh {fine_control} {coarse_control} {stage4_tune} {stage5_tune} {channel} {server} {dcps_file}", shell=True)
                 subprocess.run(f"../rpi_side/runAtNex.sh bin/data_acq.exe 0 1 {server}", shell=True)
                 # Copy over the files...
