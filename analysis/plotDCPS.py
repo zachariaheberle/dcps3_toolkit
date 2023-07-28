@@ -170,7 +170,7 @@ def plot_coarse_consistency(data_save_folder):
             # ax.errorbar(x, y, yerr=yerr, fmt='r.', ecolor="black", capsize=2, label=f"Delay per Coarse Step")
             # ax.set_title("Before Y adjustment")
             # ax.legend()
-
+            #if run == 0:
             offset_8, offset_16, offset_24 = find_offsets(x, y, yerr)
             y = adjust_offsets(y, offset_8, offset_16, offset_24)
 
@@ -179,11 +179,17 @@ def plot_coarse_consistency(data_save_folder):
             popt,pcov = np.polyfit(x,y,1,cov=True,w=1/yerr**2)
             p_e = np.sqrt(np.diag(pcov))
 
+            # fig, ax = plt.subplots()
+
             # ax.plot(x, popt[0]*x+popt[1],color="b",linestyle='--',label=f"Channel {channel} \n{popt[0]:4.3}+/- {p_e[0]:4.2} [ps/step]")
             # ax.errorbar(x, y, yerr=yerr, fmt='r.', ecolor="black", capsize=2, label=f"Delay per Coarse Step")
-            # ax.set_title("After Y adjustment")
+            # ax.set_title(f"Coarse Delay Consistency Check\nChannel {channel}: {stage4_tune} {stage5_tune}, Run {run}")
+            # ax.set_xlabel("Coarse Step")
+            # ax.set_ylabel("Delay [ps]")
             # ax.legend()
-            # plt.show()
+            # ax.set_ylim([-5, 250])
+            # plt.savefig(f"dcps3Test/figures/coarse_comparison/single_y_adjust/chan{channel}_run{run}.png")
+            # plt.close(fig)
 
             channel_data.append((run, popt[0], p_e[0] / np.sqrt(len(y))))
     
@@ -208,6 +214,7 @@ def plot_coarse_consistency(data_save_folder):
         ax.fill_between(x, weighted_mean+err, weighted_mean-err, color='orange', alpha=.5, label="Standard Error All Runs")
         ax.errorbar(x, y, yerr=yerr, fmt='r.', ecolor="black", capsize=2, label=f"Delay per Coarse Step")
 
+        #ax.set_ylim([7.15, 7.22])
         ax.set_ylim([7.11, 7.18])
 
         ax.set_ylabel("Delay per Coarse Step [ps/step]")
@@ -216,7 +223,7 @@ def plot_coarse_consistency(data_save_folder):
         ax.set_xticklabels(range(10))
         ax.legend(loc="upper left",fontsize=8)
         ax.set_title(f"Coarse Delay Consistency Check\nChannel {channel}: {stage4_tune} {stage5_tune}")
-    plt.savefig("dcps3Test/figures/dcps3_coarse_consistency_test2.png", dpi=300, facecolor="#FFFFFF")
+    plt.savefig("dcps3Test/figures/coarse_comparison/single_y_adjust/dcps3_coarse_consistency_test.png", dpi=300, facecolor="#FFFFFF")
     plt.close()
 
 
@@ -343,6 +350,47 @@ def plot_fine_consistency(data_save_folder):
     plt.savefig("dcps3Test/figures/dcps3_fine_consistency_test2.png", dpi=300, facecolor="#FFFFFF")
     plt.close()
 
+def plot_fine_cell_single(data_save_folder):
+    f = plt.figure(figsize=(16,4))
+    f.subplots_adjust(top=0.85, bottom=0.15, left=0.05, right=0.96)
+    coarse_control = 0
+    fine_control = 0
+    stage4_tune = 2
+    stage5_tune = 3
+    run = 0
+    for channel in range(2, 3, 1):
+        run_data = []
+        for fine_control in range(66):
+            print(f"Calculating fine control: {fine_control} channel: {channel}")
+            run_name = f"chan{channel}_f{fine_control}_c{coarse_control}_s4{stage4_tune}_s5{stage5_tune}_run{run}"
+            mean_val, std_err = get_data(data_save_folder, run_name)
+            run_data.append((fine_control, mean_val, std_err))
+        run_data = np.asarray(run_data)
+
+        x = run_data.T[0]
+        y = -1*(run_data.T[1]+200)%3125
+        yerr = run_data.T[2]
+        y = y-y[0]
+
+        weighted_mean = np.average(y[1:], weights=1/yerr[1:]**2)
+        err = weighted_std_dev(weighted_mean, y[1:], 1/yerr[1:]**2) / np.sqrt(len(y))
+    
+        ax = f.add_subplot(111)
+        ax.grid(True, alpha=0.5)
+        ax.axhline(y=weighted_mean, color='black',linewidth=1, linestyle='-.',label=f"Mean Delay All Runs\n{weighted_mean:4.3}+/-{err:4.2} [ps]")
+        ax.fill_between(x, weighted_mean+err, weighted_mean-err, color='orange', alpha=.5, label="Standard Error All Runs")
+        ax.errorbar(x, y, yerr, fmt='r.', ecolor='k', capsize=2, label="Cell Delay")
+
+        ax.set_ylim([-0.04, 0.5])
+
+        ax.set_ylabel("Delay [ps]")
+        ax.set_xlabel("Fine Delay Cell")
+        ax.set_xticks(range(66))
+        ax.set_xticklabels(range(66), rotation=45)
+        ax.legend(loc="upper left",fontsize=8)
+        ax.set_title(f"Fine Delay Cell Consistency Check\nChannel {channel}")
+    plt.savefig("dcps3Test/figures/dcps3_fine_cell_test.png", dpi=300, facecolor="#FFFFFF")
+
 def plot_fine_cell_consistency(data_save_folder):
     f = plt.figure(figsize=(10,264))
     f.subplots_adjust(top=0.96, bottom=0.04, hspace=0.5, wspace=0.3)
@@ -351,11 +399,11 @@ def plot_fine_cell_consistency(data_save_folder):
     stage4_tune = 2
     stage5_tune = 3
     for channel in range(2, 4, 1):
-        for i, fine_control in range(66):
+        for i, fine_control in enumerate(range(66)):
             run_data = []
             for run in range(10):
-                #print(f"Calculating coarse control: {coarse_control} run: {run} channel: {channel}")
-                run_name = f"chan{channel}_fcell{fine_control}_c{coarse_control}_s4{stage4_tune}_s5{stage5_tune}_run{run}"
+                print(f"Calculating fine control: {fine_control} run: {run} channel: {channel}")
+                run_name = f"chan{channel}_f{fine_control}_c{coarse_control}_s4{stage4_tune}_s5{stage5_tune}_run{run}"
                 mean_val, std_err = get_data(data_save_folder, run_name)
                 run_data.append((run, mean_val, std_err))
             run_data = np.asarray(run_data)
@@ -395,7 +443,58 @@ def plot_fine_cell_consistency(data_save_folder):
             ax.set_title(f"Fine Delay Cell Consistency Check\nChannel {channel}: Fine Cell {fine_control}")
     plt.savefig("dcps3Test/figures/dcps3_fine_cell_consistency_test.pdf", dpi=300, facecolor="#FFFFFF")
 
+
+def plot_fine_cell_relative_consistency_single(data_save_folder):
+    f = plt.figure(figsize=(16,4))
+    f.subplots_adjust(top=0.85, bottom=0.15, left=0.05, right=0.96)
+    coarse_control = 0
+    fine_control = 0
+    stage4_tune = 2
+    stage5_tune = 3
+    run = 0
+    for channel in range(2, 3, 1):
+        run_data = []
+        for fine_control in range(66):
+            print(f"Calculating fine control: {fine_control} channel: {channel}")
+            run_name = f"chan{channel}_f{fine_control}_c{coarse_control}_s4{stage4_tune}_s5{stage5_tune}_run{run}"
+            if fine_control != 0:
+                prev_run_name = f"chan{channel}_f{fine_control-1}_c{coarse_control}_s4{stage4_tune}_s5{stage5_tune}_run{run}"
+            else:
+                prev_run_name = run_name
+            mean_val, std_err = get_data(data_save_folder, run_name)
+            prev_mean_val, prev_std_err = get_data(data_save_folder, prev_run_name)
+            mean_val = mean_val - prev_mean_val
+            run_data.append((fine_control, mean_val, std_err))
+        run_data = np.asarray(run_data)
+
+        x = run_data.T[0]
+        y = -1*(run_data.T[1]+200)%3125
+        yerr = run_data.T[2]
+        y = y-y[0]
+
+        weighted_mean = np.average(y[1:], weights=1/yerr[1:]**2)
+        err = weighted_std_dev(weighted_mean, y[1:], 1/yerr[1:]**2) / np.sqrt(len(y))
+    
+        ax = f.add_subplot(111)
+        ax.grid(True, alpha=0.5)
+        ax.axhline(y=weighted_mean, color='black',linewidth=1, linestyle='-.',label=f"Mean Delay All Runs\n{weighted_mean:4.3}+/-{err:4.2} [ps]")
+        ax.fill_between(x, weighted_mean+err, weighted_mean-err, color='orange', alpha=.5, label="Standard Error All Runs")
+        ax.errorbar(x, y, yerr, fmt='r.', ecolor='k', capsize=2, label="Cell Delay")
+
+        ax.set_ylim([-0.04, 0.5])
+
+        ax.set_ylabel("Relative Delay [ps]")
+        ax.set_xlabel("Fine Delay Cell")
+        ax.set_xticks(range(66))
+        ax.set_xticklabels(range(66), rotation=45)
+        ax.legend(loc="upper left",fontsize=8)
+        ax.set_title(f"Fine Delay Cell Relative Consistency Check\nChannel {channel}")
+    plt.savefig("dcps3Test/figures/dcps3_fine_cell_relative_consistency_test.png", dpi=300, facecolor="#FFFFFF")
+
+
+
 #plot_coarse_consistency(f"./dcps3Test/data/N{N}_coarse/")
-plot_fine_consistency(f"./dcps3Test/data/N{N}_fine/")
+#plot_fine_consistency(f"./dcps3Test/data/N{N}_fine/")
 #plot_coarse_cell_consistency(f"./dcps3Test/data/N{N}_coarse/")
-plot_fine_cell_consistency(f"./dcps3Test/data/N{N}_fine_cell/")
+#plot_fine_cell_consistency(f"./dcps3Test/data/N{N}_fine_cell/")
+plot_fine_cell_relative_consistency_single(f"./dcps3Test/data/N{N}_fine/")
