@@ -113,6 +113,11 @@ int main(int argc, char** argv)
   // readFIFO_writeCount();
 
   // usleep(10000000);
+
+  // Offset parameter
+  uint num_of_words_toRemove = 1; // 1word from both ddmtd1 & ddmtd2
+  uint offset_bytes = num_of_words_toRemove*2*4 + 2; //2 since ddmtd1 & ddmtd2; 4 is the number of bytes per word; +2 for the ignoring the returned command.
+
   while(i < 100000000)
   {
       if (N_count>=N) break;
@@ -122,8 +127,8 @@ int main(int argc, char** argv)
           N_count = N_count + 1;
           bcm2835_spi_transfernb(cmd_buf, data_buf, num_Bytes);
           
-            memcpy(total_data_buf+numBytesRead,data_buf+2,num_Bytes-2);
-            numBytesRead = numBytesRead + num_Bytes - 2;
+            memcpy(total_data_buf+numBytesRead,data_buf+offset_bytes,num_Bytes-offset_bytes);
+            numBytesRead = numBytesRead + num_Bytes - offset_bytes;
             // write_toFiles(fp1,fp2,data_buf+2, num_Bytes -2);
             // printf("$$$$$$$$$$$$$$$$$$$$$$$$$$$\n\n");
             memset(data_buf, 0xff,num_Bytes ); //cleaning data
