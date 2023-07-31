@@ -409,6 +409,7 @@ print("CHANNEL:", CHANNEL)
 i2c.writeto( 0x70,get_dcps3packet(FINE_CONTROL,COARSE_CONTROL, STAGE4_TUNE&0b11, STAGE5_TUNE&0b11) )
 
 i2c.unlock()
+CLK_ENB.value = True
 
 
 
