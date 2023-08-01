@@ -139,7 +139,7 @@ def find_offsets(x, y, yerr):
 
 
 
-def plot_coarse_consistency(data_save_folder):
+def plot_coarse_consistency(data_save_folder, figure_save_folder):
     f = plt.figure(figsize=(10,4))
     f.subplots_adjust(wspace=0.3)
     coarse_control = 0
@@ -201,7 +201,7 @@ def plot_coarse_consistency(data_save_folder):
         # weighted_mean = np.average(y, weights=1/yerr**2)
         # err = weighted_std_dev(weighted_mean, y, 1/yerr**2)
 
-        popt,pcov = np.polyfit(x,y,0,cov="unscaled",w=1/yerr**2)
+        popt,pcov = np.polyfit(x,y,0,cov=True,w=1/yerr**2)
         p_e = np.sqrt(np.diag(pcov))
 
         weighted_mean = popt[0]
@@ -222,11 +222,11 @@ def plot_coarse_consistency(data_save_folder):
         ax.set_xticklabels(range(10))
         ax.legend(loc="upper left",fontsize=8)
         ax.set_title(f"Coarse Delay Consistency Check\nChannel {channel}: {stage4_tune} {stage5_tune}")
-    plt.savefig("dcps3Test/figures/board1/dcps3_coarse_consistency_test.png", dpi=300, facecolor="#FFFFFF")
+    plt.savefig(f"{figure_save_folder}/dcps3_coarse_consistency_test.png", dpi=300, facecolor="#FFFFFF")
     plt.close()
 
 
-def plot_coarse_cell_consistency(data_save_folder):
+def plot_coarse_cell_consistency(data_save_folder, figure_save_folder):
     f = plt.figure(figsize=(10,24))
     f.subplots_adjust(top=0.96, bottom=0.04, hspace=0.5, wspace=0.3)
     coarse_control = 0
@@ -239,7 +239,7 @@ def plot_coarse_cell_consistency(data_save_folder):
             run_data = []
             for run in range(10):
                 #print(f"Calculating coarse control: {coarse_control} run: {run} channel: {channel}")
-                run_name = f"chan{channel}_f{fine_control}_c{coarse_control}_s4{stage4_tune}_s5{stage5_tune}_run{run}"
+                run_name = f"/chan{channel}_f{fine_control}_c{coarse_control}_s4{stage4_tune}_s5{stage5_tune}_run{run}"
                 mean_val, std_err = get_data(data_save_folder, run_name)
                 run_data.append((run, mean_val, std_err))
             run_data = np.asarray(run_data)
@@ -282,11 +282,11 @@ def plot_coarse_cell_consistency(data_save_folder):
             ax.set_xticklabels(range(10))
             ax.legend(loc="upper left",fontsize=8)
             ax.set_title(f"Coarse Delay Cell Consistency Check\nChannel {channel}: {stage4_tune} {stage5_tune}\nCell {coarse_control}")
-    plt.savefig("dcps3Test/figures/board1/dcps3_coarse_cell_consistency_test.png", dpi=300, facecolor="#FFFFFF")
+    plt.savefig(f"{figure_save_folder}/dcps3_coarse_cell_consistency_test.png", dpi=300, facecolor="#FFFFFF")
 
 
 
-def plot_fine_consistency(data_save_folder):
+def plot_fine_consistency(data_save_folder, figure_save_folder):
     f = plt.figure(figsize=(10,4))
     f.subplots_adjust(wspace=0.3)
     coarse_control = 0
@@ -299,7 +299,7 @@ def plot_fine_consistency(data_save_folder):
             run_data = []
             for fine_control in range(66):
                 print(f"Calculating fine control: {fine_control} run: {run} channel: {channel}")
-                run_name = f"chan{channel}_f{fine_control}_c{coarse_control}_s4{stage4_tune}_s5{stage5_tune}_run{run}"
+                run_name = f"/chan{channel}_f{fine_control}_c{coarse_control}_s4{stage4_tune}_s5{stage5_tune}_run{run}"
                 mean_val, std_err = get_data(data_save_folder, run_name)
                 run_data.append((fine_control, mean_val, std_err))
             run_data = np.asarray(run_data)
@@ -341,10 +341,10 @@ def plot_fine_consistency(data_save_folder):
         ax.set_xticklabels(range(10))
         ax.legend(loc="upper left",fontsize=8)
         ax.set_title(f"Fine Delay Consistency Check\nChannel {channel}: {stage4_tune} {stage5_tune}")
-    plt.savefig("dcps3Test/figures/board1/dcps3_fine_consistency_test.png", dpi=300, facecolor="#FFFFFF")
+    plt.savefig(f"{figure_save_folder}/dcps3_fine_consistency_test.png", dpi=300, facecolor="#FFFFFF")
     plt.close()
 
-def plot_fine_cell_single(data_save_folder):
+def plot_fine_cell_single(data_save_folder, figure_save_folder):
     f = plt.figure(figsize=(16,4))
     f.subplots_adjust(top=0.85, bottom=0.15, left=0.05, right=0.96)
     coarse_control = 0
@@ -356,7 +356,7 @@ def plot_fine_cell_single(data_save_folder):
         run_data = []
         for fine_control in range(66):
             print(f"Calculating fine control: {fine_control} channel: {channel}")
-            run_name = f"chan{channel}_f{fine_control}_c{coarse_control}_s4{stage4_tune}_s5{stage5_tune}_run{run}"
+            run_name = f"/chan{channel}_f{fine_control}_c{coarse_control}_s4{stage4_tune}_s5{stage5_tune}_run{run}"
             mean_val, std_err = get_data(data_save_folder, run_name)
             run_data.append((fine_control, mean_val, std_err))
         run_data = np.asarray(run_data)
@@ -389,9 +389,9 @@ def plot_fine_cell_single(data_save_folder):
         ax.set_xticklabels(range(66), rotation=45)
         ax.legend(loc="upper left",fontsize=8)
         ax.set_title(f"Fine Delay Cell Consistency Check\nChannel {channel}")
-    plt.savefig("dcps3Test/figures/board1/dcps3_fine_cell_test.png", dpi=300, facecolor="#FFFFFF")
+    plt.savefig(f"{figure_save_folder}/dcps3_fine_cell_test.png", dpi=300, facecolor="#FFFFFF")
 
-def plot_fine_cell_consistency(data_save_folder):
+def plot_fine_cell_consistency(data_save_folder, figure_save_folder):
     f = plt.figure(figsize=(10,264), dpi=100)
     f.subplots_adjust(top=0.997, bottom=0.003, hspace=0.5, wspace=0.3)
     coarse_control = 0
@@ -403,7 +403,7 @@ def plot_fine_cell_consistency(data_save_folder):
             run_data = []
             for run in range(10):
                 print(f"Calculating fine control: {fine_control} run: {run} channel: {channel}")
-                run_name = f"chan{channel}_f{fine_control}_c{coarse_control}_s4{stage4_tune}_s5{stage5_tune}_run{run}"
+                run_name = f"/chan{channel}_f{fine_control}_c{coarse_control}_s4{stage4_tune}_s5{stage5_tune}_run{run}"
                 mean_val, std_err = get_data(data_save_folder, run_name)
                 run_data.append((run, mean_val, std_err))
             run_data = np.asarray(run_data)
@@ -443,10 +443,10 @@ def plot_fine_cell_consistency(data_save_folder):
             ax.set_xticklabels(range(10))
             ax.legend(loc="upper left",fontsize=8)
             ax.set_title(f"Fine Delay Cell Consistency Check\nChannel {channel}: Fine Cell {fine_control}")
-    plt.savefig("dcps3Test/figures/board1/dcps3_fine_cell_consistency_test.pdf", dpi=100, facecolor="#FFFFFF")
+    plt.savefig(f"{figure_save_folder}/dcps3_fine_cell_consistency_test.pdf", dpi=100, facecolor="#FFFFFF")
 
 
-def plot_fine_cell_relative_consistency_single(data_save_folder):
+def plot_fine_cell_relative_consistency_single(data_save_folder, figure_save_folder):
     f = plt.figure(figsize=(16,4))
     f.subplots_adjust(top=0.85, bottom=0.15, left=0.05, right=0.96)
     coarse_control = 0
@@ -458,7 +458,7 @@ def plot_fine_cell_relative_consistency_single(data_save_folder):
         run_data = []
         for fine_control in range(66):
             print(f"Calculating fine control: {fine_control} channel: {channel}")
-            run_name = f"chan{channel}_f{fine_control}_c{coarse_control}_s4{stage4_tune}_s5{stage5_tune}_run{run}"
+            run_name = f"/chan{channel}_f{fine_control}_c{coarse_control}_s4{stage4_tune}_s5{stage5_tune}_run{run}"
             if fine_control != 0:
                 prev_run_name = f"chan{channel}_f{fine_control-1}_c{coarse_control}_s4{stage4_tune}_s5{stage5_tune}_run{run}"
             else:
@@ -497,13 +497,13 @@ def plot_fine_cell_relative_consistency_single(data_save_folder):
         ax.set_xticklabels(range(66), rotation=45)
         ax.legend(loc="upper left",fontsize=8)
         ax.set_title(f"Fine Delay Cell Relative Consistency Check\nChannel {channel}")
-    plt.savefig("dcps3Test/figures/board1/dcps3_fine_cell_relative_consistency_test.png", dpi=300, facecolor="#FFFFFF")
+    plt.savefig(f"{figure_save_folder}/dcps3_fine_cell_relative_consistency_test.png", dpi=300, facecolor="#FFFFFF")
 
 
-plot_coarse_consistency(f"./dcps3Test/data/board1/N{N}_coarse/")
-plot_fine_consistency(f"./dcps3Test/data/board1/N{N}_fine/")
-plot_coarse_cell_consistency(f"./dcps3Test/data/board1/N{N}_coarse/")
-plot_fine_cell_consistency(f"./dcps3Test/data/board1/N{N}_fine_cell/")
+plot_coarse_consistency(f"./dcps3Test/data/board1/N{N}_coarse", f"./dcps3Test/figure/board1")
+plot_fine_consistency(f"./dcps3Test/data/board1/N{N}_fine", f"./dcps3Test/figure/board1")
+plot_coarse_cell_consistency(f"./dcps3Test/data/board1/N{N}_coarse", f"./dcps3Test/figure/board1")
+plot_fine_cell_consistency(f"./dcps3Test/data/board1/N{N}_fine_cell", f"./dcps3Test/figure/board1")
 #plot_fine_cell_relative_consistency_single(f"./dcps3Test/data/board1/N{N}_fine/")
 #plot_fine_cell_set_consistency_single(f"./dcps3Test/data/board1/N{N}_fine_cell_set/")
 #print(check_for_bug())
