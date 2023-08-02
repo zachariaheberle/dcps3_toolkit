@@ -507,6 +507,8 @@ def plot_fine_cell_relative_consistency(data_save_folder, figure_save_folder, pl
                 mean_val, std_err = get_data(data_save_folder, run_name)
                 prev_mean_val, prev_std_err = get_data(data_save_folder, prev_run_name)
                 mean_val = ((-1*(mean_val+200)%3125)-200) - ((-1*(prev_mean_val+200)%3125)-200)
+                if fine_control != 0:
+                    std_err = std_err + prev_std_err
                 run_data.append((run, mean_val, std_err))
 
             run_data = np.asarray(run_data)
@@ -571,6 +573,8 @@ def plot_fine_cell_relative_consistency(data_save_folder, figure_save_folder, pl
                 ax.errorbar(x, y, yerr, fmt='r.', ecolor='k', capsize=2, label="Relative Fine Delay")
                 ax.set_title(f"Fine Delay Cell Relative Consistency Check\nChannel {channel} | Run {run}")
                 ax.set_ylim([-0.05, 0.6])
+                ax.set_xlabel("Coarse Delay Step")
+                ax.set_ylabel("Delay [ps]")
                 ax.legend(loc="lower right")
 
                 fig.savefig(f"{figure_save_folder}/fine_delay_relative_consistency_plots/relative_fine_delay_chan{channel}_run{run}.png", dpi=300, facecolor="#FFFFFF")
