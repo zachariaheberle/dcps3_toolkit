@@ -213,6 +213,7 @@ def plot_coarse_consistency(data_save_folder, figure_save_folder, plot_all_runs=
             if plot_all_runs:
                 fig, ax = plt.subplots()
 
+                ax.grid(True, alpha=0.5)
                 ax.plot(x, popt[0]*x+popt[1],color="b",linestyle='--',label=f"Channel {channel} \n{popt[0]:4.3}+/- {p_e[0]:4.2} [ps/step]")
                 ax.errorbar(x, y, yerr=yerr, fmt='r.', ecolor="black", capsize=2, label=f"Delay per Coarse Step")
                 ax.set_title(f"Coarse Delay\nChannel {channel}: {stage4_tune} {stage5_tune} | Run {run}")
@@ -368,7 +369,7 @@ def plot_fine_consistency(data_save_folder, figure_save_folder, plot_all_runs=Fa
             if plot_all_runs:
                 fig, ax = plt.subplots()
 
-                ax.grid(True)
+                ax.grid(True, alpha=0.5)
                 ax.plot(x, popt[0]*x+popt[1],color="b",linestyle='--',label=f"Channel {channel} \n{popt[0]:4.3}+/- {p_e[0]:4.2} [ps/step]")
                 ax.errorbar(x, y, yerr=yerr, fmt='r.', ecolor="black", capsize=2, label=f"Delay per Coarse Step")
                 ax.set_title(f"Fine Delay\nChannel {channel}: {stage4_tune} {stage5_tune} | Run {run}")
