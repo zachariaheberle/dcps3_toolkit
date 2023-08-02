@@ -45,7 +45,7 @@ def run_coarse_delay_consistency_test(data_save_folder, num_runs=10, channels=[2
                 data_acq(fine_control, coarse_control, stage4_tune, stage5_tune, channel, run)
                 if track_completion:
                     completed_loops += 1
-                    print(f"run_fine_delay_cell_set_consistency test: {(completed_loops/total_loops)*100:.3f}% complete")
+                    print(f"run_coarse_delay_consistency_test: {(completed_loops/total_loops)*100:.3f}% complete")
     return 0
 
 def run_coarse_delay_cell_consistency_test(data_save_folder, num_runs=10, channels=[2, 3], track_completion=True):
@@ -66,7 +66,7 @@ def run_coarse_delay_cell_consistency_test(data_save_folder, num_runs=10, channe
                 data_acq(fine_control, coarse_control, stage4_tune, stage5_tune, channel, run)
                 if track_completion:
                     completed_loops += 1
-                    print(f"run_fine_delay_cell_set_consistency test: {(completed_loops/total_loops)*100:.3f}% complete")
+                    print(f"run_coarse_delay_cell_consistency_test: {(completed_loops/total_loops)*100:.3f}% complete")
     return 0
 
 
@@ -88,7 +88,7 @@ def run_fine_delay_consistency_test(data_save_folder, num_runs=10, channels=[2, 
                 data_acq(fine_control, coarse_control, stage4_tune, stage5_tune, channel, run)
                 if track_completion:
                     completed_loops += 1
-                    print(f"run_fine_delay_cell_set_consistency test: {(completed_loops/total_loops)*100:.3f}% complete")
+                    print(f"run_fine_delay_consistency_test: {(completed_loops/total_loops)*100:.3f}% complete")
     return 0
 
 
@@ -111,7 +111,7 @@ def run_fine_delay_cell_consistency_test(data_save_folder, num_runs=10, channels
                 data_acq(fine_control, coarse_control, stage4_tune, stage5_tune, channel, run, dcps_file=dcps_file)
                 if track_completion:
                     completed_loops += 1
-                    print(f"run_fine_delay_cell_set_consistency test: {(completed_loops/total_loops)*100:.3f}% complete")
+                    print(f"run_fine_delay_cell_consistency_test: {(completed_loops/total_loops)*100:.3f}% complete")
     return 0
 
 def run_fine_delay_cell_set_consistency_test(data_save_folder, num_runs=10, channels=[2, 3], track_completion=True):
@@ -133,7 +133,7 @@ def run_fine_delay_cell_set_consistency_test(data_save_folder, num_runs=10, chan
                 data_acq(fine_control, coarse_control, stage4_tune, stage5_tune, channel, run, dcps_file=dcps_file)
                 if track_completion:
                     completed_loops += 1
-                    print(f"run_fine_delay_cell_set_consistency test: {(completed_loops/total_loops)*100:.3f}% complete")
+                    print(f"run_fine_delay_cell_set_consistency_test: {(completed_loops/total_loops)*100:.3f}% complete")
                     
     return 0
 
