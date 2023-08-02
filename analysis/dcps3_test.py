@@ -10,7 +10,24 @@ from tools.base import *
 from tools.ddmtd import ddmtd
 from time import sleep
 
-def run_coarse_delay_consistency_test(data_save_folder):
+def data_acq(fine_control, coarse_control, stage4_tune, stage5_tune, channel, run, dcps_file="dcps_i2c.py", quiet=True):
+    """
+    Function that will gather DCPS data with specified fine, coarse, stage4, stage5, channel, and dcps_file parameters.
+    Will additionally transfer the data back to the local machine running this.
+    """
+    if quiet:
+        stdout = subprocess.DEVNULL
+    else:
+        stdout = None
+
+    subprocess.run(f"../rpi_side/runDCPS.sh ./run_dcps_control.sh {fine_control} {coarse_control} {stage4_tune} {stage5_tune} {channel} {server} {dcps_file}", shell=True, stdout=stdout)
+    subprocess.run(f"../rpi_side/runAtNex.sh bin/data_acq.exe 0 1 {server}", shell=True, stdout=stdout)
+    # Copy over the files...
+    run_name = f"chan{channel}_f{fine_control}_c{coarse_control}_s4{stage4_tune}_s5{stage5_tune}_run{run}"
+    subprocess.run(f"scp {server}:Flash_Firmware/data/ddmtd1.txt {data_save_folder+run_name}_ddmtd1.txt", shell=True, stdout=stdout)
+    subprocess.run(f"scp {server}:Flash_Firmware/data/ddmtd2.txt {data_save_folder+run_name}_ddmtd2.txt", shell=True, stdout=stdout)
+
+def run_coarse_delay_consistency_test(data_save_folder, num_runs=10, channels=[2, 3]):
     coarse_control = 0
     fine_control = 0
     stage4_tune = 2
@@ -20,21 +37,13 @@ def run_coarse_delay_consistency_test(data_save_folder):
     subprocess.run(f"mkdir -p {data_save_folder}", shell=True) #create those directories
     subprocess.run(f"rsync ../rpi_side/dcps_i2c.py {server}:/home/pi/rpi_dcps/dcps_i2c.py", shell=True) # Transfer dcps_i2c file
 
-    for run in range(10):
-        for channel in range (2, 4, 1):
+    for run in range(num_runs):
+        for channel in channels:
             for coarse_control in range(0,32,1):
-                subprocess.run(f"../rpi_side/runDCPS.sh ./run_dcps_control.sh {fine_control} {coarse_control} {stage4_tune} {stage5_tune} {channel} {server}", shell=True)
-                subprocess.run(f"../rpi_side/runAtNex.sh bin/data_acq.exe 0 1 {server}", shell=True)
-                # Copy over the files...
-                run_name = f"chan{channel}_f{fine_control}_c{coarse_control}_s4{stage4_tune}_s5{stage5_tune}_run{run}"
-                subprocess.run(f"scp {server}:Flash_Firmware/data/ddmtd1.txt {data_save_folder+run_name}_ddmtd1.txt", shell=True)
-                subprocess.run(f"scp {server}:Flash_Firmware/data/ddmtd2.txt {data_save_folder+run_name}_ddmtd2.txt", shell=True)
-                #break
-            #break
-        #break
+                data_acq(fine_control, coarse_control, stage4_tune, stage5_tune, channel, run)
     return 0
 
-def run_coarse_delay_cell_consistency_test(data_save_folder):
+def run_coarse_delay_cell_consistency_test(data_save_folder, num_runs=10, channels=[2, 3]):
     coarse_control = 0
     fine_control = 0
     stage4_tune = 2
@@ -44,22 +53,14 @@ def run_coarse_delay_cell_consistency_test(data_save_folder):
     subprocess.run(f"mkdir -p {data_save_folder}", shell=True) #create those directories
     subprocess.run(f"rsync ../rpi_side/dcps_i2c.py {server}:/home/pi/rpi_dcps/dcps_i2c.py", shell=True) # Transfer dcps_i2c file
 
-    for run in range(10):
-        for channel in range (2, 4, 1):
+    for run in range(num_runs):
+        for channel in channels:
             for coarse_control in [0, 1, 2, 4, 8, 16]:
-                subprocess.run(f"../rpi_side/runDCPS.sh ./run_dcps_control.sh {fine_control} {coarse_control} {stage4_tune} {stage5_tune} {channel} {server}", shell=True)
-                subprocess.run(f"../rpi_side/runAtNex.sh bin/data_acq.exe 0 1 {server}", shell=True)
-                # Copy over the files...
-                run_name = f"chan{channel}_f{fine_control}_c{coarse_control}_s4{stage4_tune}_s5{stage5_tune}_run{run}"
-                subprocess.run(f"scp {server}:Flash_Firmware/data/ddmtd1.txt {data_save_folder+run_name}_ddmtd1.txt", shell=True)
-                subprocess.run(f"scp {server}:Flash_Firmware/data/ddmtd2.txt {data_save_folder+run_name}_ddmtd2.txt", shell=True)
-                #break
-            #break
-        #break
+                data_acq(fine_control, coarse_control, stage4_tune, stage5_tune, channel, run)
     return 0
 
 
-def run_fine_delay_consistency_test(data_save_folder):
+def run_fine_delay_consistency_test(data_save_folder, num_runs=10, channels=[2, 3]):
     coarse_control = 0
     fine_control = 0 
     stage4_tune = 2
@@ -69,22 +70,14 @@ def run_fine_delay_consistency_test(data_save_folder):
     subprocess.run(f"mkdir -p {data_save_folder}", shell=True) #create those directories
     subprocess.run(f"rsync ../rpi_side/dcps_i2c.py {server}:/home/pi/rpi_dcps/dcps_i2c.py", shell=True) # Transfer dcps_i2c file
     
-    for run in range(10):
-        for channel in range(2, 4, 1):
+    for run in range(num_runs):
+        for channel in channels:
             for fine_control in range(0,67,1): 
-                subprocess.run(f"../rpi_side/runDCPS.sh ./run_dcps_control.sh {fine_control} {coarse_control} {stage4_tune} {stage5_tune} {channel} {server}", shell=True)
-                subprocess.run(f"../rpi_side/runAtNex.sh bin/data_acq.exe 0 1 {server}", shell=True)
-                # Copy over the files...
-                run_name = f"chan{channel}_f{fine_control}_c{coarse_control}_s4{stage4_tune}_s5{stage5_tune}_run{run}"
-                subprocess.run(f"scp {server}:Flash_Firmware/data/ddmtd1.txt {data_save_folder+run_name}_ddmtd1.txt", shell=True)
-                subprocess.run(f"scp {server}:Flash_Firmware/data/ddmtd2.txt {data_save_folder+run_name}_ddmtd2.txt", shell=True)
-                #break
-            #break
-        #break
+                data_acq(fine_control, coarse_control, stage4_tune, stage5_tune, channel, run)
     return 0
 
 
-def run_fine_delay_cell_consistency_test(data_save_folder):
+def run_fine_delay_cell_consistency_test(data_save_folder, num_runs=10, channels=[2, 3]):
     coarse_control = 0
     fine_control = 0 
     stage4_tune = 2
@@ -95,21 +88,13 @@ def run_fine_delay_cell_consistency_test(data_save_folder):
     subprocess.run(f"mkdir -p {data_save_folder}", shell=True) #create those directories
     subprocess.run(f"rsync ../rpi_side/dcps_i2c_fine_cell_test.py {server}:/home/pi/rpi_dcps/dcps_i2c_fine_cell_test.py", shell=True) # Transfer dcps_i2c file
 
-    for run in range(10):
-        for channel in range(2, 4, 1):
+    for run in range(num_runs):
+        for channel in channels:
             for fine_control in range(0,67,1): 
-                subprocess.run(f"../rpi_side/runDCPS.sh ./run_dcps_control.sh {fine_control} {coarse_control} {stage4_tune} {stage5_tune} {channel} {server} {dcps_file}", shell=True)
-                subprocess.run(f"../rpi_side/runAtNex.sh bin/data_acq.exe 0 1 {server}", shell=True)
-                # Copy over the files...
-                run_name = f"chan{channel}_f{fine_control}_c{coarse_control}_s4{stage4_tune}_s5{stage5_tune}_run{run}"
-                subprocess.run(f"scp {server}:Flash_Firmware/data/ddmtd1.txt {data_save_folder+run_name}_ddmtd1.txt", shell=True)
-                subprocess.run(f"scp {server}:Flash_Firmware/data/ddmtd2.txt {data_save_folder+run_name}_ddmtd2.txt", shell=True)
-                #break
-            #break
-        #break
+                data_acq(fine_control, coarse_control, stage4_tune, stage5_tune, channel, run, dcps_file=dcps_file)
     return 0
 
-def run_fine_delay_cell_set_consistency_test(data_save_folder):
+def run_fine_delay_cell_set_consistency_test(data_save_folder, num_runs=10, channels=[2, 3]):
     coarse_control = 0
     fine_control = 0 
     stage4_tune = 2
@@ -120,18 +105,10 @@ def run_fine_delay_cell_set_consistency_test(data_save_folder):
     subprocess.run(f"mkdir -p {data_save_folder}", shell=True) #create those directories
     subprocess.run(f"rsync ../rpi_side/dcps_i2c_fine_cell_set_test.py {server}:/home/pi/rpi_dcps/dcps_i2c_fine_cell_set_test.py", shell=True) # Transfer dcps_i2c file
 
-    for run in range(10):
-        for channel in range(2, 4, 1):
+    for run in range(num_runs):
+        for channel in channels:
             for fine_control in range(12): # eleven sets with 6 cells in each
-                subprocess.run(f"../rpi_side/runDCPS.sh ./run_dcps_control.sh {fine_control} {coarse_control} {stage4_tune} {stage5_tune} {channel} {server} {dcps_file}", shell=True)
-                subprocess.run(f"../rpi_side/runAtNex.sh bin/data_acq.exe 0 1 {server}", shell=True)
-                # Copy over the files...
-                run_name = f"chan{channel}_f{fine_control}_c{coarse_control}_s4{stage4_tune}_s5{stage5_tune}_run{run}"
-                subprocess.run(f"scp {server}:Flash_Firmware/data/ddmtd1.txt {data_save_folder+run_name}_ddmtd1.txt", shell=True)
-                subprocess.run(f"scp {server}:Flash_Firmware/data/ddmtd2.txt {data_save_folder+run_name}_ddmtd2.txt", shell=True)
-                #break
-            #break
-        #break
+                data_acq(fine_control, coarse_control, stage4_tune, stage5_tune, channel, run, dcps_file=dcps_file)
     return 0
 
 
