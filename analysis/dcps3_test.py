@@ -18,6 +18,7 @@ def run_coarse_delay_consistency_test(data_save_folder):
     channel = 2
 
     subprocess.run(f"mkdir -p {data_save_folder}", shell=True) #create those directories
+    subprocess.run(f"rsync ../rpi_side/dcps_i2c.py {server}:/home/pi/rpi_dcps/dcps_i2c.py", shell=True) # Transfer dcps_i2c file
 
     for run in range(10):
         for channel in range (2, 4, 1):
@@ -41,6 +42,7 @@ def run_coarse_delay_cell_consistency_test(data_save_folder):
     channel = 2
 
     subprocess.run(f"mkdir -p {data_save_folder}", shell=True) #create those directories
+    subprocess.run(f"rsync ../rpi_side/dcps_i2c.py {server}:/home/pi/rpi_dcps/dcps_i2c.py", shell=True) # Transfer dcps_i2c file
 
     for run in range(10):
         for channel in range (2, 4, 1):
@@ -65,6 +67,7 @@ def run_fine_delay_consistency_test(data_save_folder):
     channel = 2
 
     subprocess.run(f"mkdir -p {data_save_folder}", shell=True) #create those directories
+    subprocess.run(f"rsync ../rpi_side/dcps_i2c.py {server}:/home/pi/rpi_dcps/dcps_i2c.py", shell=True) # Transfer dcps_i2c file
     
     for run in range(10):
         for channel in range(2, 4, 1):

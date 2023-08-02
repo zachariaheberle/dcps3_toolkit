@@ -12,11 +12,11 @@ from pca9575_lib import *
 # from pca9545a_lib import *
 
 #Do not adjust by hand, use run_dcps_control script
-FINE_CONTROL=
-COARSE_CONTROL=
-STAGE4_TUNE=
-STAGE5_TUNE=
-CHANNEL=
+FINE_CONTROL=0
+COARSE_CONTROL=16
+STAGE4_TUNE=2
+STAGE5_TUNE=3
+CHANNEL=3
 
 
 def get_dcps3packet(fstep, cstep,tuningbits_stage4 = 0b10,tuningbits_stage5 = 0b10):
@@ -74,7 +74,7 @@ def get_dcps3packet(fstep, cstep,tuningbits_stage4 = 0b10,tuningbits_stage5 = 0b
 
     #Fine Delay Stage
     for i in range(66):
-        if i == fstep - 1:
+        if i < fstep:
             # C bit
             i2c_array[i + 28] = 1
             # L bit

@@ -342,7 +342,7 @@ for i in range(1):
 
 
 i2c = busio.I2C(board.SCL, board.SDA)
-select_mux_channel(2)
+select_mux_channel(CHANNEL)
 i2c.deinit()
 # # i2c.try_lock()
 # # print(hex(i2c.scan()[0]))
