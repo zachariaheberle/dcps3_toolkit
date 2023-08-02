@@ -413,59 +413,6 @@ def plot_fine_consistency(data_save_folder, figure_save_folder, plot_all_runs=Fa
     plt.savefig(f"{figure_save_folder}/dcps3_fine_consistency_test.png", dpi=300, facecolor="#FFFFFF")
     plt.close()
 
-def plot_fine_cell_single(data_save_folder, figure_save_folder):
-    f = plt.figure(figsize=(16,4))
-    f.subplots_adjust(top=0.85, bottom=0.15, left=0.05, right=0.96)
-    coarse_control = 0
-    fine_control = 0
-    stage4_tune = 2
-    stage5_tune = 3
-    run = 0
-
-    try:
-        os.makedirs(figure_save_folder)
-    except FileExistsError:
-        pass
-
-    for channel in range(2, 3, 1):
-        run_data = []
-        for fine_control in range(66):
-            print(f"Calculating fine control: {fine_control} channel: {channel}")
-            run_name = f"/chan{channel}_f{fine_control}_c{coarse_control}_s4{stage4_tune}_s5{stage5_tune}_run{run}"
-            mean_val, std_err = get_data(data_save_folder, run_name)
-            run_data.append((fine_control, mean_val, std_err))
-        run_data = np.asarray(run_data)
-
-        x = run_data.T[0]
-        y = -1*(run_data.T[1]+200)%3125
-        yerr = run_data.T[2]
-        y = y-y[0]
-
-        # weighted_mean = np.average(y[1:], weights=1/yerr[1:]**2)
-        # err = weighted_std_dev(weighted_mean, y[1:], 1/yerr[1:]**2)
-
-        popt,pcov = np.polyfit(x[1:],y[1:],0,cov=True,w=1/yerr[1:]**2)
-        p_e = np.sqrt(np.diag(pcov))
-
-        weighted_mean = popt[0]
-        err = p_e[0]
-
-        ax = f.add_subplot(111)
-        ax.grid(True, alpha=0.5)
-        ax.axhline(y=weighted_mean, color='black',linewidth=1, linestyle='-.',label=f"Mean Delay All Runs\n{weighted_mean:4.3}+/-{err:4.2} [ps]")
-        ax.fill_between(x, weighted_mean+err, weighted_mean-err, color='orange', alpha=.5, label="Standard Error All Runs")
-        ax.errorbar(x, y, yerr, fmt='r.', ecolor='k', capsize=2, label="Cell Delay")
-
-        ax.set_ylim([-0.04, 0.5])
-
-        ax.set_ylabel("Delay [ps]")
-        ax.set_xlabel("Fine Delay Cell")
-        ax.set_xticks(range(66))
-        ax.set_xticklabels(range(66), rotation=45)
-        ax.legend(loc="upper left",fontsize=8)
-        ax.set_title(f"Fine Delay Cell Consistency Check\nChannel {channel}")
-    plt.savefig(f"{figure_save_folder}/dcps3_fine_cell_test.png", dpi=300, facecolor="#FFFFFF")
-
 def plot_fine_cell_consistency(data_save_folder, figure_save_folder):
     f = plt.figure(figsize=(10,264), dpi=100)
     f.subplots_adjust(top=0.997, bottom=0.003, hspace=0.5, wspace=0.3)
@@ -526,9 +473,9 @@ def plot_fine_cell_consistency(data_save_folder, figure_save_folder):
             ax.set_title(f"Fine Delay Cell Consistency Check\nChannel {channel}: Fine Cell {fine_control}")
     plt.savefig(f"{figure_save_folder}/dcps3_fine_cell_consistency_test.pdf", dpi=100, facecolor="#FFFFFF")
 
-def plot_fine_cell_relative_consistency_single(data_save_folder, figure_save_folder, plot_all_runs=False):
-    f = plt.figure(figsize=(16,4))
-    f.subplots_adjust(top=0.85, bottom=0.15, left=0.05, right=0.96)
+def plot_fine_cell_relative_consistency(data_save_folder, figure_save_folder, plot_all_runs=False):
+    f = plt.figure(figsize=(10,264), dpi=100)
+    f.subplots_adjust(top=0.997, bottom=0.003, hspace=0.5, wspace=0.3)
     coarse_control = 0
     fine_control = 0
     stage4_tune = 2
@@ -539,56 +486,104 @@ def plot_fine_cell_relative_consistency_single(data_save_folder, figure_save_fol
         os.makedirs(figure_save_folder)
     except FileExistsError:
         pass
+    if plot_all_runs:
+        try:
+            os.makedirs(f"{figure_save_folder}/fine_delay_relative_consistency_plots")
+        except FileExistsError:
+            pass
 
-    for channel in range(2, 3, 1):
-        run_data = []
-        for fine_control in range(66):
-            print(f"Calculating fine control: {fine_control} channel: {channel}")
-            run_name = f"/chan{channel}_f{fine_control}_c{coarse_control}_s4{stage4_tune}_s5{stage5_tune}_run{run}"
-            if fine_control != 0:
-                prev_run_name = f"chan{channel}_f{fine_control-1}_c{coarse_control}_s4{stage4_tune}_s5{stage5_tune}_run{run}"
+    for channel in range(2, 4, 1):
+        channel_data = []
+        for i, fine_control in enumerate(range(66)):
+            run_data = []
+            for run in range(10):
+                print(f"Calculating fine control: {fine_control} channel: {channel} run: {run}")
+                run_name = f"/chan{channel}_f{fine_control}_c{coarse_control}_s4{stage4_tune}_s5{stage5_tune}_run{run}"
+                if fine_control == 0:
+                    prev_run_name = run_name
+                else:
+                    prev_run_name = f"chan{channel}_f{fine_control-1}_c{coarse_control}_s4{stage4_tune}_s5{stage5_tune}_run{run}"
+                mean_val, std_err = get_data(data_save_folder, run_name)
+                prev_mean_val, prev_std_err = get_data(data_save_folder, prev_run_name)
+                mean_val = ((-1*(mean_val+200)%3125)-200) - ((-1*(prev_mean_val+200)%3125)-200)
+                run_data.append((run, mean_val, std_err))
+
+            run_data = np.asarray(run_data)
+
+            x = run_data.T[0]
+            y = run_data.T[1]
+            yerr = run_data.T[2]
+
+            if plot_all_runs:
+                channel_data.append((fine_control, y, yerr, x))
+
+            popt,pcov = np.polyfit(x[1:],y[1:],0,cov=True,w=1/yerr[1:]**2)
+            p_e = np.sqrt(np.diag(pcov))
+
+            weighted_mean = popt[0]
+            err = p_e[0]
+
+            ax = f.add_subplot(66, 2, channel-1 + 2*i)
+            ax.grid(True, alpha=0.5)
+            ax.axhline(y=weighted_mean, color='black', linewidth=1, linestyle='-.',label=f"Mean Delay All Runs\n{weighted_mean:4.3}+/-{err:4.2} [ps]")
+            ax.fill_between(x, weighted_mean+err, weighted_mean-err, color='orange', alpha=.5, label="Standard Error All Runs")
+            ax.errorbar(x, y, yerr, fmt='r.', ecolor='k', capsize=2, label="Relative Fine Delay")
+
+            if fine_control == 0:
+                ax.set_ylim([-0.1, 0.1])
             else:
-                prev_run_name = run_name
-            mean_val, std_err = get_data(data_save_folder, run_name)
-            prev_mean_val, prev_std_err = get_data(data_save_folder, prev_run_name)
-            mean_val = mean_val - prev_mean_val
-            run_data.append((fine_control, mean_val, std_err))
-        run_data = np.asarray(run_data)
+                ax.set_ylim([0, 0.65])
 
-        x = run_data.T[0]
-        y = -1*(run_data.T[1]+200)%3125
-        yerr = run_data.T[2]
-        y = y-y[0]
+            ax.set_ylabel("Relative Delay [ps]")
+            ax.set_xlabel("Fine Delay Cell")
+            ax.set_xticks(range(10))
+            ax.set_xticklabels(range(10))
+            ax.legend(loc="upper left",fontsize=8)
+            ax.set_title(f"Fine Delay Cell Relative Consistency Check\nChannel {channel} | Fine Cell {fine_control}")
+        
+        if plot_all_runs:
+            
+            for run in range(10):
+                x = []
+                y = []
+                yerr = []
+                for fine_control, y_run, y_run_err, runs in channel_data:
+                    x.append(fine_control)
+                    y.append(y_run[run])
+                    yerr.append(y_run_err[run])
+                
+                x = np.asarray(x)
+                y = np.asarray(y)
+                yerr = np.asarray(yerr)
+                
+                fig, ax = plt.subplots()
 
-        # weighted_mean = np.average(y[1:], weights=1/yerr[1:]**2)
-        # err = weighted_std_dev(weighted_mean, y[1:], 1/yerr[1:]**2)
+                popt,pcov = np.polyfit(x[1:],y[1:],0,cov=True,w=1/yerr[1:]**2)
+                p_e = np.sqrt(np.diag(pcov))
 
-        popt,pcov = np.polyfit(x[1:],y[1:],0,cov=True,w=1/yerr[1:]**2)
-        p_e = np.sqrt(np.diag(pcov))
+                weighted_mean = popt[0]
+                err = p_e[0]
 
-        weighted_mean = popt[0]
-        err = p_e[0]
-    
-        ax = f.add_subplot(111)
-        ax.grid(True, alpha=0.5)
-        ax.axhline(y=weighted_mean, color='black',linewidth=1, linestyle='-.',label=f"Mean Delay All Runs\n{weighted_mean:4.3}+/-{err:4.2} [ps]")
-        ax.fill_between(x, weighted_mean+err, weighted_mean-err, color='orange', alpha=.5, label="Standard Error All Runs")
-        ax.errorbar(x, y, yerr, fmt='r.', ecolor='k', capsize=2, label="Cell Delay")
+                ax.grid(True, alpha=0.5)
+                ax.axhline(y=weighted_mean, color='black', linewidth=1, linestyle='-.',label=f"Relative Mean Delay All Cells\n{weighted_mean:4.3}+/-{err:4.2} [ps]")
+                ax.fill_between(x, weighted_mean+err, weighted_mean-err, color='orange', alpha=.5, label="Standard Error All Cells")
+                ax.errorbar(x, y, yerr, fmt='r.', ecolor='k', capsize=2, label="Relative Fine Delay")
+                ax.set_title(f"Fine Delay Cell Relative Consistency Check\nChannel {channel} | Run {run}")
+                ax.set_ylim([-0.05, 0.6])
+                ax.legend(loc="lower right")
 
-        ax.set_ylim([-0.04, 0.5])
+                fig.savefig(f"{figure_save_folder}/fine_delay_relative_consistency_plots/relative_fine_delay_chan{channel}_run{run}.png", dpi=300, facecolor="#FFFFFF")
+                plt.close(fig)
 
-        ax.set_ylabel("Relative Delay [ps]")
-        ax.set_xlabel("Fine Delay Cell")
-        ax.set_xticks(range(66))
-        ax.set_xticklabels(range(66), rotation=45)
-        ax.legend(loc="upper left",fontsize=8)
-        ax.set_title(f"Fine Delay Cell Relative Consistency Check\nChannel {channel}")
-    plt.savefig(f"{figure_save_folder}/dcps3_fine_cell_relative_consistency_test.png", dpi=300, facecolor="#FFFFFF")
+
+                
+
+    f.savefig(f"{figure_save_folder}/dcps3_fine_cell_relative_consistency.pdf", dpi=100, facecolor="#FFFFFF")
+    plt.close()
 
 
 #plot_coarse_consistency(f"./dcps3Test/data/board1/N{N}_coarse", f"./dcps3Test/figures/board1", True)
-plot_fine_consistency(f"./dcps3Test/data/board1/N{N}_fine", f"./dcps3Test/figures/board1", True)
+#plot_fine_consistency(f"./dcps3Test/data/board1/N{N}_fine", f"./dcps3Test/figures/board1", True)
 #plot_coarse_cell_consistency(f"./dcps3Test/data/board1/N{N}_coarse", f"./dcps3Test/figures/board1")
 #plot_fine_cell_consistency(f"./dcps3Test/data/board1/N{N}_fine_cell", f"./dcps3Test/figures/board1")
-#plot_fine_cell_relative_consistency_single(f"./dcps3Test/data/board1/N{N}_fine/")
-#plot_fine_cell_set_consistency_single(f"./dcps3Test/data/board1/N{N}_fine_cell_set/")
+plot_fine_cell_relative_consistency(f"./dcps3Test/data/board1/N{N}_fine/", f"./dcps3Test/figures/board1", True)
