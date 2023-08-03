@@ -10,7 +10,7 @@ from tools.base import *
 from tools.ddmtd import ddmtd
 from time import sleep
 
-def data_acq(fine_control, coarse_control, stage4_tune, stage5_tune, channel, run, dcps_file="dcps_i2c.py", quiet=True):
+def data_acq(fine_control, coarse_control, stage4_tune, stage5_tune, channel, run, data_save_folder, dcps_file="dcps_i2c.py", quiet=True):
     """
     Function that will gather DCPS data with specified fine, coarse, stage4, stage5, channel, and dcps_file parameters.
     Will additionally transfer the data back to the local machine running this.
@@ -42,7 +42,7 @@ def run_coarse_delay_consistency_test(data_save_folder, num_runs=10, channels=[2
     for run in range(num_runs):
         for channel in channels:
             for coarse_control in range(0,32,1):
-                data_acq(fine_control, coarse_control, stage4_tune, stage5_tune, channel, run)
+                data_acq(fine_control, coarse_control, stage4_tune, stage5_tune, channel, run, data_save_folder)
                 if track_completion:
                     completed_loops += 1
                     print(f"run_coarse_delay_consistency_test: {(completed_loops/total_loops)*100:.3f}% complete")
@@ -63,7 +63,7 @@ def run_coarse_delay_cell_consistency_test(data_save_folder, num_runs=10, channe
     for run in range(num_runs):
         for channel in channels:
             for coarse_control in [0, 1, 2, 4, 8, 16]:
-                data_acq(fine_control, coarse_control, stage4_tune, stage5_tune, channel, run)
+                data_acq(fine_control, coarse_control, stage4_tune, stage5_tune, channel, run, data_save_folder)
                 if track_completion:
                     completed_loops += 1
                     print(f"run_coarse_delay_cell_consistency_test: {(completed_loops/total_loops)*100:.3f}% complete")
@@ -85,7 +85,7 @@ def run_fine_delay_consistency_test(data_save_folder, num_runs=10, channels=[2, 
     for run in range(num_runs):
         for channel in channels:
             for fine_control in range(0,67,1): 
-                data_acq(fine_control, coarse_control, stage4_tune, stage5_tune, channel, run)
+                data_acq(fine_control, coarse_control, stage4_tune, stage5_tune, channel, run, data_save_folder)
                 if track_completion:
                     completed_loops += 1
                     print(f"run_fine_delay_consistency_test: {(completed_loops/total_loops)*100:.3f}% complete")
@@ -108,7 +108,7 @@ def run_fine_delay_cell_consistency_test(data_save_folder, num_runs=10, channels
     for run in range(num_runs):
         for channel in channels:
             for fine_control in range(0,67,1): 
-                data_acq(fine_control, coarse_control, stage4_tune, stage5_tune, channel, run, dcps_file=dcps_file)
+                data_acq(fine_control, coarse_control, stage4_tune, stage5_tune, channel, run, data_save_folder, dcps_file=dcps_file)
                 if track_completion:
                     completed_loops += 1
                     print(f"run_fine_delay_cell_consistency_test: {(completed_loops/total_loops)*100:.3f}% complete")
@@ -130,7 +130,7 @@ def run_fine_delay_cell_set_consistency_test(data_save_folder, num_runs=10, chan
     for run in range(num_runs):
         for channel in channels:
             for fine_control in range(12): # eleven sets with 6 cells in each
-                data_acq(fine_control, coarse_control, stage4_tune, stage5_tune, channel, run, dcps_file=dcps_file)
+                data_acq(fine_control, coarse_control, stage4_tune, stage5_tune, channel, run, data_save_folder, dcps_file=dcps_file)
                 if track_completion:
                     completed_loops += 1
                     print(f"run_fine_delay_cell_set_consistency_test: {(completed_loops/total_loops)*100:.3f}% complete")
