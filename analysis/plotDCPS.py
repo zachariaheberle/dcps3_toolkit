@@ -168,7 +168,7 @@ def format_value_err(value, err):
 
 
 
-def plot_coarse_consistency(data_save_folder, figure_save_folder, plot_all_runs=False):
+def plot_coarse_consistency(data_save_folder, figure_save_folder, plot_all_runs=False, plot_sim=False):
     f = plt.figure(figsize=(10,4))
     f.subplots_adjust(wspace=0.3)
     coarse_control = 0
@@ -242,6 +242,30 @@ def plot_coarse_consistency(data_save_folder, figure_save_folder, plot_all_runs=
             if plot_all_runs:
                 fig, ax = plt.subplots()
 
+                if plot_sim:
+                    data = pd.read_csv("./dcps3Test/data/simulation/DCSP3_sims_coarse.csv", 
+                                        names = ["step", "00", "23", "13", "11", "12", "01"])
+                    
+                    y00 = np.asarray(data["00"][1:], dtype=np.float64)
+                    y00 = y00 - y00[0]
+                    y23 = np.asarray(data["23"][1:], dtype=np.float64)
+                    y23 = y23 - y23[0]
+                    y13 = np.asarray(data["13"][1:], dtype=np.float64)
+                    y13 = y13 - y13[0]
+                    y11 = np.asarray(data["11"][1:], dtype=np.float64)
+                    y11 = y11 - y11[0]
+                    y12 = np.asarray(data["12"][1:], dtype=np.float64)
+                    y12 = y12 - y12[0]
+                    y01 = np.asarray(data["01"][1:], dtype=np.float64)
+                    y01 = y01 - y01[0]
+
+                    ax.plot(x, y00, color="orange",  marker="o", markersize=3, linestyle='--', label="Simulation | S4: 0, S5: 0")
+                    ax.plot(x, y23, color="yellow",  marker="v", markersize=3, linestyle='--', label="Simulation | S4: 2, S5: 3")
+                    ax.plot(x, y13, color="green",   marker="^", markersize=3, linestyle='--', label="Simulation | S4: 1, S5: 3")
+                    ax.plot(x, y11, color="purple",  marker="<", markersize=3, linestyle='--', label="Simulation | S4: 1, S5: 1")
+                    ax.plot(x, y12, color="magenta", marker=">", markersize=3, linestyle='--', label="Simulation | S4: 1, S5: 2")
+                    ax.plot(x, y01, color="pink",    marker="s", markersize=3, linestyle='--', label="Simulation | S4: 0, S5: 1")
+
                 ax.grid(True, alpha=0.5)
                 ax.plot(x, popt[0]*x+popt[1],color="b",linestyle='--',label=f"Channel {channel} \n{format_value_err(popt[0], p_e[0])} [ps/step]")
                 ax.errorbar(x, y, yerr=yerr, fmt='r.', ecolor="black", capsize=2, label=f"Delay per Coarse Step")
@@ -249,7 +273,7 @@ def plot_coarse_consistency(data_save_folder, figure_save_folder, plot_all_runs=
                 ax.set_xlabel("Coarse Step")
                 ax.set_ylabel("Delay [ps]")
                 ax.legend()
-                ax.set_ylim([-5, 250])
+                ax.set_ylim([-5, 300])
 
                 plt.savefig(f"{figure_save_folder}/coarse_consistency_plots/coarse_delay_chan{channel}_run{run}.png", dpi=300, facecolor="#FFFFFF")
                 plt.close(fig)
@@ -351,7 +375,7 @@ def plot_coarse_cell_consistency(data_save_folder, figure_save_folder):
             ax.set_title(f"Coarse Delay Cell Consistency Check\nChannel {channel}: {stage4_tune} {stage5_tune}\nCell {coarse_control}")
     plt.savefig(f"{figure_save_folder}/dcps3_coarse_cell_consistency_test.png", dpi=300, facecolor="#FFFFFF")
 
-def plot_fine_consistency(data_save_folder, figure_save_folder, plot_all_runs=False):
+def plot_fine_consistency(data_save_folder, figure_save_folder, plot_all_runs=False, plot_sim=False):
     f = plt.figure(figsize=(10,4))
     f.subplots_adjust(wspace=0.3)
     coarse_control = 0
@@ -373,7 +397,7 @@ def plot_fine_consistency(data_save_folder, figure_save_folder, plot_all_runs=Fa
         channel_data = []
         for run in range(10):
             run_data = []
-            for fine_control in range(66):
+            for fine_control in range(67):
                 print(f"Calculating fine control: {fine_control} run: {run} channel: {channel}")
                 run_name = f"/chan{channel}_f{fine_control}_c{coarse_control}_s4{stage4_tune}_s5{stage5_tune}_run{run}"
                 mean_val, std_err = get_data(data_save_folder, run_name)
@@ -396,6 +420,21 @@ def plot_fine_consistency(data_save_folder, figure_save_folder, plot_all_runs=Fa
 
             if plot_all_runs:
                 fig, ax = plt.subplots()
+
+                if plot_sim:
+                    data = pd.read_csv("./dcps3Test/data/simulation/DCSP3_sims_fine.csv", 
+                                        names = ["step", "0", "16", "31"])
+                    
+                    y0 = np.asarray(data["0"][1:], dtype=np.float64)
+                    y0 = y0 - y0[0]
+                    y16 = np.asarray(data["16"][1:], dtype=np.float64)
+                    y16 = y16 - y16[0]
+                    y31 = np.asarray(data["31"][1:], dtype=np.float64)
+                    y31 = y31 - y31[0]
+
+                    ax.plot(x, y0, color="orange",   marker="o", markersize=3, linestyle='--', label="Simulation | C Step: 0")
+                    ax.plot(x, y16, color="yellow",  marker="v", markersize=3, linestyle='--', label="Simulation | C Step: 16")
+                    ax.plot(x, y31, color="green",   marker="^", markersize=3, linestyle='--', label="Simulation | C Step: 31")
 
                 ax.grid(True, alpha=0.5)
                 ax.plot(x, popt[0]*x+popt[1],color="b",linestyle='--',label=f"Channel {channel} \n{format_value_err(popt[0], p_e[0])} [fs/step]")
@@ -444,7 +483,7 @@ def plot_fine_consistency(data_save_folder, figure_save_folder, plot_all_runs=Fa
     plt.close()
 
 def plot_fine_cell_consistency(data_save_folder, figure_save_folder):
-    f = plt.figure(figsize=(10,264), dpi=100)
+    f = plt.figure(figsize=(10,268), dpi=100)
     f.subplots_adjust(top=0.997, bottom=0.003, hspace=0.5, wspace=0.3)
     coarse_control = 0
     fine_control = 0
@@ -457,7 +496,7 @@ def plot_fine_cell_consistency(data_save_folder, figure_save_folder):
         pass
 
     for channel in range(2, 4, 1):
-        for i, fine_control in enumerate(range(66)):
+        for i, fine_control in enumerate(range(67)):
             run_data = []
             for run in range(10):
                 print(f"Calculating fine control: {fine_control} run: {run} channel: {channel}")
@@ -488,7 +527,7 @@ def plot_fine_cell_consistency(data_save_folder, figure_save_folder):
                 weighted_mean -= offset
                 y = y - offset
         
-            ax = f.add_subplot(66, 2, channel-1 + 2*i)
+            ax = f.add_subplot(67, 2, channel-1 + 2*i)
             ax.grid(True, alpha=0.5)
             ax.axhline(y=weighted_mean, color='black',linewidth=1, linestyle='-.',label=f"Mean Delay All Runs\n{format_value_err(weighted_mean, err)} [fs]")
             ax.fill_between(x, weighted_mean+std_dev, weighted_mean-std_dev, color='orange', alpha=.5, label=f"\u03c3 All Runs\n{std_dev:.0f} [fs]")
@@ -505,7 +544,7 @@ def plot_fine_cell_consistency(data_save_folder, figure_save_folder):
     plt.savefig(f"{figure_save_folder}/dcps3_fine_cell_consistency_test.pdf", dpi=100, facecolor="#FFFFFF")
 
 def plot_fine_cell_relative_consistency(data_save_folder, figure_save_folder, plot_all_runs=False):
-    f = plt.figure(figsize=(10,264), dpi=100)
+    f = plt.figure(figsize=(10,268), dpi=100)
     f.subplots_adjust(top=0.997, bottom=0.003, hspace=0.5, wspace=0.3)
     coarse_control = 0
     fine_control = 0
@@ -525,7 +564,7 @@ def plot_fine_cell_relative_consistency(data_save_folder, figure_save_folder, pl
 
     for channel in range(2, 4, 1):
         channel_data = []
-        for i, fine_control in enumerate(range(66)):
+        for i, fine_control in enumerate(range(67)):
             run_data = []
             for run in range(10):
                 print(f"Calculating fine control: {fine_control} channel: {channel} run: {run}")
@@ -558,7 +597,7 @@ def plot_fine_cell_relative_consistency(data_save_folder, figure_save_folder, pl
             std_dev = weighted_std_dev(weighted_mean, y[1:], 1/yerr[1:]**2)
             err = p_e[0]
 
-            ax = f.add_subplot(66, 2, channel-1 + 2*i)
+            ax = f.add_subplot(67, 2, channel-1 + 2*i)
             ax.grid(True, alpha=0.5)
             ax.axhline(y=weighted_mean, color='black', linewidth=1, linestyle='-.',label=f"Mean Delay All Runs\n{format_value_err(weighted_mean, err)} [fs]")
             ax.fill_between(x, weighted_mean+std_dev, weighted_mean-std_dev, color='orange', alpha=.5, label=f"\u03c3 All Runs\n{std_dev:.0f} [fs]")
@@ -620,8 +659,8 @@ def plot_fine_cell_relative_consistency(data_save_folder, figure_save_folder, pl
     plt.close()
 
 
-#plot_coarse_consistency(f"./dcps3Test/data/board1/N{N}_coarse", f"./dcps3Test/figures/board1", True)
+plot_coarse_consistency(f"./dcps3Test/data/board1/N{N}_coarse", f"./dcps3Test/figures/board1", True)
 plot_fine_consistency(f"./dcps3Test/data/board1/N{N}_fine", f"./dcps3Test/figures/board1", True)
-#plot_coarse_cell_consistency(f"./dcps3Test/data/board1/N{N}_coarse", f"./dcps3Test/figures/board1")
+plot_coarse_cell_consistency(f"./dcps3Test/data/board1/N{N}_coarse", f"./dcps3Test/figures/board1")
 plot_fine_cell_consistency(f"./dcps3Test/data/board1/N{N}_fine_cell", f"./dcps3Test/figures/board1")
 plot_fine_cell_relative_consistency(f"./dcps3Test/data/board1/N{N}_fine/", f"./dcps3Test/figures/board1", True)
