@@ -570,7 +570,7 @@ def plot_fine_cell_relative_consistency(data_save_folder, figure_save_folder, pl
                 ax.set_ylim([0, 650])
 
             ax.set_ylabel("Relative Delay [fs]")
-            ax.set_xlabel("Fine Delay Cell")
+            ax.set_xlabel("Run Number")
             ax.set_xticks(range(10))
             ax.set_xticklabels(range(10))
             ax.legend(loc="upper left",fontsize=8)
