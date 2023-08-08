@@ -266,13 +266,27 @@ def plot_coarse_consistency(data_save_folder, figure_save_folder, plot_all_runs=
                     ax.plot(x, y11, color="purple",  marker="<", markersize=3, linestyle='--', label="Simulation | S4: 1, S5: 1")
                     ax.plot(x, y12, color="magenta", marker=">", markersize=3, linestyle='--', label="Simulation | S4: 1, S5: 2")
                     ax.plot(x, y01, color="pink",    marker="s", markersize=3, linestyle='--', label="Simulation | S4: 0, S5: 1")
+                
+                divider = make_axes_locatable(ax)
+                ax2 = divider.append_axes("bottom", size="40%", pad=0.1)
+                residuals = y - (popt[0]*x + popt[1])
+                residuals_std_dev = weighted_std_dev(0, residuals, yerr)
 
                 ax.grid(True, alpha=0.5)
                 ax.plot(x, popt[0]*x+popt[1],color="b",linestyle='--',label=f"Channel {channel} \n{format_value_err(popt[0], p_e[0])} [ps/step]")
                 ax.errorbar(x, y, yerr=yerr, fmt='r.', ecolor="black", capsize=2, label=f"Delay per Coarse Step")
+
+                ax2.grid(True, alpha=0.5)
+                ax2.axhline(y=0, color='blue',linewidth=1, linestyle='-.', label="Fit")
+                ax2.errorbar(x, residuals, yerr=yerr, fmt='r.', ecolor="black", capsize=2, label="Residuals")
+                ax2.fill_between(x, residuals_std_dev, -residuals_std_dev, color='orange', alpha=.5, label=f"Residual \u03c3\n{residuals_std_dev:4.2} [ps]")
+                ax2.legend(loc="upper right", fontsize=5)
+                ax2.set_ylim(-15, 15)
+
                 ax.set_title(f"Coarse Delay\nChannel {channel}: {stage4_tune} {stage5_tune} | Run {run}")
-                ax.set_xlabel("Coarse Step")
+                ax2.set_xlabel("Coarse Step")
                 ax.set_ylabel("Delay [ps]")
+                ax2.set_ylabel("Residual [ps]")
                 ax.legend()
                 ax.set_ylim([-5, 300])
 
@@ -505,15 +519,29 @@ def plot_fine_consistency(data_save_folder, figure_save_folder, plot_all_runs=Fa
                     ax.plot(x, y0, color="orange",   marker="o", markersize=3, linestyle='--', label="Simulation | C Step: 0")
                     ax.plot(x, y16, color="yellow",  marker="v", markersize=3, linestyle='--', label="Simulation | C Step: 16")
                     ax.plot(x, y31, color="green",   marker="^", markersize=3, linestyle='--', label="Simulation | C Step: 31")
+                
+                divider = make_axes_locatable(ax)
+                ax2 = divider.append_axes("bottom", size="40%", pad=0.1)
+                residuals = y - (popt[0]*x + popt[1])
+                residuals_std_dev = weighted_std_dev(0, residuals, yerr)
 
                 ax.grid(True, alpha=0.5)
-                ax.plot(x, popt[0]*x+popt[1],color="b",linestyle='--',label=f"Channel {channel} \n{format_value_err(popt[0], p_e[0])} [fs/step]")
-                ax.errorbar(x, y, yerr=yerr, fmt='r.', ecolor="black", capsize=2, label=f"Delay per Fine Step")
+                ax.plot(x, (popt[0]*x+popt[1])/1e3,color="b",linestyle='--',label=f"Channel {channel} \n{format_value_err(popt[0], p_e[0])} [fs/step]")
+                ax.errorbar(x, y/1e3, yerr=yerr/1e3, fmt='r.', ecolor="black", capsize=2, label=f"Delay per Fine Step")
+
+                ax2.grid(True, alpha=0.5)
+                ax2.axhline(y=0, color='blue',linewidth=1, linestyle='-.', label="Fit")
+                ax2.errorbar(x, residuals, yerr=yerr, fmt='r.', ecolor="black", capsize=2, label="Residuals")
+                ax2.fill_between(x, residuals_std_dev, -residuals_std_dev, color='orange', alpha=.5, label=f"Residual \u03c3\n{residuals_std_dev:.1f} [fs]")
+                ax2.legend(loc="upper right", fontsize=5)
+                ax2.set_ylim(-300, 300)
+
                 ax.set_title(f"Fine Delay\nChannel {channel}: {stage4_tune} {stage5_tune} | Run {run}")
-                ax.set_xlabel("Fine Step")
-                ax.set_ylabel("Delay [fs]")
+                ax2.set_xlabel("Fine Step")
+                ax.set_ylabel("Delay [ps]")
+                ax2.set_ylabel("Residual [fs]")
                 ax.legend()
-                ax.set_ylim([-500, 20000])
+                ax.set_ylim([-0.5, 20])
 
                 plt.savefig(f"{figure_save_folder}/fine_consistency_plots/fine_delay_chan{channel}_run{run}.png", dpi=300, facecolor="#FFFFFF")
                 plt.close(fig)
