@@ -377,6 +377,7 @@ def plot_coarse_stage_test(data_save_folder, figure_save_folder):
                 divider = make_axes_locatable(ax)
                 ax2 = divider.append_axes("bottom", size="30%", pad=0.1)
                 residuals = y - (popt[0]*x + popt[1])
+                residuals_std_dev = weighted_std_dev(0, residuals, yerr)
 
                 ax.grid(True, alpha=0.5)
                 ax.plot(x, popt[0]*x+popt[1],color="b",linestyle='--',label=f"Channel {channel} \n{format_value_err(popt[0], p_e[0])} [ps/step]\nReduced \u03c7\u00B2: {sum(residuals**2)/len(x):.3f}")
@@ -385,6 +386,7 @@ def plot_coarse_stage_test(data_save_folder, figure_save_folder):
                 ax2.grid(True, alpha=0.5)
                 ax2.axhline(y=0, color='blue',linewidth=1, linestyle='-.', label="Fit")
                 ax2.errorbar(x, residuals, yerr=yerr, fmt='r.', ecolor="black", capsize=2, label="Residuals")
+                ax2.fill_between(x, residuals_std_dev, -residuals_std_dev, color='orange', alpha=.5, label=f"Residual \u03c3\n{residuals_std_dev:4.2} [ps]")
                 ax2.legend(loc="upper right", fontsize=5)
                 ax2.set_ylim(-15, 15)
 
@@ -757,9 +759,9 @@ def plot_fine_cell_relative_consistency(data_save_folder, figure_save_folder, pl
     plt.close()
 
 
-plot_coarse_consistency(f"./dcps3Test/data/board1/N{N}_coarse", f"./dcps3Test/figures/board1", True)
+#plot_coarse_consistency(f"./dcps3Test/data/board1/N{N}_coarse", f"./dcps3Test/figures/board1", True)
 #plot_fine_consistency(f"./dcps3Test/data/board1/N{N}_fine", f"./dcps3Test/figures/board1", True)
 #plot_coarse_cell_consistency(f"./dcps3Test/data/board1/N{N}_coarse", f"./dcps3Test/figures/board1")
 #plot_fine_cell_consistency(f"./dcps3Test/data/board1/N{N}_fine_cell", f"./dcps3Test/figures/board1")
 #plot_fine_cell_relative_consistency(f"./dcps3Test/data/board1/N{N}_fine/", f"./dcps3Test/figures/board1", True)
-#plot_coarse_stage_test(f"./dcps3Test/data/board1/N{N}_coarse_stage_test", f"./dcps3Test/figures/board1")
+plot_coarse_stage_test(f"./dcps3Test/data/board1/N{N}_coarse_stage_test", f"./dcps3Test/figures/board1")
