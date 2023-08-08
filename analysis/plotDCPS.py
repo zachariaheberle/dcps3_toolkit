@@ -11,6 +11,7 @@ from tools.ddmtd import ddmtd
 from time import sleep
 
 import matplotlib
+from mpl_toolkits.axes_grid1 import make_axes_locatable
 matplotlib.style.available
 # import scienceplots
 # matplotlib.style.use(['seaborn-v0_8-darkgrid', 'science'])
@@ -312,6 +313,75 @@ def plot_coarse_consistency(data_save_folder, figure_save_folder, plot_all_runs=
         ax.set_title(f"Coarse Delay Consistency Check\nChannel {channel}: {stage4_tune} {stage5_tune}")
     plt.savefig(f"{figure_save_folder}/dcps3_coarse_consistency.png", dpi=300, facecolor="#FFFFFF")
     plt.close()
+
+def plot_coarse_stage_test(data_save_folder, figure_save_folder):
+    run = 0
+    coarse_control = 0
+    fine_control = 0
+    stage4_tune = 2
+    stage5_tune = 3
+
+    figure_save_folder += "/coarse_stage_tests"
+    print(figure_save_folder)
+    no_file = False
+
+    try:
+        os.makedirs(figure_save_folder)
+    except FileExistsError:
+        pass
+
+    for channel in range(2, 4, 1):
+        for stage4_tune in range(2, 4, 1):
+            for stage5_tune in range(2, 4, 1):
+                plot_data = []
+                for coarse_control in range(32):
+                    print(f"Calculating coarse control: {coarse_control} channel: {channel} s4: {stage4_tune} s5: {stage5_tune}")
+                    run_name = f"/chan{channel}_f{fine_control}_c{coarse_control}_s4{stage4_tune}_s5{stage5_tune}_run{run}"
+                    try:
+                        mean_val, std_err = get_data(data_save_folder, run_name)
+                    except FileNotFoundError:
+                        no_file = True
+                        break
+                    plot_data.append((coarse_control, mean_val, std_err))
+                
+                if no_file:
+                    no_file = False
+                    continue
+            
+                fig, ax = plt.subplots()
+
+                plot_data = np.asarray(plot_data)
+
+                x = plot_data.T[0]
+                y = ((lambda channel: -1 if channel==2 else 1)(channel))*(plot_data.T[1]+200)%3125
+                yerr = plot_data.T[2]
+                y = y - y[0]
+
+                popt,pcov = np.polyfit(x,y,1,cov=True,w=1/yerr**2)
+                p_e = np.sqrt(np.diag(pcov))
+
+                divider = make_axes_locatable(ax)
+                ax2 = divider.append_axes("bottom", size="30%", pad=0.1)
+                residuals = y - (popt[0]*x + popt[1])
+
+                ax.grid(True, alpha=0.5)
+                ax.plot(x, popt[0]*x+popt[1],color="b",linestyle='--',label=f"Channel {channel} \n{format_value_err(popt[0], p_e[0])} [ps/step]\nReduced \u03c7\u00B2: {sum(residuals**2)/len(x):.3f}")
+                ax.errorbar(x, y, yerr=yerr, fmt='r.', ecolor="black", capsize=2, label=f"Delay per Coarse Step")
+
+                ax2.grid(True, alpha=0.5)
+                ax2.axhline(y=0, color='blue',linewidth=1, linestyle='-.', label="Fit")
+                ax2.errorbar(x, residuals, yerr=yerr, fmt='r.', ecolor="black", capsize=2, label="Residuals")
+                ax2.legend(loc="upper right", fontsize=5)
+                ax2.set_ylim(-15, 15)
+
+                ax.set_title(f"Coarse Delay\nChannel {channel}: {stage4_tune} {stage5_tune}")
+                ax2.set_xlabel("Coarse Step")
+                ax.set_ylabel("Delay [ps]")
+                ax.legend(loc="upper left")
+                ax.set_ylim([-5, 300])
+
+                plt.savefig(f"{figure_save_folder}/coarse_plot_chan{channel}_s4{stage4_tune}_s5{stage5_tune}.png", dpi=300, facecolor="#FFFFFF", bbox_inches="tight")
+                plt.close()
 
 def plot_coarse_cell_consistency(data_save_folder, figure_save_folder):
     f = plt.figure(figsize=(10,24))
@@ -660,7 +730,8 @@ def plot_fine_cell_relative_consistency(data_save_folder, figure_save_folder, pl
 
 
 plot_coarse_consistency(f"./dcps3Test/data/board1/N{N}_coarse", f"./dcps3Test/figures/board1", True)
-plot_fine_consistency(f"./dcps3Test/data/board1/N{N}_fine", f"./dcps3Test/figures/board1", True)
-plot_coarse_cell_consistency(f"./dcps3Test/data/board1/N{N}_coarse", f"./dcps3Test/figures/board1")
-plot_fine_cell_consistency(f"./dcps3Test/data/board1/N{N}_fine_cell", f"./dcps3Test/figures/board1")
-plot_fine_cell_relative_consistency(f"./dcps3Test/data/board1/N{N}_fine/", f"./dcps3Test/figures/board1", True)
+#plot_fine_consistency(f"./dcps3Test/data/board1/N{N}_fine", f"./dcps3Test/figures/board1", True)
+#plot_coarse_cell_consistency(f"./dcps3Test/data/board1/N{N}_coarse", f"./dcps3Test/figures/board1")
+#plot_fine_cell_consistency(f"./dcps3Test/data/board1/N{N}_fine_cell", f"./dcps3Test/figures/board1")
+#plot_fine_cell_relative_consistency(f"./dcps3Test/data/board1/N{N}_fine/", f"./dcps3Test/figures/board1", True)
+#plot_coarse_stage_test(f"./dcps3Test/data/board1/N{N}_coarse_stage_test", f"./dcps3Test/figures/board1")
