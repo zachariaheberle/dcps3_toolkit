@@ -48,7 +48,7 @@ def get_data(data_save_folder, run_name, fit=True, draw=False):
     if fit:
         gauss_fit, _, count = data.drawTIE(sep='',fit=True,draw=False)
         mean_val, std_dev = gauss_fit[1]*1000, abs(gauss_fit[2])*1000
-        return mean_val, std_dev / np.sqrt(count)
+        return mean_val, std_dev, count
     else:
         mean_val = np.mean(np.concatenate((data.TIE_rise,data.TIE_fall)))*data.MULT_FACT*1000
         return mean_val
@@ -135,6 +135,12 @@ def find_offsets(x, y, yerr):
             #print(f"Error should be {min_err:.3f}, Offsets are {offset_8:.3f}, {offset_16:.3f}, {offset_24:.3f}")
             return offset_8, offset_16, offset_24 
 
+def reduced_chi2(residuals, std_devs):
+    total = 0
+    for residual, std_dev in zip(residuals, std_devs):
+        total += residual**2 / std_dev**2
+    return total / len(residuals) - 2 
+
 def format_value_err(value, err):
     """
     Outputs a formatted string to show value+/-err with proper
@@ -193,10 +199,11 @@ def plot_coarse_consistency(data_save_folder, figure_save_folder, plot_all_runs=
         for run in range(10):
             run_data = []
             for coarse_control in range(32):
-                print(f"Calculating coarse control: {coarse_control} run: {run} channel: {channel}")
+                #print(f"Calculating coarse control: {coarse_control} run: {run} channel: {channel}")
                 run_name = f"/chan{channel}_f{fine_control}_c{coarse_control}_s4{stage4_tune}_s5{stage5_tune}_run{run}"
-                mean_val, std_err = get_data(data_save_folder, run_name)
-                run_data.append((coarse_control, mean_val, std_err))
+                mean_val, std_dev, count = get_data(data_save_folder, run_name)
+                print(count)
+                run_data.append((coarse_control, mean_val, std_dev/np.sqrt(count)))
 
             run_data = np.asarray(run_data)
             x = run_data.T[0]
@@ -352,11 +359,11 @@ def plot_coarse_stage_test(data_save_folder, figure_save_folder):
                     print(f"Calculating coarse control: {coarse_control} channel: {channel} s4: {stage4_tune} s5: {stage5_tune}")
                     run_name = f"/chan{channel}_f{fine_control}_c{coarse_control}_s4{stage4_tune}_s5{stage5_tune}_run{run}"
                     try:
-                        mean_val, std_err = get_data(data_save_folder, run_name)
+                        mean_val, std_dev, count = get_data(data_save_folder, run_name)
                     except FileNotFoundError:
                         no_file = True
                         break
-                    plot_data.append((coarse_control, mean_val, std_err))
+                    plot_data.append((coarse_control, mean_val, std_dev/np.sqrt(count), std_dev))
                 
                 if no_file:
                     no_file = False
@@ -369,6 +376,7 @@ def plot_coarse_stage_test(data_save_folder, figure_save_folder):
                 x = plot_data.T[0]
                 y = ((lambda channel: -1 if channel==2 else 1)(channel))*(plot_data.T[1]+200)%3125
                 yerr = plot_data.T[2]
+                ystd_dev = plot_data.T[3]
                 y = y - y[0]
 
                 popt,pcov = np.polyfit(x,y,1,cov=True,w=1/yerr**2)
@@ -380,7 +388,7 @@ def plot_coarse_stage_test(data_save_folder, figure_save_folder):
                 residuals_std_dev = weighted_std_dev(0, residuals, yerr)
 
                 ax.grid(True, alpha=0.5)
-                ax.plot(x, popt[0]*x+popt[1],color="b",linestyle='--',label=f"Channel {channel} \n{format_value_err(popt[0], p_e[0])} [ps/step]\nReduced \u03c7\u00B2: {sum(residuals**2)/len(x):.3f}")
+                ax.plot(x, popt[0]*x+popt[1],color="b",linestyle='--',label=f"Channel {channel} \n{format_value_err(popt[0], p_e[0])} [ps/step]\nReduced \u03c7\u00B2: {reduced_chi2(residuals, ystd_dev):.3f}")
                 ax.errorbar(x, y, yerr=yerr, fmt='r.', ecolor="black", capsize=2, label=f"Delay per Coarse Step")
 
                 ax2.grid(True, alpha=0.5)
@@ -419,8 +427,8 @@ def plot_coarse_cell_consistency(data_save_folder, figure_save_folder):
             for run in range(10):
                 #print(f"Calculating coarse control: {coarse_control} run: {run} channel: {channel}")
                 run_name = f"/chan{channel}_f{fine_control}_c{coarse_control}_s4{stage4_tune}_s5{stage5_tune}_run{run}"
-                mean_val, std_err = get_data(data_save_folder, run_name)
-                run_data.append((run, mean_val, std_err))
+                mean_val, std_dev, count = get_data(data_save_folder, run_name)
+                run_data.append((run, mean_val, std_dev/np.sqrt(count)))
             run_data = np.asarray(run_data)
 
             x = run_data.T[0]
@@ -486,8 +494,8 @@ def plot_fine_consistency(data_save_folder, figure_save_folder, plot_all_runs=Fa
             for fine_control in range(67):
                 print(f"Calculating fine control: {fine_control} run: {run} channel: {channel}")
                 run_name = f"/chan{channel}_f{fine_control}_c{coarse_control}_s4{stage4_tune}_s5{stage5_tune}_run{run}"
-                mean_val, std_err = get_data(data_save_folder, run_name)
-                run_data.append((fine_control, mean_val, std_err))
+                mean_val, std_dev, count = get_data(data_save_folder, run_name)
+                run_data.append((fine_control, mean_val, std_dev/np.sqrt(count)))
             run_data = np.asarray(run_data)
             x = run_data.T[0]
             y = ((lambda channel: -1 if channel==2 else 1)(channel))*(run_data.T[1]+200)%3125 
@@ -601,8 +609,8 @@ def plot_fine_cell_consistency(data_save_folder, figure_save_folder):
             for run in range(10):
                 print(f"Calculating fine control: {fine_control} run: {run} channel: {channel}")
                 run_name = f"/chan{channel}_f{fine_control}_c{coarse_control}_s4{stage4_tune}_s5{stage5_tune}_run{run}"
-                mean_val, std_err = get_data(data_save_folder, run_name)
-                run_data.append((run, mean_val, std_err))
+                mean_val, std_dev, count = get_data(data_save_folder, run_name)
+                run_data.append((run, mean_val, std_dev/np.sqrt(count)))
             run_data = np.asarray(run_data)
 
             x = run_data.T[0]
@@ -673,12 +681,12 @@ def plot_fine_cell_relative_consistency(data_save_folder, figure_save_folder, pl
                     prev_run_name = run_name
                 else:
                     prev_run_name = f"chan{channel}_f{fine_control-1}_c{coarse_control}_s4{stage4_tune}_s5{stage5_tune}_run{run}"
-                mean_val, std_err = get_data(data_save_folder, run_name)
-                prev_mean_val, prev_std_err = get_data(data_save_folder, prev_run_name)
+                mean_val, std_dev, count = get_data(data_save_folder, run_name)
+                prev_mean_val, prev_std_dev, prev_count = get_data(data_save_folder, prev_run_name)
                 factor = ((lambda channel: -1 if channel==2 else 1)(channel))
                 mean_val = ((factor*(mean_val+200)%3125)-200) - ((factor*(prev_mean_val+200)%3125)-200)
                 if fine_control != 0:
-                    std_err = std_err + prev_std_err
+                    std_err = std_dev/np.sqrt(count) + prev_std_dev/np.sqrt(prev_count)
                 run_data.append((run, mean_val, std_err))
 
             run_data = np.asarray(run_data)
