@@ -5,6 +5,7 @@ from scipy.optimize import curve_fit
 import time
 import pandas as pd
 import os
+import sigfig
 
 from tools.base import *
 from tools.ddmtd import ddmtd
@@ -141,40 +142,6 @@ def reduced_chi2(residuals, std_devs):
         total += residual**2 / std_dev**2
     return total / len(residuals) - 2 
 
-def format_value_err(value, err):
-    """
-    Outputs a formatted string to show value+/-err with proper
-    significant figures.
-    """
-    if err == 0:
-        return f"{value}+/-{err}"
-    if err < 1:
-        dec_digits = -int(np.log10(err)) + 2
-        return f"{value:.{dec_digits}f}+/-{err:.{dec_digits}f}"
-    
-    elif err < 100:
-        dec_digits = -int(np.log10(err)) + 1
-        return f"{value:.{dec_digits}f}+/-{err:.{dec_digits}f}"
-    
-    else:
-        err = float(f"{err:.2g}")
-        err_power = int(np.log10(err))
-        value = round(value, -err_power+1)
-        if value != 0:
-            value_power = int(np.log10(value))
-            power_diff = value_power - err_power
-            if power_diff == -1:
-                return f"({str(value)[0]}+/-{str(err/10)[0:2]})e{value_power}"
-            elif power_diff == 0:
-                return f"({str(value)[0]}.{str(value)[1:-err_power-1]}+/-{str(err)[0]}.{str(err)[1]})e{value_power}"
-            else:
-                return f"({str(value)[0]}.{str(value)[1:-err_power-1]}+/-0.{'0'*(power_diff-1)}{str(err)[0:2]})e{value_power}"
-        else:
-            return f"(0+/-{str(err)[0]}.{str(err)[1]})e{err_power}"
-        
-
-
-
 def plot_coarse_consistency(data_save_folder, figure_save_folder, plot_all_runs=False, plot_sim=False):
     f = plt.figure(figsize=(10,4))
     f.subplots_adjust(wspace=0.3)
@@ -199,10 +166,9 @@ def plot_coarse_consistency(data_save_folder, figure_save_folder, plot_all_runs=
         for run in range(10):
             run_data = []
             for coarse_control in range(32):
-                #print(f"Calculating coarse control: {coarse_control} run: {run} channel: {channel}")
+                print(f"Calculating coarse control: {coarse_control} run: {run} channel: {channel}")
                 run_name = f"/chan{channel}_f{fine_control}_c{coarse_control}_s4{stage4_tune}_s5{stage5_tune}_run{run}"
                 mean_val, std_dev, count = get_data(data_save_folder, run_name)
-                print(count)
                 run_data.append((coarse_control, mean_val, std_dev/np.sqrt(count)))
 
             run_data = np.asarray(run_data)
@@ -280,13 +246,13 @@ def plot_coarse_consistency(data_save_folder, figure_save_folder, plot_all_runs=
                 residuals_std_dev = weighted_std_dev(0, residuals, yerr)
 
                 ax.grid(True, alpha=0.5)
-                ax.plot(x, popt[0]*x+popt[1],color="b",linestyle='--',label=f"Channel {channel} \n{format_value_err(popt[0], p_e[0])} [ps/step]")
+                ax.plot(x, popt[0]*x+popt[1],color="b",linestyle='--',label=f"Channel {channel} \n{sigfig.round(popt[0], p_e[0])} [ps/step]")
                 ax.errorbar(x, y, yerr=yerr, fmt='r.', ecolor="black", capsize=2, label=f"Delay per Coarse Step")
 
                 ax2.grid(True, alpha=0.5)
                 ax2.axhline(y=0, color='blue',linewidth=1, linestyle='-.', label="Fit")
                 ax2.errorbar(x, residuals, yerr=yerr, fmt='r.', ecolor="black", capsize=2, label="Residuals")
-                ax2.fill_between(x, residuals_std_dev, -residuals_std_dev, color='orange', alpha=.5, label=f"Residual \u03c3\n{residuals_std_dev:4.2} [ps]")
+                ax2.fill_between(x, residuals_std_dev, -residuals_std_dev, color='orange', alpha=.5, label=f"Residual \u03c3\n{sigfig.round(residuals_std_dev, p_e[0]).split(' ')[0]} [ps]")
                 ax2.legend(loc="upper right", fontsize=5)
                 ax2.set_ylim(-15, 15)
 
@@ -320,8 +286,8 @@ def plot_coarse_consistency(data_save_folder, figure_save_folder, plot_all_runs=
 
         ax = f.add_subplot(int(f"12{channel-1}"))
         ax.grid(True, alpha=0.5)
-        ax.axhline(y=weighted_mean, color='black',linewidth=1, linestyle='-.',label=f"Mean Delay Slope All Runs\n{format_value_err(weighted_mean, err)} [ps/step]")
-        ax.fill_between(x, weighted_mean+std_dev, weighted_mean-std_dev, color='orange', alpha=.5, label=f"\u03c3 All Runs\n{std_dev:4.2} [ps/step]")
+        ax.axhline(y=weighted_mean, color='black',linewidth=1, linestyle='-.',label=f"Mean Delay Slope All Runs\n{sigfig.round(weighted_mean, err)} [ps/step]")
+        ax.fill_between(x, weighted_mean+std_dev, weighted_mean-std_dev, color='orange', alpha=.5, label=f"\u03c3 All Runs\n{sigfig.round(std_dev, err).split(' ')[0]} [ps/step]")
         ax.errorbar(x, y, yerr=yerr, fmt='r.', ecolor="black", capsize=2, label=f"Delay per Coarse Step")
 
         ax.set_ylim([weighted_mean-0.2, weighted_mean+0.2])
@@ -343,7 +309,6 @@ def plot_coarse_stage_test(data_save_folder, figure_save_folder):
     stage5_tune = 3
 
     figure_save_folder += "/coarse_stage_tests"
-    print(figure_save_folder)
     no_file = False
 
     try:
@@ -388,13 +353,13 @@ def plot_coarse_stage_test(data_save_folder, figure_save_folder):
                 residuals_std_dev = weighted_std_dev(0, residuals, yerr)
 
                 ax.grid(True, alpha=0.5)
-                ax.plot(x, popt[0]*x+popt[1],color="b",linestyle='--',label=f"Channel {channel} \n{format_value_err(popt[0], p_e[0])} [ps/step]\nReduced \u03c7\u00B2: {reduced_chi2(residuals, ystd_dev):.3f}")
+                ax.plot(x, popt[0]*x+popt[1],color="b",linestyle='--',label=f"Channel {channel} \n{sigfig.round(popt[0], p_e[0])} [ps/step]\nReduced \u03c7\u00B2: {reduced_chi2(residuals, ystd_dev):.3f}")
                 ax.errorbar(x, y, yerr=yerr, fmt='r.', ecolor="black", capsize=2, label=f"Delay per Coarse Step")
 
                 ax2.grid(True, alpha=0.5)
                 ax2.axhline(y=0, color='blue',linewidth=1, linestyle='-.', label="Fit")
                 ax2.errorbar(x, residuals, yerr=yerr, fmt='r.', ecolor="black", capsize=2, label="Residuals")
-                ax2.fill_between(x, residuals_std_dev, -residuals_std_dev, color='orange', alpha=.5, label=f"Residual \u03c3\n{residuals_std_dev:4.2} [ps]")
+                ax2.fill_between(x, residuals_std_dev, -residuals_std_dev, color='orange', alpha=.5, label=f"Residual \u03c3\n{sigfig.round(residuals_std_dev, p_e[0]).split(' ')[0]} [ps]")
                 ax2.legend(loc="upper right", fontsize=5)
                 ax2.set_ylim(-15, 15)
 
@@ -425,7 +390,7 @@ def plot_coarse_cell_consistency(data_save_folder, figure_save_folder):
         for i, coarse_control in enumerate([0, 1, 2, 4, 8, 16]):
             run_data = []
             for run in range(10):
-                #print(f"Calculating coarse control: {coarse_control} run: {run} channel: {channel}")
+                print(f"Calculating coarse control: {coarse_control} run: {run} channel: {channel}")
                 run_name = f"/chan{channel}_f{fine_control}_c{coarse_control}_s4{stage4_tune}_s5{stage5_tune}_run{run}"
                 mean_val, std_dev, count = get_data(data_save_folder, run_name)
                 run_data.append((run, mean_val, std_dev/np.sqrt(count)))
@@ -455,8 +420,8 @@ def plot_coarse_cell_consistency(data_save_folder, figure_save_folder):
         
             ax = f.add_subplot(6, 2, channel-1 + 2*i)
             ax.grid(True, alpha=0.5)
-            ax.axhline(y=weighted_mean, color='black',linewidth=1, linestyle='-.',label=f"Mean Delay All Runs\n{format_value_err(weighted_mean, err)} [ps]")
-            ax.fill_between(x, weighted_mean+std_dev, weighted_mean-std_dev, color='orange', alpha=.5, label=f"\u03c3 All Runs\n{std_dev:4.2} [ps]")
+            ax.axhline(y=weighted_mean, color='black',linewidth=1, linestyle='-.',label=f"Mean Delay All Runs\n{sigfig.round(weighted_mean, err)} [ps]")
+            ax.fill_between(x, weighted_mean+std_dev, weighted_mean-std_dev, color='orange', alpha=.5, label=f"\u03c3 All Runs\n{sigfig.round(std_dev, err).split(' ')[0]} [ps]")
             ax.errorbar(x, y, yerr, fmt='r.', ecolor='k', capsize=2, label="Cell Delay")
 
             ax.set_ylim([weighted_mean-0.4, weighted_mean+0.4])
@@ -536,13 +501,13 @@ def plot_fine_consistency(data_save_folder, figure_save_folder, plot_all_runs=Fa
                 residuals_std_dev = weighted_std_dev(0, residuals, yerr)
 
                 ax.grid(True, alpha=0.5)
-                ax.plot(x, (popt[0]*x+popt[1])/1e3,color="b",linestyle='--',label=f"Channel {channel} \n{format_value_err(popt[0], p_e[0])} [fs/step]")
+                ax.plot(x, (popt[0]*x+popt[1])/1e3,color="b",linestyle='--',label=f"Channel {channel} \n{sigfig.round(popt[0], p_e[0])} [fs/step]")
                 ax.errorbar(x, y/1e3, yerr=yerr/1e3, fmt='r.', ecolor="black", capsize=2, label=f"Delay per Fine Step")
 
                 ax2.grid(True, alpha=0.5)
                 ax2.axhline(y=0, color='blue',linewidth=1, linestyle='-.', label="Fit")
                 ax2.errorbar(x, residuals, yerr=yerr, fmt='r.', ecolor="black", capsize=2, label="Residuals")
-                ax2.fill_between(x, residuals_std_dev, -residuals_std_dev, color='orange', alpha=.5, label=f"Residual \u03c3\n{residuals_std_dev:.1f} [fs]")
+                ax2.fill_between(x, residuals_std_dev, -residuals_std_dev, color='orange', alpha=.5, label=f"Residual \u03c3\n{sigfig.round(residuals_std_dev, p_e[0]).split(' ')[0]} [fs]")
                 ax2.legend(loc="upper right", fontsize=5)
                 ax2.set_ylim(-300, 300)
 
@@ -575,8 +540,8 @@ def plot_fine_consistency(data_save_folder, figure_save_folder, plot_all_runs=Fa
 
         ax = f.add_subplot(int(f"12{channel-1}"))
         ax.grid(True, alpha=0.5)
-        ax.axhline(y=weighted_mean, color='black',linewidth=1, linestyle='-.',label=f"Mean Delay Slope All Runs\n{format_value_err(weighted_mean, err)} [fs/step]")
-        ax.fill_between(x, weighted_mean+std_dev, weighted_mean-std_dev, color='orange', alpha=.5, label=f"\u03c3 All Runs\n{std_dev:.1f} [fs/step]")
+        ax.axhline(y=weighted_mean, color='black',linewidth=1, linestyle='-.',label=f"Mean Delay Slope All Runs\n{sigfig.round(weighted_mean, err)} [fs/step]")
+        ax.fill_between(x, weighted_mean+std_dev, weighted_mean-std_dev, color='orange', alpha=.5, label=f"\u03c3 All Runs\n{sigfig.round(std_dev, err).split(' ')[0]} [fs/step]")
         ax.errorbar(x, y, yerr=yerr, fmt='r.', ecolor="black", capsize=2, label=f"Delay per Fine Step")
 
         ax.set_ylim([weighted_mean-5, weighted_mean+5])
@@ -637,8 +602,8 @@ def plot_fine_cell_consistency(data_save_folder, figure_save_folder):
         
             ax = f.add_subplot(67, 2, channel-1 + 2*i)
             ax.grid(True, alpha=0.5)
-            ax.axhline(y=weighted_mean, color='black',linewidth=1, linestyle='-.',label=f"Mean Delay All Runs\n{format_value_err(weighted_mean, err)} [fs]")
-            ax.fill_between(x, weighted_mean+std_dev, weighted_mean-std_dev, color='orange', alpha=.5, label=f"\u03c3 All Runs\n{std_dev:.0f} [fs]")
+            ax.axhline(y=weighted_mean, color='black',linewidth=1, linestyle='-.',label=f"Mean Delay All Runs\n{sigfig.round(weighted_mean, err)} [fs]")
+            ax.fill_between(x, weighted_mean+std_dev, weighted_mean-std_dev, color='orange', alpha=.5, label=f"\u03c3 All Runs\n{sigfig.round(std_dev, err).split(' ')[0]} [fs]")
             ax.errorbar(x, y, yerr, fmt='r.', ecolor='k', capsize=2, label="Cell Delay")
 
             ax.set_ylim([weighted_mean-400, weighted_mean+400])
@@ -709,8 +674,8 @@ def plot_fine_cell_relative_consistency(data_save_folder, figure_save_folder, pl
 
             ax = f.add_subplot(67, 2, channel-1 + 2*i)
             ax.grid(True, alpha=0.5)
-            ax.axhline(y=weighted_mean, color='black', linewidth=1, linestyle='-.',label=f"Mean Delay All Runs\n{format_value_err(weighted_mean, err)} [fs]")
-            ax.fill_between(x, weighted_mean+std_dev, weighted_mean-std_dev, color='orange', alpha=.5, label=f"\u03c3 All Runs\n{std_dev:.0f} [fs]")
+            ax.axhline(y=weighted_mean, color='black', linewidth=1, linestyle='-.',label=f"Mean Delay All Runs\n{sigfig.round(weighted_mean, err)} [fs]")
+            ax.fill_between(x, weighted_mean+std_dev, weighted_mean-std_dev, color='orange', alpha=.5, label=f"\u03c3 All Runs\n{sigfig.round(std_dev, err).split(' ')[0]} [fs]")
             ax.errorbar(x, y, yerr, fmt='r.', ecolor='k', capsize=2, label="Relative Fine Delay")
 
             if fine_control == 0:
@@ -750,8 +715,8 @@ def plot_fine_cell_relative_consistency(data_save_folder, figure_save_folder, pl
                 err = p_e[0]
 
                 ax.grid(True, alpha=0.5)
-                ax.axhline(y=weighted_mean, color='black', linewidth=1, linestyle='-.',label=f"Relative Mean Delay All Cells\n{format_value_err(weighted_mean, err)} [fs]")
-                ax.fill_between(x, weighted_mean+std_dev, weighted_mean-std_dev, color='orange', alpha=.5, label=f"\u03c3 All Cells\n{std_dev:.0f} [fs]")
+                ax.axhline(y=weighted_mean, color='black', linewidth=1, linestyle='-.',label=f"Relative Mean Delay All Cells\n{sigfig.round(weighted_mean, err)} [fs]")
+                ax.fill_between(x, weighted_mean+std_dev, weighted_mean-std_dev, color='orange', alpha=.5, label=f"\u03c3 All Cells\n{sigfig.round(std_dev, err).split(' ')[0]} [fs]")
                 ax.errorbar(x, y, yerr, fmt='r.', ecolor='k', capsize=2, label="Relative Fine Delay")
                 ax.set_title(f"Fine Delay Cell Relative Consistency Check\nChannel {channel} | Run {run}")
                 ax.set_ylim([-50, 600])
@@ -769,9 +734,9 @@ def plot_fine_cell_relative_consistency(data_save_folder, figure_save_folder, pl
     plt.close()
 
 
-#plot_coarse_consistency(f"./dcps3Test/data/board1/N{N}_coarse", f"./dcps3Test/figures/board1", True)
-#plot_fine_consistency(f"./dcps3Test/data/board1/N{N}_fine", f"./dcps3Test/figures/board1", True)
-#plot_coarse_cell_consistency(f"./dcps3Test/data/board1/N{N}_coarse", f"./dcps3Test/figures/board1")
-#plot_fine_cell_consistency(f"./dcps3Test/data/board1/N{N}_fine_cell", f"./dcps3Test/figures/board1")
-#plot_fine_cell_relative_consistency(f"./dcps3Test/data/board1/N{N}_fine/", f"./dcps3Test/figures/board1", True)
+plot_coarse_consistency(f"./dcps3Test/data/board1/N{N}_coarse", f"./dcps3Test/figures/board1", True)
+plot_fine_consistency(f"./dcps3Test/data/board1/N{N}_fine", f"./dcps3Test/figures/board1", True)
+plot_coarse_cell_consistency(f"./dcps3Test/data/board1/N{N}_coarse", f"./dcps3Test/figures/board1")
+plot_fine_cell_consistency(f"./dcps3Test/data/board1/N{N}_fine_cell", f"./dcps3Test/figures/board1")
+plot_fine_cell_relative_consistency(f"./dcps3Test/data/board1/N{N}_fine/", f"./dcps3Test/figures/board1", True)
 plot_coarse_stage_test(f"./dcps3Test/data/board1/N{N}_coarse_stage_test", f"./dcps3Test/figures/board1")
