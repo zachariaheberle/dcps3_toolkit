@@ -214,7 +214,7 @@ def plot_coarse_consistency(data_save_folder, figure_save_folder, plot_all_runs=
             p_e = np.sqrt(np.diag(pcov))
 
             if plot_all_runs:
-                fig, ax = plt.subplots()
+                fig, ax = plt.subplots() # Line plots
 
                 if plot_sim:
                     data = pd.read_csv("./dcps3Test/data/simulation/DCSP3_sims_coarse.csv", 
@@ -265,6 +265,19 @@ def plot_coarse_consistency(data_save_folder, figure_save_folder, plot_all_runs=
 
                 plt.savefig(f"{figure_save_folder}/coarse_consistency_plots/coarse_delay_chan{channel}_run{run}.png", dpi=300, facecolor="#FFFFFF")
                 plt.close(fig)
+
+                fig, ax = plt.subplots() # Histogram plots
+
+                ax.hist(residuals, bins=np.arange(-15.5, 15.5, 1), label=f"Residual \u03c3\n{sigfig.round(residuals_std_dev, p_e[0]).split(' ')[0]} [ps]")
+
+                ax.grid(True, alpha=0.5)
+                ax.set_title(f"Coarse Delay\nChannel {channel}: {stage4_tune} {stage5_tune} Residuals")
+                ax.set_xlabel("Delay Offset From Fit [ps]")
+                ax.set_ylabel("Counts")
+                ax.legend(loc="upper left")
+
+                plt.savefig(f"{figure_save_folder}/coarse_consistency_plots/coarse_delay_chan{channel}_run{run}_residuals.png", dpi=300, facecolor="#FFFFFF")
+                plt.close()
             
             slope_data.append((run, popt[0], p_e[0]))
     
@@ -334,7 +347,7 @@ def plot_coarse_stage_test(data_save_folder, figure_save_folder):
                     no_file = False
                     continue
             
-                fig, ax = plt.subplots()
+                fig, ax = plt.subplots() # Line plots
 
                 plot_data = np.asarray(plot_data)
 
@@ -370,6 +383,19 @@ def plot_coarse_stage_test(data_save_folder, figure_save_folder):
                 ax.set_ylim([-5, 300])
 
                 plt.savefig(f"{figure_save_folder}/coarse_plot_chan{channel}_s4{stage4_tune}_s5{stage5_tune}.png", dpi=300, facecolor="#FFFFFF", bbox_inches="tight")
+                plt.close()
+
+                fig, ax = plt.subplots() # Histogram plots
+
+                ax.hist(residuals, bins=np.arange(-15.5, 15.5, 1), label=f"Residual \u03c3\n{sigfig.round(residuals_std_dev, p_e[0]).split(' ')[0]} [ps]")
+
+                ax.grid(True, alpha=0.5)
+                ax.set_title(f"Coarse Delay\nChannel {channel}: {stage4_tune} {stage5_tune} Residuals")
+                ax.set_xlabel("Delay Offset From Fit [ps]")
+                ax.set_ylabel("Counts")
+                ax.legend(loc="upper left")
+
+                plt.savefig(f"{figure_save_folder}/coarse_plot_chan{channel}_s4{stage4_tune}_s5{stage5_tune}_residuals.png", dpi=300, facecolor="#FFFFFF", bbox_inches="tight")
                 plt.close()
 
 def plot_coarse_cell_consistency(data_save_folder, figure_save_folder):
@@ -519,6 +545,19 @@ def plot_fine_consistency(data_save_folder, figure_save_folder, plot_all_runs=Fa
                 ax.set_ylim([-0.5, 20])
 
                 plt.savefig(f"{figure_save_folder}/fine_consistency_plots/fine_delay_chan{channel}_run{run}.png", dpi=300, facecolor="#FFFFFF")
+                plt.close(fig)
+
+                fig, ax = plt.subplots() # Histogram plots
+
+                ax.hist(residuals, bins=np.arange(-310, 330, 20), label=f"Residual \u03c3\n{sigfig.round(residuals_std_dev, p_e[0]).split(' ')[0]} [fs]")
+
+                ax.grid(True, alpha=0.5)
+                ax.set_title(f"Fine Delay\nChannel {channel}: {stage4_tune} {stage5_tune} Residuals")
+                ax.set_xlabel("Delay Offset From Fit [fs]")
+                ax.set_ylabel("Counts")
+                ax.legend(loc="upper left")
+
+                plt.savefig(f"{figure_save_folder}/fine_consistency_plots/fine_delay_chan{channel}_run{run}_residuals.png", dpi=300, facecolor="#FFFFFF")
                 plt.close(fig)
             
             slope_data.append((run, popt[0], p_e[0]))
@@ -736,7 +775,7 @@ def plot_fine_cell_relative_consistency(data_save_folder, figure_save_folder, pl
 
 plot_coarse_consistency(f"./dcps3Test/data/board1/N{N}_coarse", f"./dcps3Test/figures/board1", True)
 plot_fine_consistency(f"./dcps3Test/data/board1/N{N}_fine", f"./dcps3Test/figures/board1", True)
-plot_coarse_cell_consistency(f"./dcps3Test/data/board1/N{N}_coarse", f"./dcps3Test/figures/board1")
-plot_fine_cell_consistency(f"./dcps3Test/data/board1/N{N}_fine_cell", f"./dcps3Test/figures/board1")
-plot_fine_cell_relative_consistency(f"./dcps3Test/data/board1/N{N}_fine/", f"./dcps3Test/figures/board1", True)
-plot_coarse_stage_test(f"./dcps3Test/data/board1/N{N}_coarse_stage_test", f"./dcps3Test/figures/board1")
+#plot_coarse_cell_consistency(f"./dcps3Test/data/board1/N{N}_coarse", f"./dcps3Test/figures/board1")
+#plot_fine_cell_consistency(f"./dcps3Test/data/board1/N{N}_fine_cell", f"./dcps3Test/figures/board1")
+#plot_fine_cell_relative_consistency(f"./dcps3Test/data/board1/N{N}_fine/", f"./dcps3Test/figures/board1", True)
+#plot_coarse_stage_test(f"./dcps3Test/data/board1/N{N}_coarse_stage_test", f"./dcps3Test/figures/board1")
