@@ -317,8 +317,8 @@ def plot_coarse_stage_test(data_save_folder, figure_save_folder):
         pass
 
     for channel in range(2, 4, 1):
-        for stage4_tune in range(2, 4, 1):
-            for stage5_tune in range(2, 4, 1):
+        for stage4_tune in [0, 2, 3]:
+            for stage5_tune in [0, 2, 3]:
                 plot_data = []
                 for coarse_control in range(32):
                     print(f"Calculating coarse control: {coarse_control} channel: {channel} s4: {stage4_tune} s5: {stage5_tune}")
