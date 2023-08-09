@@ -687,6 +687,8 @@ def plot_fine_cell_relative_consistency(data_save_folder, figure_save_folder, pl
                 mean_val = ((factor*(mean_val+200)%3125)-200) - ((factor*(prev_mean_val+200)%3125)-200)
                 if fine_control != 0:
                     std_err = std_dev/np.sqrt(count) + prev_std_dev/np.sqrt(prev_count)
+                else:
+                    std_err = std_dev/np.sqrt(count)
                 run_data.append((run, mean_val, std_err))
 
             run_data = np.asarray(run_data)
