@@ -772,10 +772,11 @@ def plot_fine_cell_relative_consistency(data_save_folder, figure_save_folder, pl
     f.savefig(f"{figure_save_folder}/dcps3_fine_cell_relative_consistency.pdf", dpi=100, facecolor="#FFFFFF")
     plt.close()
 
+BOARD = "board0"
 
-plot_coarse_consistency(f"./dcps3Test/data/board1/N{N}_coarse", f"./dcps3Test/figures/board1", True)
-plot_fine_consistency(f"./dcps3Test/data/board1/N{N}_fine", f"./dcps3Test/figures/board1", True)
-#plot_coarse_cell_consistency(f"./dcps3Test/data/board1/N{N}_coarse", f"./dcps3Test/figures/board1")
-#plot_fine_cell_consistency(f"./dcps3Test/data/board1/N{N}_fine_cell", f"./dcps3Test/figures/board1")
-#plot_fine_cell_relative_consistency(f"./dcps3Test/data/board1/N{N}_fine/", f"./dcps3Test/figures/board1", True)
-#plot_coarse_stage_test(f"./dcps3Test/data/board1/N{N}_coarse_stage_test", f"./dcps3Test/figures/board1")
+plot_coarse_consistency(f"./dcps3Test/data/{BOARD}/N{N}_coarse", f"./dcps3Test/figures/{BOARD}", True)
+plot_fine_consistency(f"./dcps3Test/data/{BOARD}/N{N}_fine", f"./dcps3Test/figures/{BOARD}", True)
+plot_coarse_cell_consistency(f"./dcps3Test/data/{BOARD}/N{N}_coarse", f"./dcps3Test/figures/{BOARD}")
+plot_fine_cell_consistency(f"./dcps3Test/data/{BOARD}/N{N}_fine_cell", f"./dcps3Test/figures/{BOARD}")
+plot_fine_cell_relative_consistency(f"./dcps3Test/data/{BOARD}/N{N}_fine/", f"./dcps3Test/figures/{BOARD}", True)
+plot_coarse_stage_test(f"./dcps3Test/data/{BOARD}/N{N}_coarse_stage_test", f"./dcps3Test/figures/{BOARD}")
