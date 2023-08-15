@@ -374,20 +374,29 @@ def plot_coarse_stage_test(data_save_folder, figure_save_folder):
                 ax2.errorbar(x, residuals, yerr=yerr, fmt='r.', ecolor="black", capsize=2, label="Residuals")
                 ax2.fill_between(x, residuals_std_dev, -residuals_std_dev, color='orange', alpha=.5, label=f"Residual \u03c3\n{sigfig.round(residuals_std_dev, p_e[0]).split(' ')[0]} [ps]")
                 ax2.legend(loc="upper right", fontsize=5)
-                ax2.set_ylim(-15, 15)
+                if stage4_tune == 0 or stage5_tune == 0:
+                    pass
+                else:
+                    ax2.set_ylim([-15, 15])
 
                 ax.set_title(f"Coarse Delay\nChannel {channel}: {stage4_tune} {stage5_tune}")
                 ax2.set_xlabel("Coarse Step")
                 ax.set_ylabel("Delay [ps]")
                 ax.legend(loc="upper left")
-                ax.set_ylim([-5, 300])
+                if stage4_tune == 0 or stage5_tune == 0:
+                    ax.set_ylim([-5, 200])
+                else:
+                    ax.set_ylim([-5, 260])
 
                 plt.savefig(f"{figure_save_folder}/coarse_plot_chan{channel}_s4{stage4_tune}_s5{stage5_tune}.png", dpi=300, facecolor="#FFFFFF", bbox_inches="tight")
                 plt.close()
 
                 fig, ax = plt.subplots() # Histogram plots
 
-                ax.hist(residuals, bins=np.arange(-15.5, 15.5, 1), label=f"Residual \u03c3\n{sigfig.round(residuals_std_dev, p_e[0]).split(' ')[0]} [ps]")
+                if stage4_tune == 0 or stage5_tune == 0:
+                    ax.hist(residuals, bins=np.arange(-50.5, 50.5, 5), label=f"Residual \u03c3\n{sigfig.round(residuals_std_dev, p_e[0]).split(' ')[0]} [ps]")
+                else:
+                    ax.hist(residuals, bins=np.arange(-15.5, 15.5, 1), label=f"Residual \u03c3\n{sigfig.round(residuals_std_dev, p_e[0]).split(' ')[0]} [ps]")
 
                 ax.grid(True, alpha=0.5)
                 ax.set_title(f"Coarse Delay\nChannel {channel}: {stage4_tune} {stage5_tune} Residuals")
