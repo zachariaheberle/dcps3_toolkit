@@ -173,7 +173,7 @@ def plot_coarse_consistency(data_save_folder, figure_save_folder, plot_all_runs=
 
             run_data = np.asarray(run_data)
             x = run_data.T[0]
-            y = ((lambda channel: -1 if channel==2 else 1)(channel))*(run_data.T[1]+200)%3125
+            y = ((lambda channel: -1 if channel==2 else 1)(channel))*(run_data.T[1]+300)%3125
             yerr = run_data.T[2]
             y = y-y[0]
 
@@ -211,7 +211,6 @@ def plot_coarse_consistency(data_save_folder, figure_save_folder, plot_all_runs=
             y = adjust_offsets(y, offset_8, offset_16, offset_24)
 
             popt,pcov = np.polyfit(x,y,1,cov=True,w=1/yerr**2)
-            p_e = np.sqrt(np.diag(pcov))
 
             if plot_all_runs:
                 fig, ax = plt.subplots() # Line plots
@@ -233,12 +232,12 @@ def plot_coarse_consistency(data_save_folder, figure_save_folder, plot_all_runs=
                     y01 = np.asarray(data["01"][1:], dtype=np.float64)
                     y01 = y01 - y01[0]
 
-                    ax.plot(x, y00, color="orange",  marker="o", markersize=3, linestyle='--', label="Simulation | S4: 0, S5: 0")
-                    ax.plot(x, y23, color="yellow",  marker="v", markersize=3, linestyle='--', label="Simulation | S4: 2, S5: 3")
-                    ax.plot(x, y13, color="green",   marker="^", markersize=3, linestyle='--', label="Simulation | S4: 1, S5: 3")
-                    ax.plot(x, y11, color="purple",  marker="<", markersize=3, linestyle='--', label="Simulation | S4: 1, S5: 1")
-                    ax.plot(x, y12, color="magenta", marker=">", markersize=3, linestyle='--', label="Simulation | S4: 1, S5: 2")
-                    ax.plot(x, y01, color="pink",    marker="s", markersize=3, linestyle='--', label="Simulation | S4: 0, S5: 1")
+                    #ax.plot(x, y00, color="orange",  marker="o", markersize=3, linestyle='--', label="Simulation | S4: 0, S5: 0")
+                    ax.plot(x, y23, color="purple",  marker="v", markersize=3, linestyle='--', label="Simulation | S4: 2, S5: 3")
+                    #ax.plot(x, y13, color="green",   marker="^", markersize=3, linestyle='--', label="Simulation | S4: 1, S5: 3")
+                    #ax.plot(x, y11, color="purple",  marker="<", markersize=3, linestyle='--', label="Simulation | S4: 1, S5: 1")
+                    #ax.plot(x, y12, color="magenta", marker=">", markersize=3, linestyle='--', label="Simulation | S4: 1, S5: 2")
+                    #ax.plot(x, y01, color="pink",    marker="s", markersize=3, linestyle='--', label="Simulation | S4: 0, S5: 1")
                 
                 divider = make_axes_locatable(ax)
                 ax2 = divider.append_axes("bottom", size="40%", pad=0.1)
@@ -352,7 +351,7 @@ def plot_coarse_stage_test(data_save_folder, figure_save_folder):
                 plot_data = np.asarray(plot_data)
 
                 x = plot_data.T[0]
-                y = ((lambda channel: -1 if channel==2 else 1)(channel))*(plot_data.T[1]+200)%3125
+                y = ((lambda channel: -1 if channel==2 else 1)(channel))*(plot_data.T[1]+300)%3125
                 yerr = plot_data.T[2]
                 ystd_dev = plot_data.T[3]
                 y = y - y[0]
@@ -432,7 +431,7 @@ def plot_coarse_cell_consistency(data_save_folder, figure_save_folder):
             run_data = np.asarray(run_data)
 
             x = run_data.T[0]
-            y = ((lambda channel: -1 if channel==2 else 1)(channel))*(run_data.T[1]+200)%3125
+            y = ((lambda channel: -1 if channel==2 else 1)(channel))*(run_data.T[1]+300)%3125
             yerr = run_data.T[2]
 
             # weighted_mean = np.average(y, weights=1/yerr**2)
@@ -501,7 +500,7 @@ def plot_coarse_step_relative_consistency(data_save_folder, figure_save_folder, 
                 mean_val, std_dev, count = get_data(data_save_folder, run_name)
                 prev_mean_val, prev_std_dev, prev_count = get_data(data_save_folder, prev_run_name)
                 factor = ((lambda channel: -1 if channel==2 else 1)(channel))
-                mean_val = ((factor*(mean_val+200)%3125)-200) - ((factor*(prev_mean_val+200)%3125)-200)
+                mean_val = ((factor*(mean_val+300)%3125)-300) - ((factor*(prev_mean_val+300)%3125)-300)
                 if coarse_control != 0:
                     std_err = std_dev/np.sqrt(count) + prev_std_dev/np.sqrt(prev_count)
                 else:
@@ -611,7 +610,7 @@ def plot_fine_consistency(data_save_folder, figure_save_folder, plot_all_runs=Fa
                 run_data.append((fine_control, mean_val, std_dev/np.sqrt(count)))
             run_data = np.asarray(run_data)
             x = run_data.T[0]
-            y = ((lambda channel: -1 if channel==2 else 1)(channel))*(run_data.T[1]+200)%3125 
+            y = ((lambda channel: -1 if channel==2 else 1)(channel))*(run_data.T[1]+300)%3125 
             yerr = run_data.T[2] * 1000 #-> convert to femtoseconds
             y = (y-y[0]) * 1000 # -> convert to femtoseconds
 
@@ -639,9 +638,9 @@ def plot_fine_consistency(data_save_folder, figure_save_folder, plot_all_runs=Fa
                     y31 = np.asarray(data["31"][1:], dtype=np.float64)
                     y31 = y31 - y31[0]
 
-                    ax.plot(x, y0, color="orange",   marker="o", markersize=3, linestyle='--', label="Simulation | C Step: 0")
-                    ax.plot(x, y16, color="yellow",  marker="v", markersize=3, linestyle='--', label="Simulation | C Step: 16")
-                    ax.plot(x, y31, color="green",   marker="^", markersize=3, linestyle='--', label="Simulation | C Step: 31")
+                    ax.plot(x, y0/1e3, color="magenta",   marker="o", markersize=3, linestyle='--', label="Simulation | Coarse Step: 0")
+                    #ax.plot(x, y16, color="yellow",  marker="v", markersize=3, linestyle='--', label="Simulation | C Step: 16")
+                    #ax.plot(x, y31, color="green",   marker="^", markersize=3, linestyle='--', label="Simulation | C Step: 31")
                 
                 divider = make_axes_locatable(ax)
                 ax2 = divider.append_axes("bottom", size="40%", pad=0.1)
@@ -740,7 +739,7 @@ def plot_fine_cell_consistency(data_save_folder, figure_save_folder):
             run_data = np.asarray(run_data)
 
             x = run_data.T[0]
-            y = (((lambda channel: -1 if channel==2 else 1)(channel))*(run_data.T[1]+200)%3125) * 1000 # convert to femtoseconds
+            y = (((lambda channel: -1 if channel==2 else 1)(channel))*(run_data.T[1]+300)%3125) * 1000 # convert to femtoseconds
             yerr = run_data.T[2] * 1000 # convert to femtoseconds
 
             # weighted_mean = np.average(y, weights=1/yerr**2)
@@ -810,7 +809,7 @@ def plot_fine_cell_relative_consistency(data_save_folder, figure_save_folder, pl
                 mean_val, std_dev, count = get_data(data_save_folder, run_name)
                 prev_mean_val, prev_std_dev, prev_count = get_data(data_save_folder, prev_run_name)
                 factor = ((lambda channel: -1 if channel==2 else 1)(channel))
-                mean_val = ((factor*(mean_val+200)%3125)-200) - ((factor*(prev_mean_val+200)%3125)-200)
+                mean_val = ((factor*(mean_val+300)%3125)-300) - ((factor*(prev_mean_val+300)%3125)-300)
                 if fine_control != 0:
                     std_err = std_dev/np.sqrt(count) + prev_std_dev/np.sqrt(prev_count)
                 else:
@@ -896,9 +895,10 @@ def plot_fine_cell_relative_consistency(data_save_folder, figure_save_folder, pl
 
 BOARD = "board0"
 
-plot_coarse_consistency(f"./dcps3Test/data/{BOARD}/N{N}_coarse", f"./dcps3Test/figures/{BOARD}", True)
-plot_fine_consistency(f"./dcps3Test/data/{BOARD}/N{N}_fine", f"./dcps3Test/figures/{BOARD}", True)
-plot_coarse_cell_consistency(f"./dcps3Test/data/{BOARD}/N{N}_coarse", f"./dcps3Test/figures/{BOARD}")
-plot_fine_cell_consistency(f"./dcps3Test/data/{BOARD}/N{N}_fine_cell", f"./dcps3Test/figures/{BOARD}")
-plot_fine_cell_relative_consistency(f"./dcps3Test/data/{BOARD}/N{N}_fine/", f"./dcps3Test/figures/{BOARD}", True)
-plot_coarse_stage_test(f"./dcps3Test/data/{BOARD}/N{N}_coarse_stage_test", f"./dcps3Test/figures/{BOARD}")
+plot_coarse_consistency(f"./dcps3Test/data/{BOARD}/N{N}_coarse", f"./dcps3Test/figures/{BOARD}", True, False)
+plot_fine_consistency(f"./dcps3Test/data/{BOARD}/N{N}_fine", f"./dcps3Test/figures/{BOARD}", True, False)
+#plot_coarse_cell_consistency(f"./dcps3Test/data/{BOARD}/N{N}_coarse", f"./dcps3Test/figures/{BOARD}")
+#plot_fine_cell_consistency(f"./dcps3Test/data/{BOARD}/N{N}_fine_cell", f"./dcps3Test/figures/{BOARD}")
+#plot_fine_cell_relative_consistency(f"./dcps3Test/data/{BOARD}/N{N}_fine/", f"./dcps3Test/figures/{BOARD}", True)
+#plot_coarse_stage_test(f"./dcps3Test/data/{BOARD}/N{N}_coarse_stage_test", f"./dcps3Test/figures/{BOARD}")
+#plot_coarse_step_relative_consistency(f"./dcps3Test/data/{BOARD}/N{N}_coarse", f"./dcps3Test/figures/{BOARD}", True)
