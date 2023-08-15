@@ -460,6 +460,119 @@ def plot_coarse_cell_consistency(data_save_folder, figure_save_folder):
             ax.set_title(f"Coarse Delay Cell Consistency Check\nChannel {channel}: {stage4_tune} {stage5_tune}\nCell {coarse_control}")
     plt.savefig(f"{figure_save_folder}/dcps3_coarse_cell_consistency_test.png", dpi=300, facecolor="#FFFFFF")
 
+def plot_coarse_step_relative_consistency(data_save_folder, figure_save_folder, plot_all_runs=False):
+    f = plt.figure(figsize=(10,128), dpi=100)
+    f.subplots_adjust(top=0.994, bottom=0.006, hspace=0.5, wspace=0.3)
+    coarse_control = 0
+    fine_control = 0
+    stage4_tune = 2
+    stage5_tune = 3
+
+    try:
+        os.makedirs(figure_save_folder)
+    except FileExistsError:
+        pass
+    if plot_all_runs:
+        try:
+            os.makedirs(f"{figure_save_folder}/coarse_delay_relative_consistency_plots")
+        except FileExistsError:
+            pass
+
+    for channel in range(2, 4, 1):
+        channel_data = []
+        for i, coarse_control in enumerate(range(32)):
+            run_data = []
+            for run in range(10):
+                print(f"Calculating coarse control: {coarse_control} run: {run} channel: {channel}")
+                run_name = f"/chan{channel}_f{fine_control}_c{coarse_control}_s4{stage4_tune}_s5{stage5_tune}_run{run}"
+                if coarse_control == 0:
+                    prev_run_name = run_name
+                else:
+                    prev_run_name = f"/chan{channel}_f{fine_control}_c{coarse_control-1}_s4{stage4_tune}_s5{stage5_tune}_run{run}"
+                mean_val, std_dev, count = get_data(data_save_folder, run_name)
+                prev_mean_val, prev_std_dev, prev_count = get_data(data_save_folder, prev_run_name)
+                factor = ((lambda channel: -1 if channel==2 else 1)(channel))
+                mean_val = ((factor*(mean_val+200)%3125)-200) - ((factor*(prev_mean_val+200)%3125)-200)
+                if coarse_control != 0:
+                    std_err = std_dev/np.sqrt(count) + prev_std_dev/np.sqrt(prev_count)
+                else:
+                    std_err = std_dev/np.sqrt(count)
+                run_data.append((run, mean_val, std_err))
+                
+            run_data = np.asarray(run_data)
+
+            x = run_data.T[0]
+            y = run_data.T[1]
+            yerr = run_data.T[2]
+
+            if plot_all_runs:
+                channel_data.append((coarse_control, y, yerr, x))
+
+            popt,pcov = np.polyfit(x[1:],y[1:],0,cov=True,w=1/yerr[1:]**2)
+            p_e = np.sqrt(np.diag(pcov))
+
+            weighted_mean = popt[0]
+            std_dev = weighted_std_dev(weighted_mean, y[1:], 1/yerr[1:]**2)
+            err = p_e[0]
+
+            ax = f.add_subplot(32, 2, channel-1 + 2*i)
+            ax.grid(True, alpha=0.5)
+            ax.axhline(y=weighted_mean, color='black', linewidth=1, linestyle='-.',label=f"Mean Delay All Runs\n{sigfig.round(weighted_mean, err)} [ps]")
+            ax.fill_between(x, weighted_mean+std_dev, weighted_mean-std_dev, color='orange', alpha=.5, label=f"\u03c3 All Runs\n{sigfig.round(std_dev, err).split(' ')[0]} [ps]")
+            ax.errorbar(x, y, yerr, fmt='r.', ecolor='k', capsize=2, label="Relative Coarse Delay")
+
+            ax.set_ylim([weighted_mean-0.6, weighted_mean+0.6])
+
+            ax.set_ylabel("Relative Delay [ps]")
+            ax.set_xlabel("Run Number")
+            ax.set_xticks(range(10))
+            ax.set_xticklabels(range(10))
+            ax.legend(loc="upper left",fontsize=8)
+            ax.set_title(f"Coarse Delay Relative Consistency Check\nChannel {channel} | Coarse Step {coarse_control}")
+        
+        if plot_all_runs:
+            
+            for run in range(10):
+                x = []
+                y = []
+                yerr = []
+                for coarse_control, y_run, y_run_err, runs in channel_data:
+                    x.append(coarse_control)
+                    y.append(y_run[run])
+                    yerr.append(y_run_err[run])
+                
+                x = np.asarray(x)
+                y = np.asarray(y)
+                yerr = np.asarray(yerr)
+                
+                fig, ax = plt.subplots()
+
+                popt,pcov = np.polyfit(x[1:],y[1:],0,cov=True,w=1/yerr[1:]**2)
+                p_e = np.sqrt(np.diag(pcov))
+
+                weighted_mean = popt[0]
+                std_dev = weighted_std_dev(weighted_mean, y[1:], 1/yerr[1:]**2)
+                err = p_e[0]
+
+                ax.grid(True, alpha=0.5)
+                ax.axhline(y=weighted_mean, color='black', linewidth=1, linestyle='-.',label=f"Relative Mean Delay All Steps\n{sigfig.round(weighted_mean, err)} [ps]")
+                ax.fill_between(x, weighted_mean+std_dev, weighted_mean-std_dev, color='orange', alpha=.5, label=f"\u03c3 All Steps\n{sigfig.round(std_dev, err).split(' ')[0]} [ps]")
+                ax.errorbar(x, y, yerr, fmt='r.', ecolor='k', capsize=2, label="Relative Coarse Step Delay")
+                ax.set_title(f"Coarse Delay Relative Consistency Check\nChannel {channel} | Run {run}")
+                ax.set_ylim([-.1, 15])
+                ax.set_xlabel("Coarse Delay Step")
+                ax.set_ylabel("Delay [ps]")
+                ax.legend(loc="lower right")
+
+                fig.savefig(f"{figure_save_folder}/coarse_delay_relative_consistency_plots/relative_coarse_delay_chan{channel}_run{run}.png", dpi=300, facecolor="#FFFFFF")
+                plt.close(fig)
+
+
+                
+
+    f.savefig(f"{figure_save_folder}/dcps3_coarse_step_relative_consistency.pdf", dpi=100, facecolor="#FFFFFF")
+    plt.close()
+
 def plot_fine_consistency(data_save_folder, figure_save_folder, plot_all_runs=False, plot_sim=False):
     f = plt.figure(figsize=(10,4))
     f.subplots_adjust(wspace=0.3)
