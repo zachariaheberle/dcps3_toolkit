@@ -502,7 +502,7 @@ def plot_coarse_step_relative_consistency(data_save_folder, figure_save_folder, 
                 factor = ((lambda channel: -1 if channel==2 else 1)(channel))
                 mean_val = ((factor*(mean_val+300)%3125)-300) - ((factor*(prev_mean_val+300)%3125)-300)
                 if coarse_control != 0:
-                    std_err = std_dev/np.sqrt(count) + prev_std_dev/np.sqrt(prev_count)
+                    std_err = np.sqrt((std_dev/np.sqrt(count))**2 + (prev_std_dev/np.sqrt(prev_count))**2)
                 else:
                     std_err = std_dev/np.sqrt(count)
                 run_data.append((run, mean_val, std_err))
@@ -811,7 +811,7 @@ def plot_fine_cell_relative_consistency(data_save_folder, figure_save_folder, pl
                 factor = ((lambda channel: -1 if channel==2 else 1)(channel))
                 mean_val = ((factor*(mean_val+300)%3125)-300) - ((factor*(prev_mean_val+300)%3125)-300)
                 if fine_control != 0:
-                    std_err = std_dev/np.sqrt(count) + prev_std_dev/np.sqrt(prev_count)
+                    std_err = np.sqrt((std_dev/np.sqrt(count))**2 + (prev_std_dev/np.sqrt(prev_count))**2)
                 else:
                     std_err = std_dev/np.sqrt(count)
                 run_data.append((run, mean_val, std_err))
@@ -895,10 +895,10 @@ def plot_fine_cell_relative_consistency(data_save_folder, figure_save_folder, pl
 
 BOARD = "board0"
 
-plot_coarse_consistency(f"./dcps3Test/data/{BOARD}/N{N}_coarse", f"./dcps3Test/figures/{BOARD}", True, False)
-plot_fine_consistency(f"./dcps3Test/data/{BOARD}/N{N}_fine", f"./dcps3Test/figures/{BOARD}", True, False)
+#plot_coarse_consistency(f"./dcps3Test/data/{BOARD}/N{N}_coarse", f"./dcps3Test/figures/{BOARD}", True, False)
+#plot_fine_consistency(f"./dcps3Test/data/{BOARD}/N{N}_fine", f"./dcps3Test/figures/{BOARD}", True, False)
 #plot_coarse_cell_consistency(f"./dcps3Test/data/{BOARD}/N{N}_coarse", f"./dcps3Test/figures/{BOARD}")
 #plot_fine_cell_consistency(f"./dcps3Test/data/{BOARD}/N{N}_fine_cell", f"./dcps3Test/figures/{BOARD}")
-#plot_fine_cell_relative_consistency(f"./dcps3Test/data/{BOARD}/N{N}_fine/", f"./dcps3Test/figures/{BOARD}", True)
+plot_fine_cell_relative_consistency(f"./dcps3Test/data/{BOARD}/N{N}_fine/", f"./dcps3Test/figures/{BOARD}", True)
 #plot_coarse_stage_test(f"./dcps3Test/data/{BOARD}/N{N}_coarse_stage_test", f"./dcps3Test/figures/{BOARD}")
-#plot_coarse_step_relative_consistency(f"./dcps3Test/data/{BOARD}/N{N}_coarse", f"./dcps3Test/figures/{BOARD}", True)
+plot_coarse_step_relative_consistency(f"./dcps3Test/data/{BOARD}/N{N}_coarse", f"./dcps3Test/figures/{BOARD}", True)
