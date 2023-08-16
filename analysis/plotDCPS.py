@@ -208,9 +208,12 @@ def plot_coarse_consistency(data_save_folder, figure_save_folder, plot_all_runs=
         for x, y, yerr, run in channel_data:
             #offset_8, offset_16, offset_24 = offset_data[run]
 
-            y = adjust_offsets(y, offset_8, offset_16, offset_24)
+            adjusted_y = adjust_offsets(y, offset_8, offset_16, offset_24)
 
-            popt,pcov = np.polyfit(x,y,1,cov=True,w=1/yerr**2)
+            popt,pcov = np.polyfit(x,adjusted_y,1,cov=True,w=1/yerr**2) # Get only error from adjusted slope
+            p_e = np.sqrt(np.diag(pcov))
+            popt, pcov = np.polyfit(x,y,1,cov=True,w=1/yerr**2) # Get actual slope from raw data
+
 
             if plot_all_runs:
                 fig, ax = plt.subplots() # Line plots
@@ -893,12 +896,12 @@ def plot_fine_cell_relative_consistency(data_save_folder, figure_save_folder, pl
     f.savefig(f"{figure_save_folder}/dcps3_fine_cell_relative_consistency.pdf", dpi=100, facecolor="#FFFFFF")
     plt.close()
 
-BOARD = "board0"
+BOARD = "board1"
 
-#plot_coarse_consistency(f"./dcps3Test/data/{BOARD}/N{N}_coarse", f"./dcps3Test/figures/{BOARD}", True, False)
-#plot_fine_consistency(f"./dcps3Test/data/{BOARD}/N{N}_fine", f"./dcps3Test/figures/{BOARD}", True, False)
-#plot_coarse_cell_consistency(f"./dcps3Test/data/{BOARD}/N{N}_coarse", f"./dcps3Test/figures/{BOARD}")
-#plot_fine_cell_consistency(f"./dcps3Test/data/{BOARD}/N{N}_fine_cell", f"./dcps3Test/figures/{BOARD}")
+plot_coarse_consistency(f"./dcps3Test/data/{BOARD}/N{N}_coarse", f"./dcps3Test/figures/{BOARD}", True, True)
+plot_fine_consistency(f"./dcps3Test/data/{BOARD}/N{N}_fine", f"./dcps3Test/figures/{BOARD}", True, True)
+plot_coarse_cell_consistency(f"./dcps3Test/data/{BOARD}/N{N}_coarse", f"./dcps3Test/figures/{BOARD}")
+plot_fine_cell_consistency(f"./dcps3Test/data/{BOARD}/N{N}_fine_cell", f"./dcps3Test/figures/{BOARD}")
 plot_fine_cell_relative_consistency(f"./dcps3Test/data/{BOARD}/N{N}_fine/", f"./dcps3Test/figures/{BOARD}", True)
-#plot_coarse_stage_test(f"./dcps3Test/data/{BOARD}/N{N}_coarse_stage_test", f"./dcps3Test/figures/{BOARD}")
+plot_coarse_stage_test(f"./dcps3Test/data/{BOARD}/N{N}_coarse_stage_test", f"./dcps3Test/figures/{BOARD}")
 plot_coarse_step_relative_consistency(f"./dcps3Test/data/{BOARD}/N{N}_coarse", f"./dcps3Test/figures/{BOARD}", True)
