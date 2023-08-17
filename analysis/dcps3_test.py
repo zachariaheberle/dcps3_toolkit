@@ -160,7 +160,29 @@ def run_fine_delay_cell_set_consistency_test(data_save_folder, num_runs=10, chan
                     
     return 0
 
+def run_coarse_fine_test(data_save_folder, num_runs=1, channels=[2, 3], track_completion=True):
+    coarse_control = 0
+    fine_control = 0 
+    stage4_tune = 2
+    stage5_tune = 3
+    channel = 2
+    dcps_file = "dcps_i2c_fine_cell_set_test.py"
+    total_loops = num_runs * len(channels) * 32 * 67
+    completed_loops = 0
 
+    subprocess.run(f"mkdir -p {data_save_folder}", shell=True) #create those directories
+    subprocess.run(f"rsync ../rpi_side/dcps_i2c.py {server}:/home/pi/rpi_dcps/dcps_i2c.py", shell=True) # Transfer dcps_i2c file
+
+    for run in range(num_runs):
+        for channel in channels:
+            for coarse_control in range(32):
+                for fine_control in range(67):
+                    data_acq(fine_control, coarse_control, stage4_tune, stage5_tune, channel, run, data_save_folder, dcps_file=dcps_file)
+                    if track_completion:
+                        completed_loops += 1
+                        print(f"run_coarse_fine_consistency_test: {(completed_loops/total_loops)*100:.3f}% complete")
+                    
+    return 0
 
 
 
@@ -220,3 +242,4 @@ subprocess.run(f"scp {server}:Flash_Firmware/data/ddmtd2.txt {data_save_folder+r
 #run_coarse_delay_cell_consistency_test(f"./dcps3Test/data/N{N}_coarse_cell/")
 #run_fine_delay_cell_consistency_test(f"./dcps3Test/data/N{N}_fine_cell/")
 #run_fine_delay_cell_set_consistency_test(f"./dcps3Test/data/N{N}_fine_cell_set/")
+#run_coarse_fine_test(data_save_folder, num_runs=1, channels=[2, 3], track_completion=True)
