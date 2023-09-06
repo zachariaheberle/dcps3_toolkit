@@ -8,7 +8,7 @@ server=common_vars.server
 
 def initialize(N, freq):
     """
-    Initializes the Nexys-ddmtd-dcps boards with the correct PLL configuration
+    Initializes the Nexys-ddmtd-dcps boards with the correct PLL configurations
     and prepares them for taking data
     """
 
@@ -20,18 +20,24 @@ def initialize(N, freq):
     runBash(f"rsync -ra ../rpi_side/Flash_Firmware {server}:")
     runBash(f"../rpi_side/runAtNex.sh bin/check_firmware.exe 0 1 {server}") #flash the configuration file
 
-    pll_config_folder="../rpi_side/PLL_Conf"
+    ddmtd_pll_config_folder="../rpi_side/PLL_Conf/ddmtd_side"
+    dcps_pll_config_folder="../rpi_side/PLL_Conf/dcps_side"
 
     ## Configuring the PLL. This needs to be done everytime the board is restarted/ loses power.
     ##Selecting the Register File##
 
-    pll_config = f"{pll_config_folder}/{freq}MHz_{N//1000}k.h" #Selecting the configuration according to N, freq
+    ddmtd_pll_config = f"{ddmtd_pll_config_folder}/{freq}MHz_{N//1000}k.h" #Selecting the configuration according to N, freq
+    dcps_pll_config = f"{ddmtd_pll_config_folder}/test{freq}MHz.h"
 
-    print("Using PLL Config: \n ",pll_config)
+    print("Using PLL Config: \n ",ddmtd_pll_config)
     print("\n\n")
-    runBash(f"scp {pll_config} {server}:Flash_Firmware/include/Si5344_REG.h") #Copy the config to the RPi as Si5344
+    runBash(f"scp {ddmtd_pll_config} {server}:Flash_Firmware/include/Si5344_REG.h") #Copy the config to the RPi as Si5344
+    runBash(f"scp {dcps_pll_config} {server}:~/rpi_dcps/pll_config/Si5344_REG.h")
     ## Compile and Running configuration script
     runBash(f"../rpi_side/runAtNex.sh bin/ddmtd_pll.exe 1 1 {server}") #flash the configuration file and compile programs
+    runBash(f"../rpi_side/flash_dcpsPLL.sh test{freq}MHz.h {server}")
+
+    
 
 def data_acq(fine_control, coarse_control, stage4_tune, stage5_tune, channel, run, data_save_folder, dcps_file="dcps_i2c.py", show=False, measure_temp=False):
     """

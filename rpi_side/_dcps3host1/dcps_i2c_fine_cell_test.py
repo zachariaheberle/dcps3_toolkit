@@ -1,3 +1,4 @@
+# Written for DCPS3 HOST1 Board
 import os
 import sys
 import time
@@ -74,7 +75,7 @@ def get_dcps3packet(fstep, cstep,tuningbits_stage4 = 0b10,tuningbits_stage5 = 0b
 
     #Fine Delay Stage
     for i in range(66):
-        if i % 11 == fstep - 1: # creates 11 sets of 6 active cells. use -> "for fstep in range(12)" for fine_control values
+        if i == fstep - 1:
             # C bit
             i2c_array[i + 28] = 1
             # L bit
@@ -410,7 +411,6 @@ i2c.writeto( 0x70,get_dcps3packet(FINE_CONTROL,COARSE_CONTROL, STAGE4_TUNE&0b11,
 
 i2c.unlock()
 CLK_ENB.value = True
-
 
 
 
