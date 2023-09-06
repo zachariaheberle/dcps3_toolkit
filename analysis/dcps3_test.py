@@ -5,16 +5,21 @@ from scipy.optimize import curve_fit
 import time
 import pandas as pd
 import subprocess
+import pyvisa
 
 from tools.base import *
 from tools.ddmtd import ddmtd
 from time import sleep
 
-def data_acq(fine_control, coarse_control, stage4_tune, stage5_tune, channel, run, data_save_folder, dcps_file="dcps_i2c.py", quiet=True):
+def data_acq(fine_control, coarse_control, stage4_tune, stage5_tune, channel, run, data_save_folder, dcps_file="dcps_i2c.py", quiet=True, temp_test=True):
     """
     Function that will gather DCPS data with specified fine, coarse, stage4, stage5, channel, and dcps_file parameters.
     Will additionally transfer the data back to the local machine running this.
     """
+    def get_temp():
+        result = subprocess.run("sudo python3 ~/Work/dcps3_toolkit/analysis/temp_test.py", capture_output=True, shell=True)
+        return float(result.stdout.decode())
+    
     if quiet:
         stdout = subprocess.DEVNULL
     else:
@@ -26,6 +31,14 @@ def data_acq(fine_control, coarse_control, stage4_tune, stage5_tune, channel, ru
     run_name = f"chan{channel}_f{fine_control}_c{coarse_control}_s4{stage4_tune}_s5{stage5_tune}_run{run}"
     subprocess.run(f"scp {server}:Flash_Firmware/data/ddmtd1.txt {data_save_folder+run_name}_ddmtd1.txt", shell=True, stdout=stdout)
     subprocess.run(f"scp {server}:Flash_Firmware/data/ddmtd2.txt {data_save_folder+run_name}_ddmtd2.txt", shell=True, stdout=stdout)
+    
+    if temp_test:
+        temp = get_temp()
+
+        with open(f"{data_save_folder}_temp_info.txt", "a") as fp:
+            if fp.tell() == 0:
+                fp.write("Channel,Fine control,Coarse control,Stage 4 tune, Stage 5 tune, Run, Temperature (C)\n")
+            fp.write(f"{channel},{fine_control},{coarse_control},{stage4_tune},{stage5_tune},{run},{temp}\n")
 
 def run_coarse_stage_test(data_save_folder, num_runs=1, stage4_tunes=[2, 3], stage5_tunes=[2, 3], channels=[2, 3], track_completion = True):
     coarse_control = 0
@@ -96,8 +109,8 @@ def run_coarse_delay_cell_consistency_test(data_save_folder, num_runs=10, channe
 def run_fine_delay_consistency_test(data_save_folder, num_runs=10, channels=[2, 3], track_completion=True):
     coarse_control = 0
     fine_control = 0 
-    stage4_tune = 2
-    stage5_tune = 3
+    stage4_tune = 0
+    stage5_tune = 0
     channel = 2
     total_loops = num_runs * len(channels) * len(range(67))
     completed_loops = 0
@@ -118,8 +131,8 @@ def run_fine_delay_consistency_test(data_save_folder, num_runs=10, channels=[2, 
 def run_fine_delay_cell_consistency_test(data_save_folder, num_runs=10, channels=[2, 3], track_completion=True):
     coarse_control = 0
     fine_control = 0 
-    stage4_tune = 2
-    stage5_tune = 3
+    stage4_tune = 0
+    stage5_tune = 0
     channel = 2
     dcps_file = "dcps_i2c_fine_cell_test.py"
     total_loops = num_runs * len(channels) * len(range(67))
@@ -140,8 +153,8 @@ def run_fine_delay_cell_consistency_test(data_save_folder, num_runs=10, channels
 def run_fine_delay_cell_set_consistency_test(data_save_folder, num_runs=10, channels=[2, 3], track_completion=True):
     coarse_control = 0
     fine_control = 0 
-    stage4_tune = 2
-    stage5_tune = 3
+    stage4_tune = 0
+    stage5_tune = 0
     channel = 2
     dcps_file = "dcps_i2c_fine_cell_set_test.py"
     total_loops = num_runs * len(channels) * len(range(12))
@@ -184,6 +197,24 @@ def run_coarse_fine_test(data_save_folder, num_runs=1, channels=[2, 3], track_co
                     
     return 0
 
+def sanity_check():
+    from plotDCPS import get_data
+    test_folder = "./dcps3Test/data/test/"
+    subprocess.run(f"mkdir -p {test_folder}", shell=True) #create those directories
+
+    for channel in [2, 3]:
+        data_acq(0, 0, 2, 3, channel, 0, test_folder)
+        data_acq(0, 31, 2, 3, channel, 0, test_folder)
+
+        mean0, _, _ = get_data(test_folder, f"chan{channel}_f0_c0_s42_s53_run0")
+        mean31, _, _ = get_data(test_folder, f"chan{channel}_f0_c31_s42_s53_run0")
+
+        mean0 = (mean0+300)%3125
+        mean31 = (mean31+300)%3125
+
+        if abs(mean31 - mean0) < 200:
+            return False
+    return True
 
 
 
@@ -235,11 +266,16 @@ subprocess.run(f"../rpi_side/runAtNex.sh bin/data_acq.exe 1 1 {server}", shell=T
 # Copy over the files...
 subprocess.run(f"scp {server}:Flash_Firmware/data/ddmtd1.txt {data_save_folder+run_name}_ddmtd1.txt", shell=True)
 subprocess.run(f"scp {server}:Flash_Firmware/data/ddmtd2.txt {data_save_folder+run_name}_ddmtd2.txt", shell=True) 
+print("Checking if DCPS is working...")
+if sanity_check():
+    print("Santiy check success! Running tests...")
 
-#run_coarse_stage_test(f"./dcps3Test/data/N{N}_coarse_stage_test/", stage4_tunes=[2], stage5_tunes=[2, 3], track_completion=True)
-#run_coarse_delay_consistency_test(f"./dcps3Test/data/N{N}_coarse/")
-#run_fine_delay_consistency_test(f"./dcps3Test/data/N{N}_fine/")
-#run_coarse_delay_cell_consistency_test(f"./dcps3Test/data/N{N}_coarse_cell/")
-#run_fine_delay_cell_consistency_test(f"./dcps3Test/data/N{N}_fine_cell/")
-#run_fine_delay_cell_set_consistency_test(f"./dcps3Test/data/N{N}_fine_cell_set/")
-#run_coarse_fine_test(data_save_folder, num_runs=1, channels=[2, 3], track_completion=True)
+    #run_coarse_stage_test(f"./dcps3Test/data/N{N}_coarse_stage_test/", stage4_tunes=[2], stage5_tunes=[2, 3], track_completion=True)
+    #run_coarse_delay_consistency_test(f"./dcps3Test/data/N{N}_coarse/")
+    #run_fine_delay_consistency_test(f"./dcps3Test/data/N{N}_fine/")
+    #run_coarse_delay_cell_consistency_test(f"./dcps3Test/data/N{N}_coarse_cell/")
+    #run_fine_delay_cell_consistency_test(f"./dcps3Test/data/N{N}_fine_cell/")
+    #run_fine_delay_cell_set_consistency_test(f"./dcps3Test/data/N{N}_fine_cell_set/")
+    
+else:
+    print("SANITY CHECK FAILED! ABORTING!")

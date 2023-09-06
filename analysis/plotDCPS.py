@@ -1392,12 +1392,13 @@ def plot_temp_test(data_save_folder, figure_save_folder):
 
 BOARD = "board1_shortcable_test"
 
-#plot_coarse_consistency(f"./dcps3Test/data/{BOARD}/N{N}_coarse", f"./dcps3Test/figures/{BOARD}", True, False, plot_temp=True)
-plot_fine_consistency(f"./dcps3Test/data/{BOARD}/N{N}_fine", f"./dcps3Test/figures/{BOARD}", True, False, num_runs=1)
-# plot_coarse_cell_consistency(f"./dcps3Test/data/{BOARD}/N{N}_coarse", f"./dcps3Test/figures/{BOARD}")
-# plot_fine_cell_consistency(f"./dcps3Test/data/{BOARD}/N{N}_fine_cell", f"./dcps3Test/figures/{BOARD}")
-# plot_fine_cell_relative_consistency(f"./dcps3Test/data/{BOARD}/N{N}_fine/", f"./dcps3Test/figures/{BOARD}", True)
-plot_coarse_stage_test(f"./dcps3Test/data/{BOARD}/N{N}_coarse_stage_test", f"./dcps3Test/figures/{BOARD}")
-# plot_coarse_step_relative_consistency(f"./dcps3Test/data/{BOARD}/N{N}_coarse", f"./dcps3Test/figures/{BOARD}", True, plot_temp=True, s4=[2], s5=[2])
-# plot_approximate_coarse_fine_test(f"./dcps3Test/data/{BOARD}", f"./dcps3Test/figures/{BOARD}")
-# plot_temp_test(f"./dcps3Test/data/{BOARD}", f"./dcps3Test/figures/{BOARD}")
+if __name__ == "__main__":
+    #plot_coarse_consistency(f"./dcps3Test/data/{BOARD}/N{N}_coarse", f"./dcps3Test/figures/{BOARD}", True, False, plot_temp=True)
+    plot_fine_consistency(f"./dcps3Test/data/{BOARD}/N{N}_fine", f"./dcps3Test/figures/{BOARD}", True, False, num_runs=1)
+    # plot_coarse_cell_consistency(f"./dcps3Test/data/{BOARD}/N{N}_coarse", f"./dcps3Test/figures/{BOARD}")
+    # plot_fine_cell_consistency(f"./dcps3Test/data/{BOARD}/N{N}_fine_cell", f"./dcps3Test/figures/{BOARD}")
+    # plot_fine_cell_relative_consistency(f"./dcps3Test/data/{BOARD}/N{N}_fine/", f"./dcps3Test/figures/{BOARD}", True)
+    plot_coarse_stage_test(f"./dcps3Test/data/{BOARD}/N{N}_coarse_stage_test", f"./dcps3Test/figures/{BOARD}")
+    # plot_coarse_step_relative_consistency(f"./dcps3Test/data/{BOARD}/N{N}_coarse", f"./dcps3Test/figures/{BOARD}", True, plot_temp=True, s4=[2], s5=[2])
+    # plot_approximate_coarse_fine_test(f"./dcps3Test/data/{BOARD}", f"./dcps3Test/figures/{BOARD}")
+    # plot_temp_test(f"./dcps3Test/data/{BOARD}", f"./dcps3Test/figures/{BOARD}")
