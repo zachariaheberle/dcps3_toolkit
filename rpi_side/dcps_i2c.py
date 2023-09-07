@@ -67,7 +67,7 @@ def get_dcps3packet(fstep, cstep,tuningbits_stage4 = 0b10,tuningbits_stage5 = 0b
 
     #Fine Delay Stage
     for i in range(66):
-        if i == fstep - 1:
+        if i < fstep:
             # C bit
             i2c_array[i + 28] = 1
             # L bit
