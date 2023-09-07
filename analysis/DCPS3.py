@@ -20,12 +20,6 @@ from time import sleep
 import matplotlib
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
-def mkdir(dir_path):
-    try:
-        os.makedirs(dir_path)
-    except FileExistsError:
-        return
-
 class DCPS3_analyser():
 
     def __init__(self, board, N=100000, freq=160) -> None:
@@ -97,6 +91,7 @@ class DCPS3_analyser():
                 except:
                     print("Something went wrong with board initialization!")
                     return
+            mkdir(data_folder)
             if test_preset in test_dcps3.presets:
                 test_dcps3.presets[test_preset](data_folder, num_runs, kwargs)
             else:
@@ -179,13 +174,16 @@ class DCPS3_analyser():
 
 
 
-# a = DCPS3_analyser(board=0)
+a = DCPS3_analyser(board=1)
 
-# data_folder = "./dcps3Test/data/board0/N100000_fine"
+c_folder = "./dcps3Test/data/board1_host2_test/host2_board1_N100000_coarse"
+f_folder = "./dcps3Test/data/board1_host2_test/host2_board1_N100000_fine"
 
-# a.load_data(data_folder, data_type="fine")
+#a.load_data(c_folder, data_type="coarse")
+a.load_data(f_folder, data_type="fine")
 # #print(a.loaded_data["coarse"])
-# a.plot("fine", "./dcps3Test/figures/test", plot_preset="fine_delay", stage4_vals=2, stage5_vals=3)
+a.plot("fine", "./dcps3Test/figures/test", plot_preset="fine_delay")
+#a.plot("coarse", "./dcps3Test/figures/test", plot_preset="coarse_delay")
 
         
         

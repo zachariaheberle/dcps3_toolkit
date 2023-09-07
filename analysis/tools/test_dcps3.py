@@ -1,5 +1,5 @@
 import subprocess
-from tools.base import runBash
+from tools.base import runBash, mkdir
 import tools.common_vars as common_vars
 from tools.parser import get_data_point
 import pyvisa
@@ -27,7 +27,7 @@ def initialize(N, freq):
     ##Selecting the Register File##
 
     ddmtd_pll_config = f"{ddmtd_pll_config_folder}/{freq}MHz_{N//1000}k.h" #Selecting the configuration according to N, freq
-    dcps_pll_config = f"{ddmtd_pll_config_folder}/test{freq}MHz.h"
+    dcps_pll_config = f"{dcps_pll_config_folder}/test{freq}MHz.h"
 
     print("Using PLL Config: \n ",ddmtd_pll_config)
     print("\n\n")
@@ -60,23 +60,24 @@ def data_acq(fine_control, coarse_control, stage4_tune, stage5_tune, channel, ru
                 fp.write("channel,fine_control,coarse_control,stage4_tune,stage5_tune,run,temperature\n")
             fp.write(f"{channel},{fine_control},{coarse_control},{stage4_tune},{stage5_tune},{run},{temp}\n")
 
-def sanity_check(freq, test_temp=False):
+def sanity_check(freq, N, test_temp=False):
     """
     Quick test to ensure that the DCPS board 
     and (if applicable) temp measurement is working properly
     """
+    mkdir("./temporary_test")
     for channel in [2, 3]:
         data_acq(0, 0, 2, 2, channel, 0, "./temporary_test", measure_temp=test_temp)
         data_acq(0, 31, 2, 2, channel, 0, "./temporary_test", measure_temp=test_temp)
         data_acq(66, 0, 0, 0, channel, 0, "./temporary_test", measure_temp=test_temp)
 
-        mean0, _, _ = get_data_point(f"./temporary_test/chan{channel}_f0_c0_s42_s52_run0")
-        mean31, _, _ = get_data_point(f"./temporary_test/chan{channel}_f0_c31_s42_s52_run0")
-        mean66, _, _ = get_data_point(f"./temporary_test/chan{channel}_f66_c0_s40_s50_run0")
+        mean0, _, _ = get_data_point(f"./temporary_test/chan{channel}_f0_c0_s42_s52_run0", freq=freq, N=N)
+        mean31, _, _ = get_data_point(f"./temporary_test/chan{channel}_f0_c31_s42_s52_run0", freq=freq, N=N)
+        mean66, _, _ = get_data_point(f"./temporary_test/chan{channel}_f66_c0_s40_s50_run0", freq=freq, N=N)
         
-        mean0 = (mean0+300)%((freq*1e6)/2)
-        mean31 = (mean31+300)%((freq*1e6)/2)
-        mean66 = (mean66+300)%((freq*1e6)/2)
+        mean0 = (mean0+300)%((1/freq*1e6)/2)
+        mean31 = (mean31+300)%((1/freq*1e6)/2)
+        mean66 = (mean66+300)%((1/freq*1e6)/2)
 
         if abs(mean31 - mean0) < 200 or abs(mean66 - mean0) < 15:
             return False

@@ -690,11 +690,11 @@ def DataAq(cycles=2,ser="DDMTD",data_save_folder="./data",save_name="test",compi
     cmd = f'scp {ser}:Flash_Firmware/ddmtd_mem_dump2.txt   {data_save_folder+save_name+"_2.txt"}'
     runBash(cmd)
 
-
-
-
-
-
+def mkdir(dir_path):
+    try:
+        os.makedirs(dir_path)
+    except FileExistsError:
+        return
 
 
 import os.path
