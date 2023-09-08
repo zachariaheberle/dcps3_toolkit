@@ -70,7 +70,7 @@ class DCPS3_analyser():
 
         def check_connection():
             try:
-                subprocess.run(["ssh", server, "ls"], timeout=5, check=True)
+                subprocess.run(["ssh", server, "ls"], timeout=5, check=True, stdout=subprocess.DEVNULL)
             except:
                 return False
             else:
