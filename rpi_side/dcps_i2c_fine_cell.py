@@ -169,7 +169,43 @@ print(f"STAGE4_TUNE: {STAGE4_TUNE&0b11:02b}")
 print(f"STAGE5_TUNE: {STAGE5_TUNE&0b11:02b}")
 print("CHANNEL:", CHANNEL)
 
-i2c.writeto(0x70, get_dcps3packet(FINE_CONTROL, COARSE_CONTROL, STAGE4_TUNE&0b11, STAGE5_TUNE&0b11))
+packet = get_dcps3packet(FINE_CONTROL, COARSE_CONTROL, STAGE4_TUNE&0b11, STAGE5_TUNE&0b11)
+packet_delivered = False
+write_attempts = 0
+read_attempts = 0
+
+while not packet_delivered: # Attempt to write dcps3 packet over and over until it works, janky but oh well...
+
+    write_success = False
+    while not write_success:
+        try:
+            i2c.writeto(0x70, packet)
+        except OSError:
+            print("Write error occured!")
+            continue
+        else: write_success = True
+        finally: write_attempts += 1
+
+
+    read_buffer = bytearray(20)
+    write_buffer = bytes([0x00, 0x00])
+
+    read_success = False
+    while not read_success:
+        try:
+            i2c.writeto_then_readfrom(0x70, write_buffer, read_buffer)
+        except OSError:
+            print("Read error occured!")
+            continue
+        else: read_success = True
+        finally: read_attempts += 1
+
+    if packet[2:] == read_buffer:
+        packet_delivered = True
+
+    time.sleep(0.1)
 
 i2c.unlock()
 CLK_ENB.value = True
+print(f"WRITE ATTEMPTS: {write_attempts}")
+print(f"READ ATTEMPTS: {read_attempts}")
