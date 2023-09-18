@@ -485,8 +485,8 @@ def fine_consistency(_data, figure_folder, **kwargs):
     add_temp_values = kwargs.setdefault("add_temp_values", False)
     channels = kwargs.setdefault("channels", [2, 3])
     runs = kwargs.setdefault("runs", "all")
-    stage4_vals = kwargs.setdefault("stage4_vals", [2])
-    stage5_vals = kwargs.setdefault("stage5_vals", [2])
+    stage4_vals = kwargs.setdefault("stage4_vals", [0])
+    stage5_vals = kwargs.setdefault("stage5_vals", [0])
 
     if runs == "all":
         runs = np.unique(_data.run)
@@ -556,8 +556,8 @@ def fine_relative_consistency(_data, figure_folder, **kwargs):
     add_temp_values = kwargs.setdefault("add_temp_values", False)
     channels = kwargs.setdefault("channels", [2, 3])
     runs = kwargs.setdefault("runs", "all")
-    stage4_vals = kwargs.setdefault("stage4_vals", [2])
-    stage5_vals = kwargs.setdefault("stage5_vals", [2])
+    stage4_vals = kwargs.setdefault("stage4_vals", [0])
+    stage5_vals = kwargs.setdefault("stage5_vals", [0])
 
     if runs == "all":
         runs = np.unique(_data.run)
@@ -615,8 +615,8 @@ def fine_cell_consistency(_data, figure_folder, **kwargs):
     add_temp_values = kwargs.setdefault("add_temp_values", False)
     channels = kwargs.setdefault("channels", [2, 3])
     runs = kwargs.setdefault("runs", "all")
-    stage4_vals = kwargs.setdefault("stage4_vals", [2])
-    stage5_vals = kwargs.setdefault("stage5_vals", [2])
+    stage4_vals = kwargs.setdefault("stage4_vals", [0])
+    stage5_vals = kwargs.setdefault("stage5_vals", [0])
 
     if runs == "all":
         runs = np.unique(_data.run)

@@ -93,7 +93,7 @@ class DCPS3_analyser():
                     return
             mkdir(data_folder)
             if test_preset in test_dcps3.presets:
-                test_dcps3.presets[test_preset](data_folder, num_runs, kwargs)
+                test_dcps3.presets[test_preset](data_folder, num_runs, **kwargs)
             else:
                 for run in range(num_runs):
                     for channel in channels:
