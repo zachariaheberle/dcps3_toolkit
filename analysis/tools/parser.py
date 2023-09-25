@@ -31,7 +31,11 @@ def get_temp_data(file):
     """
     return pd.read_csv(file, skiprows=[0], names=["chan", "f", "c", "s4", "s5", "run", "temp"])
 
-def load_files(data_folder, N, freq, sep="", draw=False):
+def load_files(data_folder, N, freq, sep="", force_reload=False, draw=False):
+    compressed_data = glob(f"{data_folder}/*.ddmtd")
+    if compressed_data and not force_reload:
+        df = pd.read_csv(compressed_data[0])
+        return df
     files = glob(f"{data_folder}/*.txt")
 
     data = []
@@ -64,5 +68,7 @@ def load_files(data_folder, N, freq, sep="", draw=False):
         df = pd.DataFrame(data, columns=["channel", "run", "coarse_step", "stage4_tune", "stage5_tune", "fine_step", "delay", "_std_dev", "_count", "temperature"])
     else:
         df = pd.DataFrame(data, columns=["channel", "run", "coarse_step", "stage4_tune", "stage5_tune", "fine_step", "delay", "_std_dev", "_count"])
+    
+    df.to_csv(f"{data_folder}/compiled_data.ddmtd")
     
     return df
