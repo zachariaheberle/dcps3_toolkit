@@ -54,7 +54,7 @@ class DCPS3_analyser():
                   fine_vals=range(67),
                   dcps_file="dcps_i2c.py", 
                   measure_temp=False,
-                  show_output=False,
+                  show_output=True,
                   **kwargs):
         """
         Handles actively testing the dcps board, requires that ssh config and keys are already set up.
@@ -93,7 +93,7 @@ class DCPS3_analyser():
                     return
             mkdir(data_folder)
             if test_preset in test_dcps3.presets:
-                test_dcps3.presets[test_preset](data_folder, num_runs, **kwargs)
+                test_dcps3.presets[test_preset](data_folder, num_runs, show=show_output, **kwargs)
             else:
                 for run in range(num_runs):
                     for channel in channels:

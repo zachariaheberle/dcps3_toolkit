@@ -39,7 +39,7 @@ def initialize(N, freq):
 
     
 
-def data_acq(fine_control, coarse_control, stage4_tune, stage5_tune, channel, run, data_save_folder, dcps_file="dcps_i2c.py", show=False, measure_temp=False):
+def data_acq(fine_control, coarse_control, stage4_tune, stage5_tune, channel, run, data_save_folder, dcps_file="dcps_i2c.py", show=True, measure_temp=False):
     """
     Function that will gather DCPS data with specified fine, coarse, stage4, stage5, channel, and dcps_file parameters.
     Will additionally transfer the data back to the local machine running this.
@@ -94,7 +94,7 @@ def get_temp():
     inst.baud_rate = 38400
     return float(inst.query("MEAS:TEMP? RTD,(@102)").decode(""))
 
-def coarse_consistency(data_save_folder, num_runs, **kwargs):
+def coarse_consistency(data_save_folder, num_runs, show, **kwargs):
     """
     Optional kwargs:
     fine_control
@@ -117,9 +117,9 @@ def coarse_consistency(data_save_folder, num_runs, **kwargs):
     for run in range(num_runs):
         for channel in [2, 3]:
             for coarse_control in range(32):
-                data_acq(fine_control, coarse_control, stage4_tune, stage5_tune, channel, run, data_save_folder)
+                data_acq(fine_control, coarse_control, stage4_tune, stage5_tune, channel, run, data_save_folder, show=show)
 
-def coarse_cell_consistency(data_save_folder, num_runs, **kwargs):
+def coarse_cell_consistency(data_save_folder, num_runs, show, **kwargs):
     """
     Optional kwargs:
     fine_control
@@ -142,9 +142,9 @@ def coarse_cell_consistency(data_save_folder, num_runs, **kwargs):
     for run in range(num_runs):
         for channel in [2, 3]:
             for coarse_control in [0, 1, 2, 4, 8, 16]:
-                data_acq(fine_control, coarse_control, stage4_tune, stage5_tune, channel, run, data_save_folder)
+                data_acq(fine_control, coarse_control, stage4_tune, stage5_tune, channel, run, data_save_folder, show=show)
 
-def fine_consistency(data_save_folder, num_runs, **kwargs):
+def fine_consistency(data_save_folder, num_runs, show, **kwargs):
     """
     Optional kwargs:
     coarse_control
@@ -167,9 +167,9 @@ def fine_consistency(data_save_folder, num_runs, **kwargs):
     for run in range(num_runs):
         for channel in [2, 3]:
             for fine_control in range(67):
-                data_acq(fine_control, coarse_control, stage4_tune, stage5_tune, channel, run, data_save_folder)
+                data_acq(fine_control, coarse_control, stage4_tune, stage5_tune, channel, run, data_save_folder, show=show)
 
-def fine_cell_consistency(data_save_folder, num_runs, **kwargs):
+def fine_cell_consistency(data_save_folder, num_runs, show, **kwargs):
     """
     Optional kwargs:
     coarse_control
@@ -192,7 +192,7 @@ def fine_cell_consistency(data_save_folder, num_runs, **kwargs):
     for run in range(num_runs):
         for channel in [2, 3]:
             for fine_control in range(67):
-                data_acq(fine_control, coarse_control, stage4_tune, stage5_tune, channel, run, data_save_folder, dcps_file="dcps_i2c_fine_cell_test.py")
+                data_acq(fine_control, coarse_control, stage4_tune, stage5_tune, channel, run, data_save_folder, dcps_file="dcps_i2c_fine_cell_test.py", show=show)
 
 presets = {"coarse_consistency" : coarse_consistency,
            "coarse_cell_consistency" : coarse_cell_consistency,
