@@ -22,14 +22,31 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 class DCPS3_analyser():
 
-    def __init__(self, board, N=100000, freq=160) -> None:
-        self.board = board
-        self.N = N
-        self.freq = freq # MHz
+    def __init__(self, N=100000, freq=160) -> None:
+        self._N = N
+        self._freq = freq # MHz
         self.loaded_data = dict()
         self.dcps_initialized = False
     
-    def load_data(self, data_folder, data_type, sep="", draw_all_points=False):
+    @property
+    def N(self):
+        return self._N
+    
+    @N.setter
+    def N(self, new_N):
+        self.dcps_initialized = False
+        self._N = new_N
+    
+    @property
+    def freq(self):
+        return self._freq
+    
+    @freq.setter
+    def freq(self, new_freq):
+        self.dcps_initialized = False
+        self._freq = new_freq
+    
+    def load_data(self, data_folder, data_type, sep="", draw_all_points=False, force_reload=False):
         """
         Loads data from ddmtd.txt files, data comes in a data frame that is then placed in a dictionary with
         the key named data_type 
