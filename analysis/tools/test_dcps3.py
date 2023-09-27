@@ -29,7 +29,8 @@ def initialize(N, freq):
     ddmtd_pll_config = f"{ddmtd_pll_config_folder}/{freq}MHz_{N//1000}k.h" #Selecting the configuration according to N, freq
     dcps_pll_config = f"{dcps_pll_config_folder}/test{freq}MHz.h"
 
-    print("Using PLL Config: \n ",ddmtd_pll_config)
+    print(f"Using DDMTD PLL Config:\n\t{ddmtd_pll_config}\n")
+    print(f"Using DCPS PLL Config:\n\t{dcps_pll_config}\n")
     print("\n\n")
     runBash(f"scp {ddmtd_pll_config} {server}:Flash_Firmware/include/Si5344_REG.h") #Copy the config to the RPi as Si5344
     runBash(f"scp {dcps_pll_config} {server}:~/rpi_dcps/pll_config/Si5344_REG.h")
