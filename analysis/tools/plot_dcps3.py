@@ -281,7 +281,7 @@ def coarse_consistency(_data, figure_folder, **kwargs):
                 ax.set_ylim([weighted_mean-0.2, weighted_mean+0.2])
                 ax.legend(loc="upper left")
 
-                plt.savefig(f"{figure_folder}/coarse_consistency_chan{channel}_s4{stage4_tune}_s5{stage5_tune}.png", dpi=300, facecolor="#FFFFFF")
+                plt.savefig(f"{figure_folder}/coarse_consistency_chan{channel}_s4{stage4_tune}_s5{stage5_tune}.png", dpi=300, facecolor="#FFFFFF", bbox_inches="tight")
                 plt.close()
                     
 def coarse_relative_consistency(_data, figure_folder, **kwargs): 
@@ -405,7 +405,7 @@ def coarse_cell_consistency(_data, figure_folder, **kwargs):
                     ax.set_ylim([weighted_mean-0.4, weighted_mean+0.4])
                     ax.legend(loc="upper left")
 
-                    plt.savefig(f"{figure_folder}/coarse_cell{coarse_step}_consistency_chan{channel}_s4{stage4_tune}_s5{stage5_tune}.png", dpi=300, facecolor="#FFFFFF")
+                    plt.savefig(f"{figure_folder}/coarse_cell{coarse_step}_consistency_chan{channel}_s4{stage4_tune}_s5{stage5_tune}.png", dpi=300, facecolor="#FFFFFF", bbox_inches="tight")
                     plt.close()
 
 def fine_delay(_data, figure_folder, **kwargs):
@@ -544,7 +544,7 @@ def fine_consistency(_data, figure_folder, **kwargs):
                 ax.set_ylim([weighted_mean-5, weighted_mean+5])
                 ax.legend(loc="upper left")
 
-                plt.savefig(f"{figure_folder}/dcps3_fine_consistency_chan{channel}_run{run}_s4{stage4_tune}_s5{stage5_tune}.png", dpi=300, facecolor="#FFFFFF")
+                plt.savefig(f"{figure_folder}/dcps3_fine_consistency_chan{channel}_run{run}_s4{stage4_tune}_s5{stage5_tune}.png", dpi=300, facecolor="#FFFFFF", bbox_inches="tight")
                 plt.close()
 
 def fine_relative_consistency(_data, figure_folder, **kwargs):
@@ -668,7 +668,7 @@ def fine_cell_consistency(_data, figure_folder, **kwargs):
                     ax.set_ylim([weighted_mean-400, weighted_mean+400])
                     ax.legend(loc="upper left")
 
-                    plt.savefig(f"{figure_folder}/fine_cell{fine_step}_consistency_chan{channel}_s4{stage4_tune}_s5{stage5_tune}.png", dpi=300, facecolor="#FFFFFF")
+                    plt.savefig(f"{figure_folder}/fine_cell{fine_step}_consistency_chan{channel}_s4{stage4_tune}_s5{stage5_tune}.png", dpi=300, facecolor="#FFFFFF", bbox_inches="tight")
                     plt.close()
 
 presets = {"coarse_delay" : coarse_delay,
