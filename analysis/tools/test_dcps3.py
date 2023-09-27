@@ -80,7 +80,7 @@ def sanity_check(freq, N, test_temp=False):
         mean66 = (mean66+300)%((1/freq*1e6)/2)
 
         if abs(mean31 - mean0) < 200 or abs(mean66 - mean0) < 15:
-            return False
+            raise Exception("Sanity Check Failed! DCPS 3 does not appear to be working properly!")
     return True
 
 def get_temp():

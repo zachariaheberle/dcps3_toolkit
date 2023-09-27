@@ -105,9 +105,13 @@ class DCPS3_analyser():
                 try:
                     test_dcps3.initialize(self.N, self.freq)
                     self.dcps_initialized = True
-                except:
-                    print("Something went wrong with board initialization!")
-                    return
+                except Exception as err:
+                    raise Exception(f"Something went wrong with board initialization!: {err}")
+     
+            print("Running Sanity Checks...")
+            test_dcps3.sanity_check(self.freq, self.N, test_temp=measure_temp)
+            print("Sanity Checks Passed!")
+            
             mkdir(data_folder)
             if test_preset in test_dcps3.presets:
                 test_dcps3.presets[test_preset](data_folder, num_runs, show=show_output, **kwargs)
@@ -129,8 +133,7 @@ class DCPS3_analyser():
                                                             show_output,
                                                             measure_temp)
         else:
-            print("Aborting DCPS 3 test, cannot connect to board")
-            return
+            raise ConnectionError("Aborting DCPS 3 test, cannot connect to board")
 
     def plot(self, data_type, figure_folder, x_type=None, y_type=None, plot_preset=None, **kwargs):
         """
