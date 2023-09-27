@@ -679,6 +679,7 @@ def runBash(cmd,show=False):
             print (output.decode("utf-8"))
         if error != None:
             print (error.decode("utf-8"))
+    return output.decode("utf-8"), error.decode("utf-8")
 
 
 

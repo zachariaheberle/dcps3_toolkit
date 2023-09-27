@@ -46,12 +46,27 @@ def data_acq(fine_control, coarse_control, stage4_tune, stage5_tune, channel, ru
     Will additionally transfer the data back to the local machine running this.
     """
 
-    runBash(f"../rpi_side/runDCPS.sh ./run_dcps_control.sh {fine_control} {coarse_control} {stage4_tune} {stage5_tune} {channel} {server} {dcps_file}", show=show)
+    stdout, stderr = runBash(f"../rpi_side/runDCPS.sh ./run_dcps_control.sh {fine_control} {coarse_control} {stage4_tune} {stage5_tune} {channel} {server} {dcps_file}", show=show)
     runBash(f"../rpi_side/runAtNex.sh bin/data_acq.exe 0 1 {server}", show=show)
     # Copy over the files...
     run_name = f"chan{channel}_f{fine_control}_c{coarse_control}_s4{stage4_tune}_s5{stage5_tune}_run{run}"
     runBash(f"scp {server}:Flash_Firmware/data/ddmtd1.txt {data_save_folder}/{run_name}_ddmtd1.txt", show=show)
     runBash(f"scp {server}:Flash_Firmware/data/ddmtd2.txt {data_save_folder}/{run_name}_ddmtd2.txt", show=show)
+
+    read_pos = stdout.find("READ ATTEMPTS:")
+    write_pos = stdout.find("WRITE ATTEMPTS:")
+    try:
+        i2c_reads = int(stdout[read_pos+15:].split("\n")[0])
+        i2c_writes = int(stdout[write_pos+16:].split("\n")[0])
+    except:
+        print("Failed to parse number of reads and writes!")
+        pass
+    else:
+        if i2c_reads > 1 or i2c_writes > 1:
+            with open(f"{data_save_folder}/i2c_errors.txt", "a") as fp:
+                if fp.tell() == 0:
+                    fp.write("Read Attempts,Write Attempts,Run Name\n")
+                fp.write(f"{i2c_reads},{i2c_writes},{run_name}\n")
 
     if measure_temp:
         temp = get_temp()
