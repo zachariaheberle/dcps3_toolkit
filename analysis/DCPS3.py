@@ -17,7 +17,6 @@ import tools.plot_dcps3 as plot_dcps3
 import tools.common_vars as common_vars
 from time import sleep
 
-import matplotlib
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 class DCPS3_analyser():
@@ -46,17 +45,17 @@ class DCPS3_analyser():
         self.dcps_initialized = False
         self._freq = new_freq
     
-    def load_data(self, data_folder, data_type, sep="", draw_all_points=False, force_reload=False):
+    def load_data(self, data_folder, data_name, sep="", draw_all_points=False, force_reload=False):
         """
         Loads data from ddmtd.txt files, data comes in a data frame that is then placed in a dictionary with
         the key named data_type 
         """
-        if not isinstance(data_type, str):
-            raise TypeError("data_type must be a string")
+        if not isinstance(data_name, str):
+            raise TypeError("data_name must be a string")
         
-        df = parser.load_files(data_folder, self.N, self.freq, sep=sep, draw=draw_all_points)
+        df = parser.load_files(data_folder, self.N, self.freq, sep=sep, draw=draw_all_points, force_reload=force_reload)
 
-        self.loaded_data[data_type] = df
+        self.loaded_data[data_name] = df
 
         #print(df.to_string())
     
@@ -135,75 +134,35 @@ class DCPS3_analyser():
         else:
             raise ConnectionError("Aborting DCPS 3 test, cannot connect to board")
 
-    def plot(self, data_type, figure_folder, x_type=None, y_type=None, plot_preset=None, **kwargs):
+    def plot(self, figure_folder, plot_preset, data_name, **kwargs):
         """
         Documentation goes here
 
-        data_type: key of dataframe in self.loaded_data that you wish to plot
+        data_name: name (key name) of dataframe in self.loaded_data that you wish to plot
 
-        x_type allowed values: 'run', 'coarse_step', 'fine_step', 'temperature'
-        y_type allowed values: 'delay_slope', 'delay', 'temperature'
         allowed plot_presets: coarse_delay, coarse_consistency, coarse_relative_consistency, coarse_cell_consistency
         fine_delay, fine_consistency, fine_relative_consistency, fine_cell_consistency
 
-
         allowed kwargs:
-        add_temp_vals: bool; plots temperature values in addition to y_type
+
+        add_temp_vals: bool; plots temperature values in addition to delay values
         channels: ArrayLike; set which channels you'd like to plot
         runs: ArrayLike; set which runs you'd like to plot
         stage4_tunes: ArrayLike; set which stage 4 tunes to use
         stage5_tunes: ArrayLike; set which stage 5 tunes to use
-
-        xlabel: str; sets xlabel of resulting plot
-        ylabel: str; sets ylabel of resulting plot
-
-        xlim: ArrayLike; sets x-axis limits
-        ylim: ArrayLike; sets y-axis limits
-
-        xticks: ArrayLike; sets x-axis tick marks
-        yticks: ArrayLike; sets y-axis tick marks
-
-        title: str; sets the title of the resulting plot
-        legend_loc: str; sets location of legend
-
-        delay_units: str, sets delay units (ps or fs)
-        residuals: bool; If true, plots residuals beneath main plot in addition
-        to a histogram of the residuals (seperate plot)
-
-        Note: presets have a significantly limited allowed kwargs values, 
-        see individual preset functions for more info
         """
-        x_types = ['run', 'coarse_step', 'fine_step', 'temperature']
-        y_types = ['delay_slope', 'delay', 'temperature']
 
         if plot_preset in plot_dcps3.presets:
-            data = self.loaded_data[data_type]
+            data = self.loaded_data[data_name]
             mkdir(figure_folder)
             plot_dcps3.presets[plot_preset](data, figure_folder, **kwargs)
-            pass
         else:
-            if x_type in x_types and y_type in y_types:
-                mkdir(figure_folder)
-                plot_dcps3.plot_generic(data, figure_folder, x_type, y_type, **kwargs)
-            else:
-                raise TypeError("Invalid x_type or y_type")
-    
-    
-            
+            raise KeyError(f"{plot_preset} is not a valid plot preset!")
 
 
 
 
-a = DCPS3_analyser(board=1)
 
-c_folder = "./dcps3Test/data/board1_host2_test/host2_board1_N100000_coarse"
-f_folder = "./dcps3Test/data/board1_host2_test/host2_board1_N100000_fine"
-
-#a.load_data(c_folder, data_type="coarse")
-a.load_data(f_folder, data_type="fine")
-# #print(a.loaded_data["coarse"])
-a.plot("fine", "./dcps3Test/figures/test", plot_preset="fine_delay")
-#a.plot("coarse", "./dcps3Test/figures/test", plot_preset="coarse_delay")
 
         
         

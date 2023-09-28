@@ -10,3 +10,4 @@ analysis/dcps3Test
 analysis/plots
 /.vscode
 *.pyc
+test.py

@@ -5,28 +5,6 @@ import numpy as np
 import pandas as pd
 import sigfig
 
-def _parse_fstring(string, **kwargs):
-    """
-    Used for parsing a pseudo f-string so that users can modify titles/labels based on
-    variable states:
-    i.e. change title from channel 2 to channel 3 when plotting different channels
-    """
-    print(kwargs)
-    start = False
-    replace_pos = []
-    for i, chr in enumerate(string):
-        if chr == "{":
-            l = i+1
-            start = True
-        elif chr == "}" and start:
-            r = i
-            start = False
-            replace_pos.append((l, r))
-    for pos in reversed(replace_pos):
-        if string[pos[0]:pos[1]] in kwargs:
-            string = string[0:pos[0]-1] + str(kwargs[string[pos[0]:pos[1]]]) + string[pos[1]+1:]
-    return string
-
 def weighted_std_dev(mean, values, weights):
     total = 0
     for value, weight in zip(values, weights):
@@ -131,9 +109,6 @@ def add_temp_plot(data, ax):
     temp_vals = data.temperature
     temp_vals = list(map(lambda w: (w-new_ylim[0])*(yrange/new_yrange)+ylim[0], temp_vals))
     ax.plot(x, temp_vals, color="green", linestyle=":", marker=".", label="Temperature")
-
-def plot_generic():
-    pass
 
 def coarse_delay(_data, figure_folder, **kwargs):
     """
