@@ -87,9 +87,9 @@ def sanity_check(freq, N, test_temp=False):
         data_acq(0, 31, 2, 2, channel, 0, "./temporary_test", measure_temp=test_temp)
         data_acq(66, 0, 0, 0, channel, 0, "./temporary_test", measure_temp=test_temp)
 
-        mean0, _, _ = get_data_point(f"./temporary_test/chan{channel}_f0_c0_s42_s52_run0", freq=freq, N=N)
-        mean31, _, _ = get_data_point(f"./temporary_test/chan{channel}_f0_c31_s42_s52_run0", freq=freq, N=N)
-        mean66, _, _ = get_data_point(f"./temporary_test/chan{channel}_f66_c0_s40_s50_run0", freq=freq, N=N)
+        mean0, _, _ = get_data_point(f"./temporary_test/chan{channel}_f0_c0_s42_s52_run0_ddmtd1.txt", freq=freq, N=N)
+        mean31, _, _ = get_data_point(f"./temporary_test/chan{channel}_f0_c31_s42_s52_run0_ddmtd1.txt", freq=freq, N=N)
+        mean66, _, _ = get_data_point(f"./temporary_test/chan{channel}_f66_c0_s40_s50_run0_ddmtd1.txt", freq=freq, N=N)
         
         mean0 = (mean0+300)%((1/freq*1e6)/2)
         mean31 = (mean31+300)%((1/freq*1e6)/2)
