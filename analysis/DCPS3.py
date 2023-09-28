@@ -205,8 +205,6 @@ class DCPS3_analyser():
         else:
             raise KeyError(f"{plot_preset} is not a valid plot preset!\nPlease use DCPS3_analyser.get_plot_presets() to get all valid plot presets.")
 
-print(DCPS3_analyser().get_test_presets())
-
 
 
 
