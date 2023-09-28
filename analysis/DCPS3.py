@@ -22,17 +22,38 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 class DCPS3_analyser():
 
     def __init__(self, N=100000, freq=160) -> None:
+        """
+        N -> Setting related to DDMTD clock offset, generally you should stick with 100k
+        freq -> Frequency (in MHz) at which to run the DCPS and DDMTD clocks
+        """
         self._N = N
         self._freq = freq # MHz
         self.loaded_data = dict()
         self.dcps_initialized = False
     
+    @staticmethod
+    def get_plot_presets():
+        """
+        Returns a list of all currently valid plot preset options
+        """
+        return list(plot_dcps3.presets.keys())
+
+    @staticmethod
+    def get_test_presets():
+        """
+        Returns a list of all currently valid test preset options
+        """
+        return list(test_dcps3.presets.keys())
+
     @property
     def N(self):
         return self._N
     
     @N.setter
     def N(self, new_N):
+        """
+        Ensure that if we change N for any reason, we reinitialize the DCPS board, else it won't work
+        """
         self.dcps_initialized = False
         self._N = new_N
     
@@ -42,13 +63,33 @@ class DCPS3_analyser():
     
     @freq.setter
     def freq(self, new_freq):
+        """
+        Ensure that if we change freq for any reason, we reinitialize the DCPS board, else it won't work
+        """
         self.dcps_initialized = False
         self._freq = new_freq
     
     def load_data(self, data_folder, data_name, sep="", draw_all_points=False, force_reload=False):
         """
         Loads data from ddmtd.txt files, data comes in a data frame that is then placed in a dictionary with
-        the key named data_type 
+        the key named data_name.
+
+        Data is formatted as follows:
+        Headers: "channel", "run", "coarse_step", "stage4_tune", "stage5_tune", "fine_step", "delay", "_std_dev", "_count", "temperature" (temperature is optional)
+
+        channel:     DCPS channel being used
+        run:         The run number of the data point
+        coarse_step: Coarse step value of DCPS (0 - 31)
+        stage4_tune: Stage 4 tuning bit value of DCPS (0, 2, or 3)
+        stage5_tune: Stage 5 tuning bit value of DCPS (0, 2, or 3)
+        fine_step:   Fine step value of DCPS (0 - 66)
+        delay:       Average time delay difference between DDMTD channels (ps) Note: All preset plots will compare these values relative to some zero-point 
+                     (usually when fine_step == 0 and coarse step == 0)
+        _std_dev:    Standard deviation of time delay difference between DDMTD channels (ps) Note: standard deviation is taken from a gaussian fit to
+                     histogram of ddmtd values
+        _count:      Number of total points for a single delay data point (total count from histogram)
+        temperature: Temperature measured at data point
+
         """
         if not isinstance(data_name, str):
             raise TypeError("data_name must be a string")
@@ -74,7 +115,8 @@ class DCPS3_analyser():
                   **kwargs):
         """
         Handles actively testing the dcps board, requires that ssh config and keys are already set up.
-        kwargs are ONLY used for passing additional info to preset function, like setting the stage4 and stage5 tunes
+        Data for the test will be saved to data_folder. kwargs are ONLY used for passing additional info 
+        to preset function, like setting the stage4 and stage5 tunes
         for coarse_consistency or setting any coarse tunes for fine_consistency.
 
         Example: Say we want to set coarse_consistency stage 4 and stage 5 tunes to 2, 3, then we would call...
@@ -85,6 +127,9 @@ class DCPS3_analyser():
         """
 
         def check_connection():
+            """
+            Runs simple ssh command to ensure we can connect to the raspberry pi
+            """
             try:
                 subprocess.run(["ssh", server, "ls"], timeout=5, check=True, stdout=subprocess.DEVNULL)
             except:
@@ -112,9 +157,10 @@ class DCPS3_analyser():
             print("Sanity Checks Passed!")
             
             mkdir(data_folder)
-            if test_preset in test_dcps3.presets:
+            if test_preset in test_dcps3.presets and test_preset is not None:
                 test_dcps3.presets[test_preset](data_folder, num_runs, show=show_output, **kwargs)
-            else:
+
+            elif test_preset is None:
                 for run in range(num_runs):
                     for channel in channels:
                         for stage4_tune in stage4_vals:
@@ -131,17 +177,17 @@ class DCPS3_analyser():
                                                             dcps_file, 
                                                             show_output,
                                                             measure_temp)
+            else:
+                raise KeyError(f"{test_preset} is not a valid test preset!\nPlease use DCPS3_analyser.get_test_presets() to get all valid test presets.")
+            
         else:
             raise ConnectionError("Aborting DCPS 3 test, cannot connect to board")
 
     def plot(self, figure_folder, plot_preset, data_name, **kwargs):
         """
-        Documentation goes here
+        Automatically plots data from self.loaded_data[data_name] dataframe using a predefined plot preset.
 
         data_name: name (key name) of dataframe in self.loaded_data that you wish to plot
-
-        allowed plot_presets: coarse_delay, coarse_consistency, coarse_relative_consistency, coarse_cell_consistency
-        fine_delay, fine_consistency, fine_relative_consistency, fine_cell_consistency
 
         allowed kwargs:
 
@@ -157,9 +203,9 @@ class DCPS3_analyser():
             mkdir(figure_folder)
             plot_dcps3.presets[plot_preset](data, figure_folder, **kwargs)
         else:
-            raise KeyError(f"{plot_preset} is not a valid plot preset!")
+            raise KeyError(f"{plot_preset} is not a valid plot preset!\nPlease use DCPS3_analyser.get_plot_presets() to get all valid plot presets.")
 
-
+print(DCPS3_analyser().get_test_presets())
 
 
 

@@ -6,12 +6,18 @@ import pandas as pd
 import sigfig
 
 def weighted_std_dev(mean, values, weights):
+    """
+    Calculate weighted standard deviation
+    """
     total = 0
     for value, weight in zip(values, weights):
         total += weight*(mean - value)**2
     return np.sqrt(total / (((len(values)-1)/len(values)) * sum(weights)))
 
 def adjust_offsets(y, offset_8, offset_16, offset_24):
+    """
+    Adjusts the y values of the coarse delays based off 3 offsets for coarse cells 8 - 15, 16 - 23, 24 - 31
+    """
     new_vals = []
     for i, val in enumerate(y):
         if i < 8:
@@ -25,7 +31,9 @@ def adjust_offsets(y, offset_8, offset_16, offset_24):
     return np.asarray(new_vals)
 
 def find_offsets(x, y, yerr):
-
+    """
+    Determines the ideal offset values coarse delays (only checks accurately down to ps^-5)
+    """
     offset_8, offset_16, offset_24 = (0, 0, 0)
     ideal = False
     power = 0
@@ -94,6 +102,9 @@ def find_offsets(x, y, yerr):
             return offset_8, offset_16, offset_24 
 
 def add_temp_plot(data, ax):
+    """
+    Creates a second temperature plot on the same axes as ax and adds another ylabel on the right hand side of graph
+    """
     target_temp = round(np.mean(data.temperature))
     mean_temp = np.mean(data.temperature)
     x = np.asarray(data.coarse_step)

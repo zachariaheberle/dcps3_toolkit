@@ -8,7 +8,8 @@ from glob import glob
 
 def get_data_point(file, N, freq, sep="", draw=False):
     """
-    Gets mean, std dev and number of counts from ddmtd.txt files
+    Gets mean, std dev and number of counts from ddmtd.txt files, not designed to be used
+    outside of load_files.
     """
     df1 = pd.read_csv(f"{file}",names=['edge1','ddmtd1'])
     df2 = pd.read_csv(f"{file[0:-5]}2.txt",names=['edge2','ddmtd2'])
@@ -32,6 +33,13 @@ def get_temp_data(file):
     return pd.read_csv(file, skiprows=[0], names=["chan", "f", "c", "s4", "s5", "run", "temp"])
 
 def load_files(data_folder, N, freq, sep="", force_reload=False, draw=False):
+    """
+    Loads in data files from data_folder. If a cached .ddmtd dataframe file is present, it will load that instead.
+    This process usually takes a *long* time uncached. Grab some water or something while you wait, I dunno.
+
+    If for some reason your compressed_data.ddmtd cache gets corrupted or loads data in the incorrect format, you can
+    pass force_reload to reload everything from scratch.
+    """
     compressed_data = glob(f"{data_folder}/*.ddmtd")
     if compressed_data and not force_reload:
         df = pd.read_csv(compressed_data[0])
