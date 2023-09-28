@@ -7,6 +7,7 @@ import pandas as pd
 import os
 from glob import glob
 import sigfig
+import shutil
 import subprocess
 
 from tools.base import *
@@ -155,6 +156,10 @@ class DCPS3_analyser():
             print("Running Sanity Checks...")
             test_dcps3.sanity_check(self.freq, self.N, test_temp=measure_temp)
             print("Sanity Checks Passed!")
+            try:
+                shutil.rmtree("./temporary_test")
+            except (FileNotFoundError, OSError):
+                print(f"Could not find directory {os.getcwd()}/temporary_test, ignoring directory deletion.")
             
             mkdir(data_folder)
             if test_preset in test_dcps3.presets and test_preset is not None:
