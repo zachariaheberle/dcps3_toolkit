@@ -22,8 +22,11 @@ def get_data_point(file, N, freq, sep="", draw=False):
     gauss_fit, _, count = data.drawTIE(sep=sep,fit=True,draw=draw)
     mean_val, std_dev = gauss_fit[1]*1000, abs(gauss_fit[2])*1000
     if draw:
-        plt.savefig(f"{common_vars.figure_folder}/data_points/{file[0:-11]}.png", dpi=300, facecolor="#FFFFFF")
-        plt.close()
+        if common_vars.figure_folder:
+            plt.savefig(f"{common_vars.figure_folder}/data_points/{file[-35:-4]}.png", dpi=300, facecolor="#FFFFFF")
+            plt.close()
+        else:
+            print("Figure folder not set, cannot draw data point.")
     return mean_val, std_dev, count
 
 def get_temp_data(file):
