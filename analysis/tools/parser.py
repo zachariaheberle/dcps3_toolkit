@@ -5,6 +5,7 @@ import pandas as pd
 from tools.ddmtd import ddmtd
 import tools.common_vars as common_vars
 from glob import glob
+import os
 
 def get_data_point(file, N, freq, sep="", draw=False):
     """
@@ -23,7 +24,7 @@ def get_data_point(file, N, freq, sep="", draw=False):
     mean_val, std_dev = gauss_fit[1]*1000, abs(gauss_fit[2])*1000
     if draw:
         if common_vars.figure_folder:
-            plt.savefig(f"{common_vars.figure_folder}/data_points/{file[-35:-4]}.png", dpi=300, facecolor="#FFFFFF")
+            plt.savefig(f"{common_vars.figure_folder}/data_points/{os.path.split(file)[-1][0:-4]}.png", dpi=300, facecolor="#FFFFFF")
             plt.close()
         else:
             print("Figure folder not set, cannot draw data point.")
