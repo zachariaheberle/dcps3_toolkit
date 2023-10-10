@@ -33,7 +33,7 @@ def initialize(N, freq):
     print(f"Using DCPS PLL Config:\n\t{dcps_pll_config}\n")
     print("\n\n")
     runBash(f"scp {ddmtd_pll_config} {server}:Flash_Firmware/include/Si5344_REG.h") #Copy the config to the RPi as Si5344
-    runBash(f"scp {dcps_pll_config} {server}:~/rpi_dcps/pll_config/Si5344_REG.h")
+    runBash(f"scp {dcps_pll_config} {server}:~/rpi_dcps/pll_config/Si5344H_REG.h")
     ## Compile and Running configuration script
     runBash(f"../rpi_side/runAtNex.sh bin/ddmtd_pll.exe 1 1 {server}") #flash the configuration file and compile programs
     runBash(f"../rpi_side/flash_dcpsPLL.sh test{freq}MHz.h {server}")
