@@ -217,7 +217,6 @@ def coarse_consistency(_data, figure_folder, **kwargs):
     for stage4_tune in stage4_vals:
         for stage5_tune in stage5_vals:
             for channel in channels:
-                f, ax = plt.subplots()
                 channel_data = []
 
                 for run in runs:
@@ -242,6 +241,12 @@ def coarse_consistency(_data, figure_folder, **kwargs):
                     channel_data.append((run, popt[0], p_e[0]))
 
                 channel_data = np.asarray(channel_data)
+
+                if len(channel_data) == 0:
+                    print(f"No data found for channel {channel}")
+                    continue
+
+                f, ax = plt.subplots()
 
                 x = channel_data.T[0] # run number
                 y = channel_data.T[1] # delay slope
@@ -485,7 +490,6 @@ def fine_consistency(_data, figure_folder, **kwargs):
     for stage4_tune in stage4_vals:
         for stage5_tune in stage5_vals:
             for channel in channels:
-                f, ax = plt.subplots()
                 channel_data = []
 
                 for run in runs:
@@ -505,6 +509,12 @@ def fine_consistency(_data, figure_folder, **kwargs):
                     channel_data.append((run, popt[0], p_e[0]))
 
                 channel_data = np.asarray(channel_data)
+
+                if len(channel_data) == 0:
+                    print(f"No data found for channel {channel}")
+                    continue
+
+                f, ax = plt.subplots()
 
                 x = channel_data.T[0] # run number
                 y = channel_data.T[1] # delay slope
