@@ -125,13 +125,15 @@ def coarse_delay(_data, figure_folder, **kwargs):
     """
     Plots the coarse step vs the total delay for all 32 coarse steps. 
 
-    Valid kwargs: add_temp_values, channels, stage4_vals, stage5_vals
+    Valid kwargs: add_temp_values, channels, stage4_vals, stage5_vals, ylim, residual_ylim
     """
     add_temp_values = kwargs.setdefault("add_temp_values", False)
     channels = kwargs.setdefault("channels", [2, 3])
     runs = kwargs.setdefault("runs", "all")
     stage4_vals = kwargs.setdefault("stage4_vals", [2])
     stage5_vals = kwargs.setdefault("stage5_vals", [2])
+    ylim = kwargs.setdefault("ylim", (-5, 300)) # In ps
+    residual_ylim = kwargs.setdefault("residual_ylim", (-15, 15)) # In ps
 
     if runs == "all":
         runs = np.unique(_data.run)
@@ -178,13 +180,13 @@ def coarse_delay(_data, figure_folder, **kwargs):
                     ax2.errorbar(x, residuals, yerr=yerr, fmt='r.', ecolor="black", capsize=2, label="Residuals")
                     ax2.fill_between(x, residuals_std_dev, -residuals_std_dev, color='orange', alpha=.5, label=f"Residual \u03c3\n{sigfig.round(residuals_std_dev, p_e[0]).split(' ')[0]} [ps]")
                     ax2.legend(loc="upper right", fontsize=5)
-                    ax2.set_ylim(-15, 15)
+                    ax2.set_ylim(residual_ylim)
 
                     ax.set_title(f"Coarse Delay\nChannel {channel}: {stage4_tune} {stage5_tune} | Run {run}")
                     ax2.set_xlabel("Coarse Step")
                     ax.set_ylabel("Delay [ps]")
                     ax2.set_ylabel("Residual [ps]")
-                    ax.set_ylim([-5, 300])
+                    ax.set_ylim(ylim)
 
                     if add_temp_values:
                         add_temp_plot(data, ax)
@@ -198,13 +200,15 @@ def coarse_consistency(_data, figure_folder, **kwargs):
     """
     Plots the consistency of (coarse step vs the total delay) vs all runs (The delay per step over all runs). 
 
-    Valid kwargs: add_temp_values, channels, stage4_vals, stage5_vals
+    Valid kwargs: add_temp_values, channels, stage4_vals, stage5_vals, relative_ylim
     """
     add_temp_values = kwargs.setdefault("add_temp_values", False)
     channels = kwargs.setdefault("channels", [2, 3])
     runs = kwargs.setdefault("runs", "all")
     stage4_vals = kwargs.setdefault("stage4_vals", [2])
     stage5_vals = kwargs.setdefault("stage5_vals", [2])
+    relative_ylim = kwargs.setdefault("relative_ylim", (-0.2, 0.2)) # ylim relative to the mean delay slope for all included runs, 
+    # must be array-like of size (2,), values in ps
 
     if runs == "all":
         runs = np.unique(_data.run)
@@ -269,7 +273,7 @@ def coarse_consistency(_data, figure_folder, **kwargs):
                 ax.set_title(f"Coarse Delay Consistency\nChannel {channel}: {stage4_tune} {stage5_tune}")
                 ax.set_xlabel("Run Number")
                 ax.set_ylabel("Delay per Coarse Step [ps/step]")
-                ax.set_ylim([weighted_mean-0.2, weighted_mean+0.2])
+                ax.set_ylim([weighted_mean+relative_ylim[0], weighted_mean+relative_ylim[1]])
                 ax.legend(loc="upper left")
 
                 plt.savefig(f"{figure_folder}/coarse_consistency_chan{channel}_s4{stage4_tune}_s5{stage5_tune}.png", dpi=300, facecolor="#FFFFFF", bbox_inches="tight")
@@ -279,13 +283,14 @@ def coarse_relative_consistency(_data, figure_folder, **kwargs):
     """
     Plots the coarse step vs the delay relative to the cell beneath it for all 32 coarse steps. 
 
-    Valid kwargs: add_temp_values, channels, stage4_vals, stage5_vals
+    Valid kwargs: add_temp_values, channels, stage4_vals, stage5_vals, ylim
     """
     add_temp_values = kwargs.setdefault("add_temp_values", False)
     channels = kwargs.setdefault("channels", [2, 3])
     runs = kwargs.setdefault("runs", "all")
     stage4_vals = kwargs.setdefault("stage4_vals", [2])
     stage5_vals = kwargs.setdefault("stage5_vals", [2])
+    ylim = kwargs.setdefault("ylim", (-.1, 15)) # In ps
 
     if runs == "all":
         runs = np.unique(_data.run)
@@ -322,7 +327,7 @@ def coarse_relative_consistency(_data, figure_folder, **kwargs):
                     ax.fill_between(x, weighted_mean+std_dev, weighted_mean-std_dev, color='orange', alpha=.5, label=f"\u03c3 All Steps\n{sigfig.round(std_dev, err).split(' ')[0]} [ps]")
                     ax.errorbar(x, y, yerr, fmt='r.', ecolor='k', capsize=2, label="Relative Coarse Step Delay")
                     ax.set_title(f"Coarse Delay Relative Step Consistency\nChannel {channel}: {stage4_tune} {stage5_tune} | Run {run}")
-                    ax.set_ylim([-.1, 15])
+                    ax.set_ylim(ylim)
                     ax.set_xlabel("Coarse Delay Step")
                     ax.set_ylabel("Delay [ps]")
 
@@ -338,13 +343,15 @@ def coarse_cell_consistency(_data, figure_folder, **kwargs):
     """
     Plots the consistency of individual coarse cells vs all runs. 
 
-    Valid kwargs: add_temp_values, channels, stage4_vals, stage5_vals
+    Valid kwargs: add_temp_values, channels, stage4_vals, stage5_vals, relative_ylim
     """
     add_temp_values = kwargs.setdefault("add_temp_values", False)
     channels = kwargs.setdefault("channels", [2, 3])
     runs = kwargs.setdefault("runs", "all")
     stage4_vals = kwargs.setdefault("stage4_vals", [2])
     stage5_vals = kwargs.setdefault("stage5_vals", [2])
+    relative_ylim = kwargs.setdefault("relative_ylim", (-0.4, 0.4)) # ylim relative to the mean delay slope for all included runs, 
+    # must be array-like of size (2,), values in ps
 
     if runs == "all":
         runs = np.unique(_data.run)
@@ -393,7 +400,7 @@ def coarse_cell_consistency(_data, figure_folder, **kwargs):
                     ax.set_title(f"Coarse Delay Cell {coarse_step} Consistency\nChannel {channel}: {stage4_tune} {stage5_tune}")
                     ax.set_xlabel("Run Number")
                     ax.set_ylabel("Delay [ps]")
-                    ax.set_ylim([weighted_mean-0.4, weighted_mean+0.4])
+                    ax.set_ylim([weighted_mean+relative_ylim[0], weighted_mean+relative_ylim[1]])
                     ax.legend(loc="upper left")
 
                     plt.savefig(f"{figure_folder}/coarse_cell{coarse_step}_consistency_chan{channel}_s4{stage4_tune}_s5{stage5_tune}.png", dpi=300, facecolor="#FFFFFF", bbox_inches="tight")
@@ -403,13 +410,15 @@ def fine_delay(_data, figure_folder, **kwargs):
     """
     Plots the fine step vs the total delay for all 67 coarse steps. 
 
-    Valid kwargs: add_temp_values, channels, stage4_vals, stage5_vals
+    Valid kwargs: add_temp_values, channels, stage4_vals, stage5_vals, ylim, residual_ylim
     """
     add_temp_values = kwargs.setdefault("add_temp_values", False)
     channels = kwargs.setdefault("channels", [2, 3])
     runs = kwargs.setdefault("runs", "all")
     stage4_vals = kwargs.setdefault("stage4_vals", [0])
     stage5_vals = kwargs.setdefault("stage5_vals", [0])
+    ylim = kwargs.setdefault("ylim", (-500, 25000)) # In fs
+    residual_ylim = kwargs.setdefault("residual_ylim", (-300, 300)) # In fs
 
     if runs == "all":
         runs = np.unique(_data.run)
@@ -451,13 +460,13 @@ def fine_delay(_data, figure_folder, **kwargs):
                     ax2.errorbar(x, residuals, yerr=yerr*1e3, fmt='r.', ecolor="black", capsize=2, label="Residuals")
                     ax2.fill_between(x, residuals_std_dev, -residuals_std_dev, color='orange', alpha=.5, label=f"Residual \u03c3\n{sigfig.round(residuals_std_dev, p_e[0]*1e3).split(' ')[0]} [fs]")
                     ax2.legend(loc="upper right", fontsize=5)
-                    ax2.set_ylim(-300, 300)
+                    ax2.set_ylim(residual_ylim)
 
                     ax.set_title(f"Fine Delay\nChannel {channel}: {stage4_tune} {stage5_tune} | Run {run}")
                     ax2.set_xlabel("Fine Step")
                     ax.set_ylabel("Delay [ps]")
                     ax2.set_ylabel("Residual [fs]")
-                    ax.set_ylim([-0.5, 25])
+                    ax.set_ylim(ylim[0]/1000, ylim[1]/1000)
 
                     if add_temp_values:
                         add_temp_plot(data, ax)
@@ -471,13 +480,15 @@ def fine_consistency(_data, figure_folder, **kwargs):
     """
     Plots the consistency of (fine step vs the total delay) vs all runs (The delay per step over all runs). 
 
-    Valid kwargs: add_temp_values, channels, stage4_vals, stage5_vals
+    Valid kwargs: add_temp_values, channels, stage4_vals, stage5_vals, relative_ylim
     """
     add_temp_values = kwargs.setdefault("add_temp_values", False)
     channels = kwargs.setdefault("channels", [2, 3])
     runs = kwargs.setdefault("runs", "all")
     stage4_vals = kwargs.setdefault("stage4_vals", [0])
     stage5_vals = kwargs.setdefault("stage5_vals", [0])
+    relative_ylim = kwargs.setdefault("relative_ylim", (-5, 5)) # ylim relative to the mean delay slope for all included runs, 
+    # must be array-like of size (2,), values in fs
 
     if runs == "all":
         runs = np.unique(_data.run)
@@ -537,7 +548,7 @@ def fine_consistency(_data, figure_folder, **kwargs):
                 ax.set_title(f"Fine Delay Consistency\nChannel {channel}: {stage4_tune} {stage5_tune}")
                 ax.set_xlabel("Run Number")
                 ax.set_ylabel("Delay per Fine Step [fs/step]")
-                ax.set_ylim([weighted_mean-5, weighted_mean+5])
+                ax.set_ylim([weighted_mean+relative_ylim[0], weighted_mean+relative_ylim[1]])
                 ax.legend(loc="upper left")
 
                 plt.savefig(f"{figure_folder}/dcps3_fine_consistency_chan{channel}_run{run}_s4{stage4_tune}_s5{stage5_tune}.png", dpi=300, facecolor="#FFFFFF", bbox_inches="tight")
@@ -547,13 +558,14 @@ def fine_relative_consistency(_data, figure_folder, **kwargs):
     """
     Plots the fine step vs the delay relative to the cell beneath it for all 67 coarse steps.
 
-    Valid kwargs: add_temp_values, channels, stage4_vals, stage5_vals
+    Valid kwargs: add_temp_values, channels, stage4_vals, stage5_vals, ylim
     """
     add_temp_values = kwargs.setdefault("add_temp_values", False)
     channels = kwargs.setdefault("channels", [2, 3])
     runs = kwargs.setdefault("runs", "all")
     stage4_vals = kwargs.setdefault("stage4_vals", [0])
     stage5_vals = kwargs.setdefault("stage5_vals", [0])
+    ylim = kwargs.setdefault("ylim", (50, 600)) # In fs
 
     if runs == "all":
         runs = np.unique(_data.run)
@@ -590,7 +602,7 @@ def fine_relative_consistency(_data, figure_folder, **kwargs):
                     ax.fill_between(x, weighted_mean+std_dev, weighted_mean-std_dev, color='orange', alpha=.5, label=f"\u03c3 All Steps\n{sigfig.round(std_dev, err).split(' ')[0]} [fs]")
                     ax.errorbar(x, y, yerr, fmt='r.', ecolor='k', capsize=2, label="Relative Fine Step Delay")
                     ax.set_title(f"Fine Delay Relative Step Consistency\nChannel {channel}: {stage4_tune} {stage5_tune} | Run {run}")
-                    ax.set_ylim([-50, 600])
+                    ax.set_ylim(ylim)
                     ax.set_xlabel("Fine Delay Step")
                     ax.set_ylabel("Delay [fs]")
 
@@ -606,13 +618,15 @@ def fine_cell_consistency(_data, figure_folder, **kwargs):
     """
     Plots the consistency of individual fine cells vs all runs. 
 
-    Valid kwargs: add_temp_values, channels, stage4_vals, stage5_vals
+    Valid kwargs: add_temp_values, channels, stage4_vals, stage5_vals, relative_ylim
     """
     add_temp_values = kwargs.setdefault("add_temp_values", False)
     channels = kwargs.setdefault("channels", [2, 3])
     runs = kwargs.setdefault("runs", "all")
     stage4_vals = kwargs.setdefault("stage4_vals", [0])
     stage5_vals = kwargs.setdefault("stage5_vals", [0])
+    relative_ylim = kwargs.setdefault("relative_ylim", (-400, 400)) # ylim relative to the mean delay slope for all included runs, 
+    # must be array-like of size (2,), values in fs
 
     if runs == "all":
         runs = np.unique(_data.run)
@@ -661,7 +675,7 @@ def fine_cell_consistency(_data, figure_folder, **kwargs):
                     ax.set_title(f"Fine Delay Cell {fine_step} Consistency\nChannel {channel}: {stage4_tune} {stage5_tune}")
                     ax.set_xlabel("Run Number")
                     ax.set_ylabel("Delay [fs]")
-                    ax.set_ylim([weighted_mean-400, weighted_mean+400])
+                    ax.set_ylim([weighted_mean+relative_ylim[0], weighted_mean+relative_ylim[1]])
                     ax.legend(loc="upper left")
 
                     plt.savefig(f"{figure_folder}/fine_cell{fine_step}_consistency_chan{channel}_s4{stage4_tune}_s5{stage5_tune}.png", dpi=300, facecolor="#FFFFFF", bbox_inches="tight")
