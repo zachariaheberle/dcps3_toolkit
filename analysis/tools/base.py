@@ -667,12 +667,25 @@ def load_obj(name ):
 
 
 
+def get_errors(bash):
+    """
+    Wrapper for error reporting for runBash function
+    """
+    
+    def wrapper(*args, **kwargs):
 
+        stdout, stderr = bash(*args, **kwargs)
+        if stderr != "\x00":
+            raise Exception(stderr)
+
+    return wrapper
 
 # use 14 cycles for 160MHz, and 3 cycles for 40MHz
 import subprocess
+
+@get_errors
 def runBash(cmd,show=False):
-    process = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE)
+    process = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     output, error = process.communicate()
     if show:
         if output != None:
