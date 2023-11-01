@@ -1,24 +1,13 @@
-import matplotlib.pyplot as plt
-import numpy as np
-from scipy import signal
-from scipy.optimize import curve_fit
-import time
-import pandas as pd
 import os
-from glob import glob
-import sigfig
 import shutil
 import subprocess
 
 from tools.base import *
-from tools.ddmtd import ddmtd
 import tools.parser as parser
 import tools.test_dcps3 as test_dcps3
 import tools.plot_dcps3 as plot_dcps3
 import tools.common_vars as common_vars
-from time import sleep
-
-from mpl_toolkits.axes_grid1 import make_axes_locatable
+import time
 
 class DCPS3_analyser():
 
@@ -76,14 +65,12 @@ class DCPS3_analyser():
         the key named data_name.
 
         Data is formatted as follows:
-        Headers: "channel", "run", "coarse_step", "stage4_tune", "stage5_tune", "fine_step", "delay", "_std_dev", "_count", "temperature" (temperature is optional)
+        Headers: "channel", "run", "coarse_step", "fine_step", "delay", "_std_dev", "_count", "temperature" (temperature is optional)
 
-        channel:     DCPS channel being used
+        channel:     PLL channel being used (1 - 3)
         run:         The run number of the data point
-        coarse_step: Coarse step value of DCPS (0 - 31)
-        stage4_tune: Stage 4 tuning bit value of DCPS (0, 2, or 3)
-        stage5_tune: Stage 5 tuning bit value of DCPS (0, 2, or 3)
-        fine_step:   Fine step value of DCPS (0 - 66)
+        coarse_step: Coarse step value of Delay Chip (0 - 1024)
+        fine_step:   Fine step value of PLL delay (-32768 - 32767)
         delay:       Average time delay difference between DDMTD channels (ps) Note: All preset plots will compare these values relative to some zero-point 
                      (usually when fine_step == 0 and coarse step == 0)
         _std_dev:    Standard deviation of time delay difference between DDMTD channels (ps) Note: standard deviation is taken from a gaussian fit to
@@ -106,10 +93,8 @@ class DCPS3_analyser():
                   test_preset=None, 
                   num_runs=10, 
                   channels=[2, 3], 
-                  coarse_vals=range(32), 
-                  stage4_vals=[2, 3], 
-                  stage5_vals=[2, 3], 
-                  fine_vals=range(67),
+                  coarse_vals=range(1024), 
+                  fine_vals=range(-32768, 32768),
                   dcps_file="dcps_i2c.py", 
                   measure_temp=False,
                   show_output=True,
@@ -117,13 +102,9 @@ class DCPS3_analyser():
         """
         Handles actively testing the dcps board, requires that ssh config and keys are already set up.
         Data for the test will be saved to data_folder. kwargs are ONLY used for passing additional info 
-        to preset function, like setting the stage4 and stage5 tunes
-        for coarse_consistency or setting any coarse tunes for fine_consistency.
+        to preset function
 
-        Example: Say we want to set coarse_consistency stage 4 and stage 5 tunes to 2, 3, then we would call...
-        DCPS3_analyser.test_dcps(data_folder, test_preset='coarse_consistency', stage4_tune=2, stage5_tune=3)
-
-        Exmaple 2: set fine_consistency to start at coarse control = 16...
+        Exmaple: set fine_consistency to start at coarse control = 16...
         DCPS3_analyser.test_dcps(data_folder, test_preset='fine_consistency', coarse_control=16)
         """
 
@@ -139,11 +120,6 @@ class DCPS3_analyser():
                 return True
 
         server = common_vars.server
-
-        if isinstance(stage4_vals, int):
-            stage4_vals = [stage4_vals] # Allows for integer inputs for stage4_vals instead of iterable
-        if isinstance(stage5_vals, int):
-            stage5_vals = [stage5_vals] # Allows for integer inputs for stage5_vals
         
         if check_connection():
             if not self.dcps_initialized:
@@ -168,20 +144,16 @@ class DCPS3_analyser():
             elif test_preset is None:
                 for run in range(num_runs):
                     for channel in channels:
-                        for stage4_tune in stage4_vals:
-                            for stage5_tune in stage5_vals:
-                                for coarse_control in coarse_vals:
-                                    for fine_control in fine_vals:
-                                        test_dcps3.data_acq(fine_control, 
-                                                            coarse_control, 
-                                                            stage4_tune, 
-                                                            stage5_tune, 
-                                                            channel, 
-                                                            run, 
-                                                            data_folder, 
-                                                            dcps_file, 
-                                                            show_output,
-                                                            measure_temp)
+                        for coarse_control in coarse_vals:
+                            for fine_control in fine_vals:
+                                test_dcps3.data_acq(fine_control, 
+                                                    coarse_control, 
+                                                    channel, 
+                                                    run, 
+                                                    data_folder, 
+                                                    dcps_file, 
+                                                    show_output,
+                                                    measure_temp)
             else:
                 raise KeyError(f"{test_preset} is not a valid test preset!\nPlease use DCPS3_analyser.get_test_presets() to get all valid test presets.")
             
@@ -199,8 +171,6 @@ class DCPS3_analyser():
         add_temp_vals: bool; plots temperature values in addition to delay values
         channels: ArrayLike; set which channels you'd like to plot
         runs: ArrayLike; set which runs you'd like to plot
-        stage4_tunes: ArrayLike; set which stage 4 tunes to use
-        stage5_tunes: ArrayLike; set which stage 5 tunes to use
         """
 
         if plot_preset in plot_dcps3.presets:

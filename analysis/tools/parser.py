@@ -34,7 +34,7 @@ def get_temp_data(file):
     """
     Loads in temperature data file
     """
-    return pd.read_csv(file, skiprows=[0], names=["chan", "f", "c", "s4", "s5", "run", "temp"])
+    return pd.read_csv(file, skiprows=[0], names=["chan", "f", "c", "run", "temp"])
 
 def load_files(data_folder, N, freq, sep="", force_reload=False, draw=False):
     """
@@ -59,27 +59,25 @@ def load_files(data_folder, N, freq, sep="", force_reload=False, draw=False):
         temp_values = False
 
     for i, file in enumerate(files):
-        # Format: type, channel, run number, coarse step, stage 4 tune, stage 5 tune, fine step, mean, std dev, count
+        # Format: type, channel, run number, coarse step, fine step, mean, std dev, count
         if "ddmtd1.txt" in file:
             mean, std_dev, count = get_data_point(file, N, freq, sep=sep, draw=draw)
             vals = file.split("_")
             run_number = int(vals[-2][3:])
-            s5 = int(vals[-3][-1])
-            s4 = int(vals[-4][-1])
-            c = int(vals[-5][1:])
-            f = int(vals[-6][1:])
-            channel = int(vals[-7][-1])
-            delay = ((lambda channel: -1 if channel==2 else 1)(channel))*(mean+300)%((1/freq*1e6)/2)
+            c = int(vals[-3][1:])
+            f = int(vals[-4][1:])
+            channel = int(vals[-5][-1])
+            delay = -(mean+300)%((1/freq*1e6)/2)
             if temp_values:
-                t = T_df.query(f"chan=={channel} & f=={f} & c=={c} & s4=={s4} & s5=={s5} & run=={run_number}").temp.iloc[0]
-                data.append((channel, run_number, c, s4, s5, f, delay, std_dev, count, t))
+                t = T_df.query(f"chan=={channel} & f=={f} & c=={c} & run=={run_number}").temp.iloc[0]
+                data.append((channel, run_number, c, f, delay, std_dev, count, t))
             else:
-                data.append((channel, run_number, c, s4, s5, f, delay, std_dev, count))
+                data.append((channel, run_number, c, f, delay, std_dev, count))
             print(f"{(i+1)/len(files)*100:.3f}% Complete")
     if temp_values:
-        df = pd.DataFrame(data, columns=["channel", "run", "coarse_step", "stage4_tune", "stage5_tune", "fine_step", "delay", "_std_dev", "_count", "temperature"])
+        df = pd.DataFrame(data, columns=["channel", "run", "coarse_step", "fine_step", "delay", "_std_dev", "_count", "temperature"])
     else:
-        df = pd.DataFrame(data, columns=["channel", "run", "coarse_step", "stage4_tune", "stage5_tune", "fine_step", "delay", "_std_dev", "_count"])
+        df = pd.DataFrame(data, columns=["channel", "run", "coarse_step", "fine_step", "delay", "_std_dev", "_count"])
     
     df.to_csv(f"{data_folder}/compiled_data.ddmtd")
     
