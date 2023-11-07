@@ -1,12 +1,5 @@
-import matplotlib.pyplot as plt
-import numpy as np
-from scipy import signal
-from scipy.optimize import curve_fit
 import time
-import pandas as pd
 import os
-from glob import glob
-import sigfig
 import shutil
 import subprocess
 
@@ -16,9 +9,6 @@ import tools.parser as parser
 import tools.test_dcps3 as test_dcps3
 import tools.plot_dcps3 as plot_dcps3
 import tools.common_vars as common_vars
-from time import sleep
-
-from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 class DCPS3_analyser():
 

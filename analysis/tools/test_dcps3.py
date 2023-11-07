@@ -2,7 +2,10 @@ import subprocess
 from tools.base import runBash, mkdir
 import tools.common_vars as common_vars
 from tools.parser import get_data_point
-import pyvisa
+try:
+    import pyvisa
+except:
+    pass
 
 server=common_vars.server
 
