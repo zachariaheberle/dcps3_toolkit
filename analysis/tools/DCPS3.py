@@ -1,3 +1,4 @@
+import time
 import os
 import shutil
 import subprocess
@@ -7,7 +8,6 @@ import tools.parser as parser
 import tools.test_dcps3 as test_dcps3
 import tools.plot_dcps3 as plot_dcps3
 import tools.common_vars as common_vars
-import time
 
 class DCPS3_analyser():
 
