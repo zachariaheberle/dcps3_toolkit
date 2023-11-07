@@ -184,13 +184,17 @@ class DCPS3_analyser():
 
         data_name: name (key name) of dataframe in self.loaded_data that you wish to plot
 
-        allowed kwargs:
+        allowed kwargs: (not all are applicable to all plot presets, see plot_dcps3.py for details)
 
         add_temp_vals: bool; plots temperature values in addition to delay values
         channels: ArrayLike; set which channels you'd like to plot
         runs: ArrayLike; set which runs you'd like to plot
         stage4_tunes: ArrayLike; set which stage 4 tunes to use
         stage5_tunes: ArrayLike; set which stage 5 tunes to use
+        ylim: ArrayLike; set the upper and lower y limits on the graph (in units of ps for coarse plots, fs for fine plots)
+        relative_ylim: ArrayLike; set the upper and lower y limits on the graph relative to the mean of the graph
+        (applies to coarse/fine consistency plots) (in units of ps for coarse plots, fs for fine plots)
+        residual_ylim: ArrayLike; set the upper and lower y limits for the residuals plots (in units of ps for coarse plots, fs for fine plots)
         """
 
         if plot_preset in plot_dcps3.presets:
