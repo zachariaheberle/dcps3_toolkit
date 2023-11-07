@@ -39,7 +39,10 @@ Host nexys_ddmtd_radiation
 ```
 
 ## Data Taking
-In order to take data using the DCPS3, you will first need to instantiate a class of DCPS3_analyser.
+### Using the Jupyter Notebook
+To make basic data measurements, simply use the final_analysis.ipynb notebook and run all relevant cells for the tests you would like to do. For more custom data taking, see "Using a Python Script".
+### Using a Python Script
+In order to take data using the DCPS3, you will first need to instantiate a class of ```DCPS3_analyser```.
 ```py
 analyser = DCPS3_analyser(N=100_000, freq=160) # Frequency is in MHz, default settings are N=100_000, freq=160
 ```
@@ -59,12 +62,15 @@ analyser.test_dcps(data_folder=data_save_folder,
                   show_output=True,)
 ```
 ## Loading Data and Plotting
+### Using the Jupyter Notebook
+To load and plot collected data, simply use the final_analysis.ipynb notebook and run all relevant cells for the plots you would like to create. For more custom plotting, see "Using a Python Script".
+### Using a Python Script
 Once data has been collected, plotting is very simply. First, using the DCPS3_analyser class, load in the collected data from a folder using the load_dcps method. You will also need to give the data a name, this name is arbitary, and is only used to call the data later.
 ```py
 data_save_folder = "./data"
 analyser.load_data(data_folder=data_save_folder, data_name="test_data")
 ```
-### Data Format
+#### Data Format
 When loading in the data, it is stored internally in the class as a pandas dataframe. The data is formated as follows:
 
 - Headers: "channel", "run", "coarse_step", "stage4_tune", "stage5_tune", "fine_step", "delay", "_std_dev", "_count", "temperature" (temperature is optional)
@@ -81,10 +87,10 @@ When loading in the data, it is stored internally in the class as a pandas dataf
              histogram of ddmtd values
 - _count:      Number of total points for a single delay data point (total count from histogram)
 - temperature: Temperature measured at data point
-##
+###
 After this, you can either create your own plots by using the loaded data directly by calling
 ```py
-analyser.loaded_data["DATA NAME HERE"]
+data = analyser.loaded_data["DATA NAME HERE"]
 # Do plotting stuff here
 ...
 ```
@@ -93,9 +99,10 @@ Or, you can use one of the many preset plots by calling the plot_dcps method
 analyser.plot(figure_folder="./figures", plot_preset="coarse_delay", data_name="test_data")
 ```
 Please see dcps3_toolkit/analysis/DCPS3.py and dcps3_toolkit/analysis/tools/plot_dcps3.py for more details.
-## Example Use
+## Example Usage
+### Basic Coarse Delay Test
 ```py
-from DCPS3 import DCPS3_analyser
+from tools.DCPS3 import DCPS3_analyser
 
 analyser = DCPS3_analyser(N=100_000, freq=160) # Create DCPS3_analyser object
 
@@ -111,4 +118,35 @@ analyser.plot(figure_folder="./figures/coarse_test", plot_preset="coarse_consist
 
 # Plots the slope from each point within each run
 analyser.plot(figure_folder="./figures/coarse_test", plot_preset="coarse_delay", data_name="coarse") 
+```
+### Custom Data Taking Test
+```py
+from tools.DCPS3 import DCPS3_analyser
+
+analyser = DCPS3_analyser(N=100_000, freq=160) # Create DCPS3_analyser object
+
+# Plots coarse values 0, 1, 2, 4, 8, 16 testing tuning values of both (2, 2) and (2, 3).
+# Uses only channel 3, total of 5 runs for each permutation of settings.
+analyser.test_dcps(data_folder="./data/custom_test",
+                  test_preset=None, 
+                  num_runs=5, 
+                  channels=[3], 
+                  coarse_vals=[0, 1, 2, 4, 8, 16], 
+                  stage4_vals=[2], 
+                  stage5_vals=[2, 3], 
+                  fine_vals=[0],
+                  dcps_file="dcps_i2c.py", 
+                  measure_temp=False,
+                  show_output=True,)
+
+# Loads in acquired data
+analyser.load_data("./data/custom_test", data_name="coarse")
+
+# Grab loaded data
+data = analyser.loaded_data["coarse"]
+
+# Can do other stuff with data at this point
+print(data)
+...
+
 ```
