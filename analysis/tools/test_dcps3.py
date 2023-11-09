@@ -21,6 +21,7 @@ def initialize(N, freq):
     ## Contact rohith.saradhy@cern.ch for password to the RPi
 
     runBash(f"rsync -ra ../rpi_side/Flash_Firmware {server}:")
+    runBash(f"rsync --mkpath ../rpi_side/flash_pll.py {server}:~/rpi_dcps/pll_config/")
     runBash(f"../rpi_side/runAtNex.sh bin/check_firmware.exe 0 1 {server}") #flash the configuration file
 
     ddmtd_pll_config_folder="../rpi_side/PLL_Conf/ddmtd_side"
