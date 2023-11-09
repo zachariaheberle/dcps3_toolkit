@@ -20,9 +20,17 @@ def initialize(N, freq):
     ## END IMPORTANT##
     ## Contact rohith.saradhy@cern.ch for password to the RPi
 
+    print("Syncing Flash_Firmware... ")
     runBash(f"rsync -ra ../rpi_side/Flash_Firmware {server}:")
+    print("Done!")
+
+    print("Syncing flash_pll.py... ")
     runBash(f"rsync --mkpath ../rpi_side/flash_pll.py {server}:~/rpi_dcps/pll_config/")
+    print("Done!")
+
+    print("Compiling programs and checking firmware... ")
     runBash(f"../rpi_side/runAtNex.sh bin/check_firmware.exe 1 1 {server}") #flash the configuration file and compile programs
+    print("Done!")
 
     ddmtd_pll_config_folder="../rpi_side/PLL_Conf/ddmtd_side"
     dcps_pll_config_folder="../rpi_side/PLL_Conf/dcps_side"
@@ -33,14 +41,28 @@ def initialize(N, freq):
     ddmtd_pll_config = f"{ddmtd_pll_config_folder}/{freq}MHz_{N//1000}k.h" #Selecting the configuration according to N, freq
     dcps_pll_config = f"{dcps_pll_config_folder}/{freq}MHz.h"
 
-    print(f"Using DDMTD PLL Config:\n\t{ddmtd_pll_config}\n")
-    print(f"Using DCPS PLL Config:\n\t{dcps_pll_config}\n")
-    print("\n\n")
+    print(f"\nUsing DDMTD PLL Config:\n\t{ddmtd_pll_config}\n")
+    print(f"\nUsing DCPS PLL Config:\n\t{dcps_pll_config}\n")
+
+    print("Copying DDMTD PLL Registers... ")
     runBash(f"scp {ddmtd_pll_config} {server}:Flash_Firmware/include/Si5344_REG.h") #Copy the config to the RPi as Si5344
-    runBash(f"scp {dcps_pll_config} {server}:~/rpi_dcps/pll_config/Si5344H_REG.h")
+    print("Done!")
+
+    print("Copying DCPS PLL Registers... ")
+    stdout, stderr = runBash(f"scp {dcps_pll_config} {server}:~/rpi_dcps/pll_config/Si5344H_REG.h")
+    if "AssertionError" in stdout:
+        raise AssertionError("PLL Register mismatch!")
+    print("Done!")
     ## Run configuration scripts
-    runBash(f"../rpi_side/runAtNex.sh bin/ddmtd_pll.exe 0 1 {server}") #flash the PLL configuration files 
+    print("Flashing DDMTD PLL... ")
+    runBash(f"../rpi_side/runAtNex.sh bin/ddmtd_pll.exe 0 1 {server}") #flash the PLL configuration files
+    print("Done!")
+
+    print("Flashing DCPS PLL... ")
     runBash(f"../rpi_side/flash_dcpsPLL.sh {freq}MHz.h {server}")
+    print("Done!")
+
+    print("\nInitialization Complete!\n")
 
     
 
