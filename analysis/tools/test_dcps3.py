@@ -22,7 +22,7 @@ def initialize(N, freq):
 
     runBash(f"rsync -ra ../rpi_side/Flash_Firmware {server}:")
     runBash(f"rsync --mkpath ../rpi_side/flash_pll.py {server}:~/rpi_dcps/pll_config/")
-    runBash(f"../rpi_side/runAtNex.sh bin/check_firmware.exe 0 1 {server}") #flash the configuration file
+    runBash(f"../rpi_side/runAtNex.sh bin/check_firmware.exe 1 1 {server}") #flash the configuration file and compile programs
 
     ddmtd_pll_config_folder="../rpi_side/PLL_Conf/ddmtd_side"
     dcps_pll_config_folder="../rpi_side/PLL_Conf/dcps_side"
@@ -31,16 +31,16 @@ def initialize(N, freq):
     ##Selecting the Register File##
 
     ddmtd_pll_config = f"{ddmtd_pll_config_folder}/{freq}MHz_{N//1000}k.h" #Selecting the configuration according to N, freq
-    dcps_pll_config = f"{dcps_pll_config_folder}/test{freq}MHz.h"
+    dcps_pll_config = f"{dcps_pll_config_folder}/{freq}MHz.h"
 
     print(f"Using DDMTD PLL Config:\n\t{ddmtd_pll_config}\n")
     print(f"Using DCPS PLL Config:\n\t{dcps_pll_config}\n")
     print("\n\n")
     runBash(f"scp {ddmtd_pll_config} {server}:Flash_Firmware/include/Si5344_REG.h") #Copy the config to the RPi as Si5344
     runBash(f"scp {dcps_pll_config} {server}:~/rpi_dcps/pll_config/Si5344H_REG.h")
-    ## Compile and Running configuration script
-    runBash(f"../rpi_side/runAtNex.sh bin/ddmtd_pll.exe 1 1 {server}") #flash the configuration file and compile programs
-    runBash(f"../rpi_side/flash_dcpsPLL.sh test{freq}MHz.h {server}")
+    ## Run configuration scripts
+    runBash(f"../rpi_side/runAtNex.sh bin/ddmtd_pll.exe 0 1 {server}") #flash the PLL configuration files 
+    runBash(f"../rpi_side/flash_dcpsPLL.sh {freq}MHz.h {server}")
 
     
 
