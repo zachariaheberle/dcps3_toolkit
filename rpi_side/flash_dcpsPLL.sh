@@ -6,6 +6,6 @@ HOST=$2
 
 ssh -T $HOST << EOF
 cd ~/rpi_dcps/pll_config;
-cp Si5344H_REG.h /media/pi/CIRCUITPY1/Si5344H_REG.h
+cp Si5344H_REG.h /media/pi/CIRCUITPY/Si5344H_REG.h
 mpremote connect /dev/ttyACM0 run flash_pll.py;
 EOF

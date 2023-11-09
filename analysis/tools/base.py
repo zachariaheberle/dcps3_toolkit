@@ -675,8 +675,9 @@ def get_errors(bash):
     def wrapper(*args, **kwargs):
 
         stdout, stderr = bash(*args, **kwargs)
-        if stderr != "\x00":
+        if stderr != "":
             raise Exception(stderr)
+        return stdout, stderr
 
     return wrapper
 
@@ -688,14 +689,10 @@ def runBash(cmd,show=False):
     process = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     output, error = process.communicate()
     if show:
-        if output != None:
-            print (output.decode("utf-8"))
-        if error != None:
-            print (error.decode("utf-8"))
-    if output is None:
-        output = bytes([0])
-    if error is None:
-        error = bytes([0])
+        if output != b"":
+            print(output.decode("utf-8"))
+        if error != b"":
+            print(error.decode("utf-8"))
     return output.decode("utf-8"), error.decode("utf-8")
 
 
