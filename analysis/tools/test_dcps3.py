@@ -21,15 +21,21 @@ def initialize(N, freq):
     ## Contact rohith.saradhy@cern.ch for password to the RPi
 
     print("Syncing Flash_Firmware... ")
-    runBash(f"rsync -ra ../rpi_side/Flash_Firmware {server}:")
+    runBash(f"scp -r ../rpi_side/Flash_Firmware {server}:")
     print("Done!")
 
     print("Syncing flash_pll.py... ")
-    runBash(f"rsync --mkpath ../rpi_side/flash_pll.py {server}:~/rpi_dcps/pll_config/")
+    try:
+        runBash(f"scp ../rpi_side/flash_pll.py {server}:~/rpi_dcps/pll_config/")
+    except Exception as err:
+        if "No such file or directory" in str(err):
+            raise
+        runBash(f"ssh {server} \"mkdir ~/rpi_dcps/pll_config/\"")
+        runBash(f"scp ../rpi_side/flash_pll.py {server}:~/rpi_dcps/pll_config/")
     print("Done!")
 
     print("Compiling programs and checking firmware... ")
-    runBash(f"../rpi_side/runAtNex.sh bin/check_firmware.exe 1 1 {server}") #flash the configuration file and compile programs
+    runBash(f"..\\rpi_side\\runAtNex.bat bin/check_firmware.exe 1 1 {server}") #flash the configuration file and compile programs
     print("Done!")
 
     ddmtd_pll_config_folder="../rpi_side/PLL_Conf/ddmtd_side"
@@ -55,11 +61,11 @@ def initialize(N, freq):
     print("Done!")
     ## Run configuration scripts
     print("Flashing DDMTD PLL... ")
-    runBash(f"../rpi_side/runAtNex.sh bin/ddmtd_pll.exe 0 1 {server}") #flash the PLL configuration files
+    runBash(f"..\\rpi_side\\runAtNex.bat bin/ddmtd_pll.exe 0 1 {server}") #flash the PLL configuration files
     print("Done!")
 
     print("Flashing DCPS PLL... ")
-    runBash(f"../rpi_side/flash_dcpsPLL.sh {freq}MHz.h {server}")
+    runBash(f"..\\rpi_side\\flash_dcpsPLL.bat {freq}MHz.h {server}")
     print("Done!")
 
     print("\nInitialization Complete!\n")
@@ -72,8 +78,8 @@ def data_acq(fine_control, coarse_control, stage4_tune, stage5_tune, channel, ru
     Will additionally transfer the data back to the local machine running this.
     """
 
-    stdout, stderr = runBash(f"../rpi_side/runDCPS.sh ./run_dcps_control.sh {fine_control} {coarse_control} {stage4_tune} {stage5_tune} {channel} {server} {dcps_file}", show=show)
-    runBash(f"../rpi_side/runAtNex.sh bin/data_acq.exe 0 1 {server}", show=show)
+    stdout, stderr = runBash(f"..\\rpi_side\\runDCPS.bat ./run_dcps_control.sh {fine_control} {coarse_control} {stage4_tune} {stage5_tune} {channel} {server} {dcps_file}", show=show)
+    runBash(f"..\\rpi_side\\runAtNex.bat bin/data_acq.exe 0 1 {server}", show=show)
     # Copy over the files...
     run_name = f"chan{channel}_f{fine_control}_c{coarse_control}_s4{stage4_tune}_s5{stage5_tune}_run{run}"
     runBash(f"scp {server}:Flash_Firmware/data/ddmtd1.txt {data_save_folder}/{run_name}_ddmtd1.txt", show=show)
@@ -154,7 +160,7 @@ def coarse_consistency(data_save_folder, num_runs, show, **kwargs):
     if "stage5_tune" in kwargs:
         stage5_tune = kwargs["stage5_tune"]
 
-    runBash(f"rsync ../rpi_side/dcps_i2c.py {server}:/home/pi/rpi_dcps/dcps_i2c.py") # Transfer dcps_i2c file
+    runBash(f"scp ../rpi_side/dcps_i2c.py {server}:/home/pi/rpi_dcps/dcps_i2c.py") # Transfer dcps_i2c file
 
     for run in range(num_runs):
         for channel in [2, 3]:
@@ -179,7 +185,7 @@ def coarse_cell_consistency(data_save_folder, num_runs, show, **kwargs):
     if "stage5_tune" in kwargs:
         stage5_tune = kwargs["stage5_tune"]
 
-    runBash(f"rsync ../rpi_side/dcps_i2c.py {server}:/home/pi/rpi_dcps/dcps_i2c.py") # Transfer dcps_i2c file
+    runBash(f"scp ../rpi_side/dcps_i2c.py {server}:/home/pi/rpi_dcps/dcps_i2c.py") # Transfer dcps_i2c file
 
     for run in range(num_runs):
         for channel in [2, 3]:
@@ -204,7 +210,7 @@ def fine_consistency(data_save_folder, num_runs, show, **kwargs):
     if "stage5_tune" in kwargs:
         stage5_tune = kwargs["stage5_tune"]
 
-    runBash(f"rsync ../rpi_side/dcps_i2c.py {server}:/home/pi/rpi_dcps/dcps_i2c.py") # Transfer dcps_i2c file
+    runBash(f"scp ../rpi_side/dcps_i2c.py {server}:/home/pi/rpi_dcps/dcps_i2c.py") # Transfer dcps_i2c file
 
     for run in range(num_runs):
         for channel in [2, 3]:
@@ -229,7 +235,7 @@ def fine_cell_consistency(data_save_folder, num_runs, show, **kwargs):
     if "stage5_tune" in kwargs:
         stage5_tune = kwargs["stage5_tune"]
 
-    runBash(f"rsync ../rpi_side/dcps_i2c_fine_cell_test.py {server}:/home/pi/rpi_dcps/dcps_i2c_fine_cell_test.py") # Transfer dcps_i2c file
+    runBash(f"scp ../rpi_side/dcps_i2c_fine_cell_test.py {server}:/home/pi/rpi_dcps/dcps_i2c_fine_cell_test.py") # Transfer dcps_i2c file
 
     for run in range(num_runs):
         for channel in [2, 3]:
