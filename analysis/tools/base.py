@@ -326,7 +326,7 @@ def drawTIE(TIE1,save_name="",bns=100,cutoff=0,MULT_FACT=1,fit=False,figName="",
     average_TIE  = np.average(bin_mid[bns2Consider])
 
     try:
-        popt, pcov = curve_fit(gauss_function, bin_mid[bns2Consider], Y[bns2Consider],p0=[1,average_TIE,.001])
+        popt, pcov = curve_fit(gauss_function, bin_mid[bns2Consider], Y[bns2Consider],p0=[np.max(Y),average_TIE,.001])
     except:
         print("Not able to fit")
         fit = False
